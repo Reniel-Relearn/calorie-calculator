@@ -8,7 +8,7 @@ Version 1 — Core Calorie Calculator
 
 ## Current Project Status
 
-Prompt 5 deterministic input parsing and local food matching completed. Serving conversion, nutrition calculation, and UI integration are not implemented yet.
+Prompt 6 food-specific serving conversion and nutrition calculation completed. The calculated data is not connected to the visible result UI yet.
 
 ## Run the current skeleton
 

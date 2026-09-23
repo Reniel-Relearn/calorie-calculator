@@ -11,7 +11,6 @@ export const PARSE_ERROR_CODES = Object.freeze({
   MALFORMED_QUANTITY: "MALFORMED_QUANTITY",
   INVALID_QUANTITY: "INVALID_QUANTITY",
   NON_POSITIVE_QUANTITY: "NON_POSITIVE_QUANTITY",
-  QUANTITY_EXCEEDS_GRAM_LIMIT: "QUANTITY_EXCEEDS_GRAM_LIMIT",
   MULTIPLE_PREPARATIONS: "MULTIPLE_PREPARATIONS",
   MISSING_FOOD: "MISSING_FOOD",
 });
@@ -48,8 +47,6 @@ const PREPARATION_PATTERNS = Object.freeze([
   { phrase: "cooked", value: "cooked" },
   { phrase: "raw", value: "raw" },
 ]);
-
-const MAX_EXPLICIT_GRAMS = 5000;
 
 function createError(code, message) {
   return { code, message };
@@ -215,15 +212,6 @@ export function parseFoodInput(input) {
       createError(
         PARSE_ERROR_CODES.MULTIPLE_PREPARATIONS,
         "Enter one preparation method.",
-      ),
-    );
-  }
-
-  if (quantity !== null && unit === "grams" && quantity > MAX_EXPLICIT_GRAMS) {
-    errors.push(
-      createError(
-        PARSE_ERROR_CODES.QUANTITY_EXCEEDS_GRAM_LIMIT,
-        "Amount must not exceed 5,000 grams.",
       ),
     );
   }

@@ -167,7 +167,7 @@ Do not add AI parsing.
 
 # Prompt 6 — Serving Conversion and Nutrition Calculation
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 
