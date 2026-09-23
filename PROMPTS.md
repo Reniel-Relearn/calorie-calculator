@@ -52,7 +52,7 @@ Do not implement the entire application in this step.
 
 # Prompt 3 — Mobile-First Base UI
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 

@@ -8,11 +8,11 @@ Version 1 — Core Calorie Calculator
 
 ## Current Project Status
 
-Version 1 project skeleton created. Calculator behavior and demo nutrition data are not implemented yet.
+Prompt 3 mobile-first base UI completed. Calculator behavior and demo nutrition data are not implemented yet.
 
 ## Run the current skeleton
 
-Serve this directory with a local static HTTP server and open `index.html` through that server. No build tools or dependencies are required. The page currently shows only the CalorieCheck heading.
+Serve this directory with a local static HTTP server and open `index.html` through that server. No build tools or dependencies are required. The current page provides the static mobile UI foundation; calculator actions are not connected yet.
 
 ## Product Goal
 

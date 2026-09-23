@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CalorieCheck is a mobile-first food calorie and nutrition calculator.">
     <title>CalorieCheck</title>
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/components.css">
@@ -10,8 +11,197 @@
     <script type="module" src="./js/app.js"></script>
   </head>
   <body>
-    <main id="app">
-      <h1>CalorieCheck</h1>
+    <a class="skip-link" href="#app">Skip to food search</a>
+
+    <header class="site-header">
+      <div class="page-container">
+        <p class="brand" aria-label="CalorieCheck">
+          <span>Calorie</span><span class="brand__accent">Check</span>
+        </p>
+      </div>
+    </header>
+
+    <main class="app-shell page-container" id="app">
+      <section class="app-state app-state--idle" id="state-idle" data-state="IDLE" aria-labelledby="idle-heading">
+        <div class="hero">
+          <p class="eyebrow">A healthier you</p>
+          <h1 id="idle-heading">Know what's on your plate.</h1>
+          <p class="hero__description">Enter a supported food and instantly see its calories and nutrition.</p>
+        </div>
+
+        <form class="search-form" id="food-search-form">
+          <label class="visually-hidden" for="food-query">Food and amount</label>
+          <div class="input-with-icon">
+            <svg class="input-with-icon__icon" aria-hidden="true" viewBox="0 0 24 24" width="24" height="24">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16 16 5 5"></path>
+            </svg>
+            <input id="food-query" name="food-query" type="search" inputmode="search" autocomplete="off" placeholder="Try: 150g grilled chicken breast">
+          </div>
+          <button class="button button--primary" type="button">Analyze Food</button>
+        </form>
+
+        <details class="advanced-input">
+          <summary>Advanced Input</summary>
+          <form class="advanced-input__form" id="advanced-input-form">
+            <div class="form-field form-field--full">
+              <label for="advanced-food">Food</label>
+              <input id="advanced-food" name="food" type="text" autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="advanced-amount">Amount</label>
+              <input id="advanced-amount" name="amount" type="number" inputmode="decimal" min="0" step="any">
+            </div>
+            <div class="form-field">
+              <label for="advanced-unit">Unit</label>
+              <select id="advanced-unit" name="unit">
+                <option value="grams">Grams</option>
+                <option value="pieces">Pieces</option>
+                <option value="cups">Cups</option>
+                <option value="servings">Servings</option>
+              </select>
+            </div>
+            <div class="form-field form-field--full">
+              <label for="advanced-preparation">Preparation</label>
+              <select id="advanced-preparation" name="preparation">
+                <option value="">Not specified</option>
+                <option value="grilled">Grilled</option>
+                <option value="fried">Fried</option>
+                <option value="boiled">Boiled</option>
+                <option value="roasted">Roasted</option>
+              </select>
+            </div>
+          </form>
+        </details>
+
+        <aside class="search-help" aria-label="Food matching help">
+          <svg class="search-help__icon" aria-hidden="true" viewBox="0 0 24 24" width="24" height="24">
+            <path d="M9 18h6M10 22h4"></path>
+            <path d="M8.5 14.5A7 7 0 1 1 15.5 14.5C14.5 15.3 14 16 14 17h-4c0-1-.5-1.7-1.5-2.5Z"></path>
+          </svg>
+          <p>Not sure which food? We'll help you choose the closest match.</p>
+        </aside>
+
+        <section class="popular-searches" aria-labelledby="popular-searches-heading">
+          <h2 id="popular-searches-heading">Popular searches</h2>
+          <ul class="chip-list" aria-label="Example food searches">
+            <li><span class="example-chip">2 fried eggs</span></li>
+            <li><span class="example-chip">1 cup cooked white rice</span></li>
+            <li><span class="example-chip">1 medium banana</span></li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="app-state state-panel state-panel--centered" id="state-analyzing" data-state="ANALYZING" aria-labelledby="analyzing-heading" aria-live="polite" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <h2 id="analyzing-heading">Analyzing food...</h2>
+        <p>Checking the supported demo foods for a match.</p>
+      </section>
+
+      <section class="app-state" id="state-ambiguous" data-state="AMBIGUOUS" aria-labelledby="ambiguous-heading" hidden>
+        <div class="state-heading">
+          <h2 id="ambiguous-heading">Which food did you mean?</h2>
+          <p>Choose the closest match for a more accurate estimate.</p>
+        </div>
+        <div class="match-list" aria-label="Possible food matches">
+          <button class="match-card" type="button">
+            <span class="match-card__marker" aria-hidden="true">GB</span>
+            <span class="match-card__content"><strong>Grilled Chicken Breast</strong><span>Chicken breast, cooked, grilled</span><span class="match-card__reference">Reference information</span></span>
+            <span class="match-card__arrow" aria-hidden="true">›</span>
+          </button>
+          <button class="match-card" type="button">
+            <span class="match-card__marker" aria-hidden="true">FC</span>
+            <span class="match-card__content"><strong>Fried Chicken</strong><span>Chicken, fried</span><span class="match-card__reference">Reference information</span></span>
+            <span class="match-card__arrow" aria-hidden="true">›</span>
+          </button>
+          <button class="match-card" type="button">
+            <span class="match-card__marker" aria-hidden="true">RT</span>
+            <span class="match-card__content"><strong>Roasted Chicken Thigh</strong><span>Chicken thigh, cooked, roasted</span><span class="match-card__reference">Reference information</span></span>
+            <span class="match-card__arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+        <button class="button button--text button--back" type="button">← Edit Search</button>
+      </section>
+
+      <section class="app-state state-panel" id="state-needs-amount" data-state="NEEDS_AMOUNT" aria-labelledby="needs-amount-heading" hidden>
+        <div class="state-heading">
+          <p class="state-kicker">Food identified</p>
+          <h2 id="needs-amount-heading">How much did you eat?</h2>
+          <p>Add the amount before calculating nutrition.</p>
+        </div>
+        <p class="selected-food" id="needs-amount-food">Selected food</p>
+        <form class="amount-form" id="needs-amount-form">
+          <div class="form-field">
+            <label for="needs-amount-value">Amount</label>
+            <input id="needs-amount-value" name="amount" type="number" inputmode="decimal" min="0" step="any">
+          </div>
+          <div class="form-field">
+            <label for="needs-amount-unit">Unit</label>
+            <select id="needs-amount-unit" name="unit">
+              <option value="">Choose a unit</option>
+              <option value="grams">Grams</option>
+              <option value="pieces">Pieces</option>
+              <option value="cups">Cups</option>
+              <option value="servings">Servings</option>
+            </select>
+          </div>
+          <button class="button button--primary form-field--full" type="button">Calculate Nutrition</button>
+        </form>
+      </section>
+
+      <section class="app-state result" id="state-success" data-state="SUCCESS" aria-labelledby="result-food-name" aria-live="polite" hidden>
+        <p class="success-banner"><span class="success-banner__icon" aria-hidden="true">✓</span>Food matched</p>
+        <header class="result__header">
+          <div><h2 id="result-food-name">Food name</h2><p id="result-description">Matched food description</p></div>
+          <p class="calorie-value"><output id="result-calories">—</output> <span>kcal</span></p>
+          <p class="serving-value" id="result-serving">Serving amount</p>
+        </header>
+        <section class="macro-grid" aria-label="Macronutrients">
+          <div class="nutrient-card nutrient-card--protein"><span>Protein</span><strong><output id="result-protein">—</output> g</strong></div>
+          <div class="nutrient-card nutrient-card--carbs"><span>Carbs</span><strong><output id="result-carbs">—</output> g</strong></div>
+          <div class="nutrient-card nutrient-card--fat"><span>Fat</span><strong><output id="result-fat">—</output> g</strong></div>
+        </section>
+        <section class="result-card" aria-labelledby="serving-adjustment-heading">
+          <h3 id="serving-adjustment-heading">Adjust serving</h3>
+          <label for="serving-adjustment">Amount</label>
+          <div class="serving-control">
+            <button type="button" aria-label="Decrease serving amount">−</button>
+            <input id="serving-adjustment" name="serving-adjustment" type="number" inputmode="decimal" min="0" step="any" placeholder="Amount">
+            <button type="button" aria-label="Increase serving amount">+</button>
+          </div>
+        </section>
+        <section class="result-card" aria-labelledby="other-nutrition-heading">
+          <h3 id="other-nutrition-heading">Other Nutrition</h3>
+          <dl class="nutrition-list">
+            <div><dt>Fiber</dt><dd><output id="result-fiber">—</output> g</dd></div>
+            <div><dt>Sugar</dt><dd><output id="result-sugar">—</output> g</dd></div>
+            <div><dt>Sodium</dt><dd><output id="result-sodium">—</output> mg</dd></div>
+          </dl>
+          <dl class="result-meta">
+            <div><dt>Matched food:</dt><dd id="result-match-description">—</dd></div>
+            <div><dt>Data:</dt><dd>Demo nutrition dataset</dd></div>
+          </dl>
+        </section>
+        <div class="result__actions">
+          <button class="button button--primary" type="button">Analyze Another Food</button>
+          <button class="button button--text" type="button">Change Amount</button>
+        </div>
+      </section>
+
+      <section class="app-state state-panel state-panel--centered" id="state-not-found" data-state="NOT_FOUND" aria-labelledby="not-found-heading" aria-live="polite" hidden>
+        <span class="state-symbol" aria-hidden="true">?</span>
+        <h2 id="not-found-heading">Food not found</h2>
+        <p>We couldn't find that food in the current demo database.</p>
+        <p class="state-guidance">Check the spelling or add more detail to your search.</p>
+        <button class="button button--primary" type="button">Try Another Search</button>
+      </section>
+
+      <section class="app-state state-panel state-panel--centered state-panel--invalid" id="state-invalid" data-state="INVALID" aria-labelledby="invalid-heading" role="alert" hidden>
+        <span class="state-symbol" aria-hidden="true">!</span>
+        <h2 id="invalid-heading">Check your entry</h2>
+        <p id="invalid-message">Enter a food first.</p>
+        <button class="button button--primary" type="button">Edit Search</button>
+      </section>
     </main>
   </body>
 </html>
