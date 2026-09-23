@@ -8,11 +8,11 @@ Version 1 — Core Calorie Calculator
 
 ## Current Project Status
 
-Prompt 6 food-specific serving conversion and nutrition calculation completed. The calculated data is not connected to the visible result UI yet.
+Prompt 7 result interaction and the end-to-end local nutrition flow are complete. UX-state refinement, responsive enhancement, and final Version 1 QA remain.
 
 ## Run the current skeleton
 
-Serve this directory with a local static HTTP server and open `index.html` through that server. No build tools or dependencies are required. The current page provides the static mobile UI foundation; calculator actions are not connected yet.
+Serve this directory with a local static HTTP server and open `index.html` through that server. No build tools or dependencies are required. The core local flow supports food analysis, ambiguity resolution, amount entry, calculated nutrition results, and serving recalculation.
 
 ## Product Goal
 

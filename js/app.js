@@ -4,8 +4,9 @@ import { parseFoodInput } from "./input-parser.js";
 import { calculateNutrition } from "./nutrition-calculator.js";
 import { convertServingToGrams } from "./serving-converter.js";
 import { APP_STATES } from "./state.js";
+import { createUI } from "./ui.js";
 
-// Pure Prompt 5 coordination. UI behavior is introduced in a later prompt.
+// Pure analysis remains available independently of the DOM controller.
 export function analyzeFoodInput(rawInput, catalog = foods) {
   const parsedInput = parseFoodInput(rawInput);
 
@@ -94,3 +95,314 @@ export function calculateFoodInput(rawInput, catalog = foods) {
     applicationState: APP_STATES.SUCCESS,
   };
 }
+
+function getUserMessage(failure) {
+  if (!failure) return "We couldn't complete that calculation.";
+
+  const messages = {
+    MISSING_AMOUNT: "Enter an amount before calculating nutrition.",
+    INVALID_QUANTITY: "Amount must be greater than zero.",
+    NORMALIZED_AMOUNT_TOO_LARGE:
+      "That amount is too large for one calculation. Use 5,000 g or less.",
+    INVALID_CONVERSION_METADATA:
+      "Serving information is unavailable for this food.",
+    INVALID_REFERENCE_WEIGHT:
+      "Nutrition reference information is unavailable for this food.",
+    INVALID_NUTRITION_DATA:
+      "Nutrition information is unavailable for this food.",
+  };
+
+  return messages[failure.code] ?? failure.message;
+}
+
+function parseServingChoice(value) {
+  const [type, name] = value.split(":");
+
+  if (type === "descriptor") {
+    return { unit: null, servingDescriptor: name };
+  }
+
+  return { unit: name ?? null, servingDescriptor: null };
+}
+
+function getAdjustmentStep(servingInput) {
+  if (servingInput.servingDescriptor) return 1;
+
+  return {
+    grams: 10,
+    pieces: 1,
+    cups: 0.5,
+    servings: 1,
+  }[servingInput.unit] ?? 1;
+}
+
+function validateDiscreteServing(servingInput) {
+  if (
+    (servingInput.servingDescriptor || servingInput.unit === "pieces") &&
+    !Number.isInteger(servingInput.quantity)
+  ) {
+    return "Use a whole number for pieces or described servings.";
+  }
+
+  return null;
+}
+
+export function createApplicationController(ui, catalog = foods) {
+  const session = {
+    rawInput: "",
+    parsedInput: null,
+    candidates: [],
+    selectedFood: null,
+    servingInput: null,
+    conversion: null,
+    nutritionCalculation: null,
+  };
+
+  const schedule =
+    typeof requestAnimationFrame === "function"
+      ? requestAnimationFrame
+      : (callback) => callback();
+
+  function clearSession() {
+    session.rawInput = "";
+    session.parsedInput = null;
+    session.candidates = [];
+    session.selectedFood = null;
+    session.servingInput = null;
+    session.conversion = null;
+    session.nutritionCalculation = null;
+  }
+
+  function showInvalid(message) {
+    ui.showInvalid(message || "Check your entry and try again.");
+  }
+
+  function calculateSelectedFood(servingInput, { focus = true } = {}) {
+    const discreteServingError = validateDiscreteServing(servingInput);
+    if (discreteServingError) {
+      showInvalid(discreteServingError);
+      return false;
+    }
+
+    const conversion = convertServingToGrams(
+      session.selectedFood,
+      servingInput,
+    );
+    if (!conversion.ok) {
+      showInvalid(getUserMessage(conversion));
+      return false;
+    }
+
+    const nutritionCalculation = calculateNutrition(
+      session.selectedFood,
+      conversion.grams,
+    );
+    if (!nutritionCalculation.ok) {
+      showInvalid(getUserMessage(nutritionCalculation));
+      return false;
+    }
+
+    session.servingInput = { ...servingInput };
+    session.conversion = conversion;
+    session.nutritionCalculation = nutritionCalculation;
+
+    ui.renderSuccess(
+      {
+        food: session.selectedFood,
+        servingInput: session.servingInput,
+        conversion,
+        nutritionCalculation,
+      },
+      { focus },
+    );
+    return true;
+  }
+
+  function continueWithSelectedFood() {
+    if (!session.selectedFood || !session.parsedInput) {
+      showInvalid("Choose a food before calculating nutrition.");
+      return;
+    }
+
+    if (session.parsedInput.quantity === null) {
+      ui.renderNeedsAmount(session.selectedFood);
+      return;
+    }
+
+    calculateSelectedFood({
+      quantity: session.parsedInput.quantity,
+      unit: session.parsedInput.unit,
+      servingDescriptor: session.parsedInput.servingDescriptor,
+    });
+  }
+
+  function routeAnalysis(rawInput) {
+    const analysis = analyzeFoodInput(rawInput, catalog);
+    session.rawInput = rawInput;
+    session.parsedInput = analysis.parsedInput;
+    session.candidates = analysis.matches;
+
+    if (analysis.status === APP_STATES.INVALID) {
+      showInvalid(analysis.parsedInput.errors[0]?.message);
+      return;
+    }
+
+    if (analysis.status === FOOD_MATCH_STATUSES.AMBIGUOUS) {
+      ui.renderAmbiguous(analysis.matches);
+      return;
+    }
+
+    if (analysis.status === FOOD_MATCH_STATUSES.NOT_FOUND) {
+      ui.showNotFound();
+      return;
+    }
+
+    session.selectedFood = analysis.matches[0];
+    continueWithSelectedFood();
+  }
+
+  function analyze(rawInput) {
+    clearSession();
+    ui.reset({ clearSearch: false });
+    ui.showState(APP_STATES.ANALYZING, { focus: false });
+    schedule(() => routeAnalysis(rawInput));
+  }
+
+  function analyzeAdvanced({ food, amount, unit, preparation }) {
+    const serving = amount.trim() ? `${amount.trim()} ${unit}` : "";
+    const rawInput = [serving, preparation, food.trim()]
+      .filter(Boolean)
+      .join(" ");
+    analyze(rawInput);
+  }
+
+  function selectFood(foodId) {
+    session.selectedFood =
+      session.candidates.find((food) => food.id === foodId) ?? null;
+    continueWithSelectedFood();
+  }
+
+  function provideAmount({ amount, servingChoice }) {
+    const quantity = amount.trim() === "" ? null : Number(amount);
+    const serving = parseServingChoice(servingChoice);
+
+    calculateSelectedFood({
+      quantity,
+      ...serving,
+    });
+  }
+
+  function recalculateServing(quantity) {
+    if (!session.selectedFood || !session.servingInput) return;
+
+    const nextServingInput = {
+      ...session.servingInput,
+      quantity,
+    };
+    const discreteServingError = validateDiscreteServing(nextServingInput);
+    if (discreteServingError) {
+      ui.showServingError(discreteServingError, session.servingInput.quantity);
+      return;
+    }
+
+    const conversion = convertServingToGrams(
+      session.selectedFood,
+      nextServingInput,
+    );
+    if (!conversion.ok) {
+      ui.showServingError(
+        getUserMessage(conversion),
+        session.servingInput.quantity,
+      );
+      return;
+    }
+
+    const nutritionCalculation = calculateNutrition(
+      session.selectedFood,
+      conversion.grams,
+    );
+    if (!nutritionCalculation.ok) {
+      ui.showServingError(
+        getUserMessage(nutritionCalculation),
+        session.servingInput.quantity,
+      );
+      return;
+    }
+
+    session.servingInput = nextServingInput;
+    session.conversion = conversion;
+    session.nutritionCalculation = nutritionCalculation;
+    ui.renderSuccess(
+      {
+        food: session.selectedFood,
+        servingInput: session.servingInput,
+        conversion,
+        nutritionCalculation,
+      },
+      { focus: false },
+    );
+  }
+
+  function adjustServing(direction) {
+    if (!session.servingInput) return;
+    const nextQuantity = Number(
+      (
+        session.servingInput.quantity +
+        direction * getAdjustmentStep(session.servingInput)
+      ).toPrecision(12),
+    );
+    recalculateServing(nextQuantity);
+  }
+
+  function setServingAmount(rawAmount) {
+    const quantity = rawAmount.trim() === "" ? Number.NaN : Number(rawAmount);
+    recalculateServing(quantity);
+  }
+
+  function editSearch() {
+    clearSession();
+    ui.reset({ clearSearch: false });
+    ui.showState(APP_STATES.IDLE);
+  }
+
+  function analyzeAnother() {
+    clearSession();
+    ui.reset({ clearSearch: true });
+    ui.showState(APP_STATES.IDLE);
+  }
+
+  return {
+    adjustServing,
+    analyze,
+    analyzeAdvanced,
+    analyzeAnother,
+    editSearch,
+    initialize: () => {
+      ui.reset({ clearSearch: true });
+      ui.showState(APP_STATES.IDLE, { focus: false });
+    },
+    provideAmount,
+    selectFood,
+    setServingAmount,
+  };
+}
+
+export function initializeApp() {
+  let controller;
+  const ui = createUI({
+    onAdjustServing: (direction) => controller.adjustServing(direction),
+    onAdvancedAnalyze: (fields) => controller.analyzeAdvanced(fields),
+    onAnalyze: (rawInput) => controller.analyze(rawInput),
+    onAnalyzeAnother: () => controller.analyzeAnother(),
+    onEditSearch: () => controller.editSearch(),
+    onProvideAmount: (serving) => controller.provideAmount(serving),
+    onSelectFood: (foodId) => controller.selectFood(foodId),
+    onSetServingAmount: (amount) => controller.setServingAmount(amount),
+  });
+
+  controller = createApplicationController(ui);
+  controller.initialize();
+  return controller;
+}
+
+if (typeof document !== "undefined") initializeApp();

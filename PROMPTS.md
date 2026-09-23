@@ -204,7 +204,7 @@ unless the matched food record explicitly defines the conversion.
 
 # Prompt 7 — Result Interaction
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 
