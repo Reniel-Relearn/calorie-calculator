@@ -88,8 +88,10 @@ Starting foods should include:
 - fried chicken
 - roasted chicken thigh
 - fried egg
+- boiled egg
 - cooked white rice
 - banana
+- saba banana
 - cheeseburger
 
 Each record should contain, where applicable:
