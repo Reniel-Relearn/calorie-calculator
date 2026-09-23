@@ -76,7 +76,7 @@ Do not prioritize desktop yet.
 
 # Prompt 4 — Local Nutrition Dataset
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 

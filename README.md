@@ -8,7 +8,7 @@ Version 1 — Core Calorie Calculator
 
 ## Current Project Status
 
-Prompt 3 mobile-first base UI completed. Calculator behavior and demo nutrition data are not implemented yet.
+Prompt 4 local demo nutrition dataset completed. Calculator behavior is not implemented yet, and the dataset is not connected to the UI.
 
 ## Run the current skeleton
 
