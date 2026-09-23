@@ -121,7 +121,7 @@ Demo nutrition dataset
 
 # Prompt 5 — Input Parsing and Food Matching
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 

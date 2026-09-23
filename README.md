@@ -8,7 +8,7 @@ Version 1 — Core Calorie Calculator
 
 ## Current Project Status
 
-Prompt 4 local demo nutrition dataset completed. Calculator behavior is not implemented yet, and the dataset is not connected to the UI.
+Prompt 5 deterministic input parsing and local food matching completed. Serving conversion, nutrition calculation, and UI integration are not implemented yet.
 
 ## Run the current skeleton
 
