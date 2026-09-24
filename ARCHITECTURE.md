@@ -409,7 +409,7 @@ Verified nutrition database
 
 unless the application is actually connected to one.
 
-The existing nine-food catalog remains the solid-food baseline. Prompt 4.1 must add at least one sourced liquid record to verify the mL pathway; two simple liquid records are preferred to prevent a single-record special case.
+The nine original foods remain the solid-food baseline. Prompt 4.1 added sourced Whole Milk and Orange Juice records so the future mL pathway can be verified without a single-record special case.
 
 ## Future Version 2 Architecture
 

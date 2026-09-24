@@ -113,7 +113,7 @@ Suggested starting foods:
 - saba banana
 - cheeseburger
 
-These nine solid records remain part of Version 1. Prompt 4.1 should add at least one sourced liquid record, with two simple liquids preferred so the mL path is verified across more than one record.
+These nine solid records remain part of Version 1. Prompt 4.1 added two sourced liquid records, Whole Milk and Orange Juice, so the mL path can be verified across more than one record.
 
 Each food record should include:
 
@@ -155,7 +155,7 @@ Pieces and size descriptors are optional. Existing reliable support may remain w
 
 ### Version 1 Completion
 
-Version 1 is complete when the complete core flow works reliably on mobile and desktop using the demo dataset, including verified mass and volume pathways. Liquid data, mL parsing, volume calculation, and UI integration still require the planned 4.1–7.1 refinement prompts.
+Version 1 is complete when the complete core flow works reliably on mobile and desktop using the demo dataset, including verified mass and volume pathways. Liquid data is now present; mL parsing, volume calculation, and UI integration still require the planned 5.1–7.1 refinement prompts.
 
 ---
 

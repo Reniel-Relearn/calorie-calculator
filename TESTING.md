@@ -46,7 +46,7 @@ Expected:
 
 ## Liquid Search
 
-Test after Prompt 4.1 adds sourced liquid records:
+Test after Prompts 5.1–7.1 connect the sourced liquid records:
 
 250ml liquid food
 

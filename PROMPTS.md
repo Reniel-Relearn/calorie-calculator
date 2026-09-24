@@ -251,7 +251,7 @@ This prompt changes documentation and architecture requirements only. It does no
 
 # Prompt 4.1 — Measurement Dataset Enrichment
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 
