@@ -263,7 +263,7 @@ Nutrition and conversion values must remain source-backed. Decide and document t
 
 # Prompt 5.1 — Measurement-Aware Input Parsing
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 

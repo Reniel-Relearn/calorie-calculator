@@ -8,7 +8,7 @@ Version 1 — Core Calorie Calculator
 
 ## Current Project Status
 
-Prompts 1–7 and measurement dataset refinement 4.1 are complete. The local demo catalog now contains nine solid foods and two liquid foods, plus a source-backed cooked-rice cup conversion. Prompts 5.1–7.1 still need to implement mL parsing, mass/volume calculation, and measurement-aware UI behavior. UX-state refinement, responsive enhancement, and final Version 1 QA also remain.
+Prompts 1–7 and measurement refinements 4.1–5.1 are complete. The local demo catalog contains nine solid foods and two liquid foods, plus a source-backed cooked-rice cup conversion. Deterministic input parsing now recognizes grams, cups, and milliliters while preserving optional pieces and size descriptors. Prompts 6.1–7.1 still need to implement mass/volume calculation and measurement-aware UI behavior. UX-state refinement, responsive enhancement, and final Version 1 QA also remain.
 
 ## Run the current skeleton
 

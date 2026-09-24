@@ -1,5 +1,6 @@
 export const CANONICAL_UNITS = Object.freeze([
   "grams",
+  "milliliters",
   "pieces",
   "cups",
   "servings",
@@ -19,6 +20,11 @@ const UNIT_ALIASES = Object.freeze({
   g: "grams",
   gram: "grams",
   grams: "grams",
+  ml: "milliliters",
+  milliliter: "milliliters",
+  milliliters: "milliliters",
+  millilitre: "milliliters",
+  millilitres: "milliliters",
   piece: "pieces",
   pieces: "pieces",
   pc: "pieces",
@@ -60,6 +66,7 @@ export function normalizeInput(value) {
     .toLowerCase()
     .replace(/[‐‑‒–—−]/g, "-")
     .replace(/(\p{L})-(?=\p{L})/gu, "$1 ")
+    .replace(/(\d)-(?=\p{L})/gu, "$1 ")
     .replace(/[^\p{L}\p{N}.\-\s]+/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
