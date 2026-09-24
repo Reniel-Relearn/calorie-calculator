@@ -42,6 +42,7 @@ function formatNutrient(value, maximumFractionDigits, unit) {
 
 function formatUnitQuantity(quantity, unit) {
   if (unit === "grams") return `${formatQuantity(quantity)} g`;
+  if (unit === "milliliters") return `${formatQuantity(quantity)} mL`;
 
   const singularUnits = {
     pieces: "piece",
@@ -52,16 +53,25 @@ function formatUnitQuantity(quantity, unit) {
   return `${formatQuantity(quantity)} ${label}`;
 }
 
-function formatServing(servingInput, grams) {
-  const normalizedGrams = `${formatNumber(grams, 1)} g`;
-
+function formatServing(servingInput, food) {
   if (servingInput.servingDescriptor) {
-    return `${formatQuantity(servingInput.quantity)} × ${servingInput.servingDescriptor} (${normalizedGrams})`;
+    const descriptor = food.servingDescriptors?.[servingInput.servingDescriptor];
+    const descriptorUnit = descriptor?.unit ?? "pieces";
+    const unit =
+      servingInput.quantity === 1 && descriptorUnit === "pieces"
+        ? "piece"
+        : descriptorUnit;
+    return `${formatQuantity(servingInput.quantity)} ${servingInput.servingDescriptor} ${unit}`;
   }
 
-  if (servingInput.unit === "grams") return normalizedGrams;
+  return formatUnitQuantity(servingInput.quantity, servingInput.unit);
+}
 
-  return `${formatUnitQuantity(servingInput.quantity, servingInput.unit)} (${normalizedGrams})`;
+function formatNormalizedServing(conversion) {
+  if (conversion.conversionType.startsWith("direct-")) return null;
+
+  const unit = conversion.normalizedUnit === "ml" ? "mL" : "g";
+  return `${formatNumber(conversion.normalizedAmount, 1)} ${unit} normalized`;
 }
 
 function getInitials(name) {
@@ -81,13 +91,20 @@ function titleCase(value) {
 function getServingChoices(food) {
   const choices = [];
 
-  if (food.supportedUnits.includes("grams")) {
-    choices.push({ value: "unit:grams", label: "Grams" });
-  }
-
   for (const unit of food.supportedUnits) {
-    if (unit === "grams" || !food.servingConversions?.[unit]) continue;
-    choices.push({ value: `unit:${unit}`, label: titleCase(unit) });
+    const isDirectUnit =
+      (food.measurementBasis === "mass" && unit === "grams") ||
+      (food.measurementBasis === "volume" && unit === "milliliters");
+    if (!isDirectUnit && !food.servingConversions?.[unit]) continue;
+
+    const labels = {
+      grams: "Grams (g)",
+      milliliters: "Milliliters (mL)",
+    };
+    choices.push({
+      value: `unit:${unit}`,
+      label: labels[unit] ?? titleCase(unit),
+    });
   }
 
   for (const [descriptor, metadata] of Object.entries(
@@ -106,21 +123,34 @@ function getServingChoices(food) {
 function getAdjustmentPresentation(servingInput) {
   if (servingInput.servingDescriptor) {
     return {
-      context: servingInput.servingDescriptor,
+      context: "adjusts by 1",
       step: 1,
+      unitLabel: servingInput.servingDescriptor,
     };
   }
 
   const steps = {
     grams: 10,
+    milliliters: 10,
     pieces: 1,
-    cups: 0.5,
+    cups: 0.25,
     servings: 1,
   };
 
+  const unitLabels = {
+    grams: "g",
+    milliliters: "mL",
+    cups: servingInput.quantity === 1 ? "cup" : "cups",
+    pieces: servingInput.quantity === 1 ? "piece" : "pieces",
+    servings: servingInput.quantity === 1 ? "serving" : "servings",
+  };
+
+  const step = steps[servingInput.unit] ?? 1;
+
   return {
-    context: servingInput.unit ?? "serving",
-    step: steps[servingInput.unit] ?? 1,
+    context: `adjusts by ${formatQuantity(step)}`,
+    step,
+    unitLabel: unitLabels[servingInput.unit] ?? "serving",
   };
 }
 
@@ -151,6 +181,7 @@ export function createUI(handlers) {
     resultDescription: getRequiredElement("result-description"),
     resultCalories: getRequiredElement("result-calories"),
     resultServing: getRequiredElement("result-serving"),
+    resultNormalizedServing: getRequiredElement("result-normalized-serving"),
     resultProtein: getRequiredElement("result-protein"),
     resultCarbs: getRequiredElement("result-carbs"),
     resultFat: getRequiredElement("result-fat"),
@@ -160,6 +191,7 @@ export function createUI(handlers) {
     resultMatchDescription: getRequiredElement("result-match-description"),
     servingAdjustment: getRequiredElement("serving-adjustment"),
     servingAdjustmentContext: getRequiredElement("serving-adjustment-context"),
+    servingAdjustmentUnit: getRequiredElement("serving-adjustment-unit"),
     servingAdjustmentError: getRequiredElement("serving-adjustment-error"),
     decreaseServing: getRequiredElement("decrease-serving"),
     increaseServing: getRequiredElement("increase-serving"),
@@ -256,10 +288,10 @@ export function createUI(handlers) {
       Math.round(nutrition.caloriesKcal),
       0,
     );
-    elements.resultServing.textContent = formatServing(
-      servingInput,
-      conversion.grams,
-    );
+    elements.resultServing.textContent = formatServing(servingInput, food);
+    const normalizedServing = formatNormalizedServing(conversion);
+    elements.resultNormalizedServing.textContent = normalizedServing ?? "";
+    elements.resultNormalizedServing.hidden = !normalizedServing;
     elements.resultProtein.textContent = formatNutrient(
       nutrition.proteinG,
       1,
@@ -292,8 +324,11 @@ export function createUI(handlers) {
     );
     elements.resultMatchDescription.textContent = food.sourceDescription;
     elements.servingAdjustment.value = servingInput.quantity;
-    elements.servingAdjustment.step = adjustment.step;
+    elements.servingAdjustment.step = "any";
     elements.servingAdjustmentContext.textContent = `(${adjustment.context})`;
+    elements.servingAdjustmentUnit.textContent = adjustment.unitLabel;
+    elements.decreaseServing.disabled =
+      servingInput.quantity - adjustment.step <= 0;
     elements.servingAdjustmentError.hidden = true;
     elements.servingAdjustmentError.textContent = "";
 
@@ -316,6 +351,8 @@ export function createUI(handlers) {
     elements.resultFoodName.textContent = "Food name";
     elements.resultDescription.textContent = "Matched food description";
     elements.resultServing.textContent = "Serving amount";
+    elements.resultNormalizedServing.textContent = "";
+    elements.resultNormalizedServing.hidden = true;
     elements.resultMatchDescription.textContent = MISSING_VALUE;
     for (const output of [
       elements.resultCalories,
@@ -329,6 +366,8 @@ export function createUI(handlers) {
       output.textContent = MISSING_VALUE;
     }
     elements.servingAdjustment.value = "";
+    elements.servingAdjustmentUnit.textContent = "unit";
+    elements.decreaseServing.disabled = false;
     elements.servingAdjustmentError.hidden = true;
     elements.servingAdjustmentError.textContent = "";
   }
@@ -393,10 +432,7 @@ export function createUI(handlers) {
     handlers.onSetServingAmount(elements.servingAdjustment.value),
   );
   elements.analyzeAnother.addEventListener("click", handlers.onAnalyzeAnother);
-  elements.changeAmount.addEventListener("click", () => {
-    elements.servingAdjustment.focus();
-    elements.servingAdjustment.select();
-  });
+  elements.changeAmount.addEventListener("click", handlers.onChangeAmount);
 
   return {
     clearResult,

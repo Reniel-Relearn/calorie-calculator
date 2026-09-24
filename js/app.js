@@ -96,8 +96,46 @@ export function calculateFoodInput(rawInput, catalog = foods) {
   };
 }
 
-function getUserMessage(failure) {
+function formatList(items) {
+  if (items.length < 2) return items[0] ?? "a supported measurement";
+  if (items.length === 2) return `${items[0]} or ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")}, or ${items.at(-1)}`;
+}
+
+function getSupportedMeasurementMessage(food) {
+  if (!food) return "Choose a measurement supported by this food.";
+
+  const labels = [];
+  for (const unit of food.supportedUnits ?? []) {
+    const isDirectUnit =
+      (food.measurementBasis === "mass" && unit === "grams") ||
+      (food.measurementBasis === "volume" && unit === "milliliters");
+    if (isDirectUnit || food.servingConversions?.[unit]) labels.push(unit);
+  }
+
+  for (const [descriptor, metadata] of Object.entries(
+    food.servingDescriptors ?? {},
+  )) {
+    const unit = metadata.unit === "pieces" ? "pieces" : metadata.unit;
+    labels.push(`${descriptor} ${unit}`);
+  }
+
+  return `${food.name} supports ${formatList(labels)} in the current demo dataset.`;
+}
+
+function getUserMessage(failure, food = null) {
   if (!failure) return "We couldn't complete that calculation.";
+
+  if (
+    [
+      "UNSUPPORTED_UNIT",
+      "UNSUPPORTED_DESCRIPTOR",
+      "UNSUPPORTED_SERVING",
+      "MEASUREMENT_BASIS_MISMATCH",
+    ].includes(failure.code)
+  ) {
+    return getSupportedMeasurementMessage(food);
+  }
 
   const messages = {
     MISSING_AMOUNT: "Enter an amount before calculating nutrition.",
@@ -109,8 +147,6 @@ function getUserMessage(failure) {
       "Nutrition reference information is unavailable for this food.",
     REFERENCE_UNIT_MISMATCH:
       "Nutrition reference units are unavailable for this food.",
-    MEASUREMENT_BASIS_MISMATCH:
-      "Choose a unit compatible with this food.",
     INVALID_NUTRITION_DATA:
       "Nutrition information is unavailable for this food.",
     NON_FINITE_RESULT:
@@ -135,8 +171,9 @@ function getAdjustmentStep(servingInput) {
 
   return {
     grams: 10,
+    milliliters: 10,
     pieces: 1,
-    cups: 0.5,
+    cups: 0.25,
     servings: 1,
   }[servingInput.unit] ?? 1;
 }
@@ -194,7 +231,7 @@ export function createApplicationController(ui, catalog = foods) {
       servingInput,
     );
     if (!conversion.ok) {
-      showInvalid(getUserMessage(conversion));
+      showInvalid(getUserMessage(conversion, session.selectedFood));
       return false;
     }
 
@@ -203,7 +240,7 @@ export function createApplicationController(ui, catalog = foods) {
       conversion,
     );
     if (!nutritionCalculation.ok) {
-      showInvalid(getUserMessage(nutritionCalculation));
+      showInvalid(getUserMessage(nutritionCalculation, session.selectedFood));
       return false;
     }
 
@@ -316,7 +353,7 @@ export function createApplicationController(ui, catalog = foods) {
     );
     if (!conversion.ok) {
       ui.showServingError(
-        getUserMessage(conversion),
+        getUserMessage(conversion, session.selectedFood),
         session.servingInput.quantity,
       );
       return;
@@ -328,7 +365,7 @@ export function createApplicationController(ui, catalog = foods) {
     );
     if (!nutritionCalculation.ok) {
       ui.showServingError(
-        getUserMessage(nutritionCalculation),
+        getUserMessage(nutritionCalculation, session.selectedFood),
         session.servingInput.quantity,
       );
       return;
@@ -356,6 +393,7 @@ export function createApplicationController(ui, catalog = foods) {
         direction * getAdjustmentStep(session.servingInput)
       ).toPrecision(12),
     );
+    if (nextQuantity <= 0) return;
     recalculateServing(nextQuantity);
   }
 
@@ -376,11 +414,17 @@ export function createApplicationController(ui, catalog = foods) {
     ui.showState(APP_STATES.IDLE);
   }
 
+  function changeAmount() {
+    if (!session.selectedFood) return;
+    ui.renderNeedsAmount(session.selectedFood);
+  }
+
   return {
     adjustServing,
     analyze,
     analyzeAdvanced,
     analyzeAnother,
+    changeAmount,
     editSearch,
     initialize: () => {
       ui.reset({ clearSearch: true });
@@ -399,6 +443,7 @@ export function initializeApp() {
     onAdvancedAnalyze: (fields) => controller.analyzeAdvanced(fields),
     onAnalyze: (rawInput) => controller.analyze(rawInput),
     onAnalyzeAnother: () => controller.analyzeAnother(),
+    onChangeAmount: () => controller.changeAmount(),
     onEditSearch: () => controller.editSearch(),
     onProvideAmount: (serving) => controller.provideAmount(serving),
     onSelectFood: (foodId) => controller.selectFood(foodId),

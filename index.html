@@ -56,9 +56,10 @@
             <div class="form-field">
               <label for="advanced-unit">Unit</label>
               <select id="advanced-unit" name="unit">
-                <option value="grams">Grams</option>
-                <option value="pieces">Pieces</option>
+                <option value="grams">Grams (g)</option>
                 <option value="cups">Cups</option>
+                <option value="milliliters">Milliliters (mL)</option>
+                <option value="pieces">Pieces</option>
                 <option value="servings">Servings</option>
               </select>
             </div>
@@ -89,9 +90,10 @@
         <section class="popular-searches" aria-labelledby="popular-searches-heading">
           <h2 id="popular-searches-heading">Popular searches</h2>
           <ul class="chip-list" aria-label="Example food searches">
-            <li><button class="example-chip" type="button" data-example-query="2 fried eggs">2 fried eggs</button></li>
+            <li><button class="example-chip" type="button" data-example-query="150g grilled chicken breast">150g grilled chicken breast</button></li>
             <li><button class="example-chip" type="button" data-example-query="1 cup cooked white rice">1 cup cooked white rice</button></li>
-            <li><button class="example-chip" type="button" data-example-query="1 medium banana">1 medium banana</button></li>
+            <li><button class="example-chip" type="button" data-example-query="250ml whole milk">250ml whole milk</button></li>
+            <li><button class="example-chip" type="button" data-example-query="300ml orange juice">300ml orange juice</button></li>
           </ul>
         </section>
       </section>
@@ -136,7 +138,10 @@
         <header class="result__header">
           <div><h2 id="result-food-name" tabindex="-1">Food name</h2><p id="result-description">Matched food description</p></div>
           <p class="calorie-value"><output id="result-calories">—</output> <span>kcal</span></p>
-          <p class="serving-value" id="result-serving">Serving amount</p>
+          <p class="serving-value">
+            <span id="result-serving">Serving amount</span>
+            <span class="serving-value__normalized" id="result-normalized-serving" hidden></span>
+          </p>
         </header>
         <section class="macro-grid" aria-label="Macronutrients">
           <div class="nutrient-card nutrient-card--protein"><span>Protein</span><strong><output id="result-protein">—</output></strong></div>
@@ -148,7 +153,8 @@
           <label for="serving-adjustment">Amount <span class="serving-context" id="serving-adjustment-context"></span></label>
           <div class="serving-control">
             <button id="decrease-serving" type="button" aria-label="Decrease serving amount">−</button>
-            <input id="serving-adjustment" name="serving-adjustment" type="number" inputmode="decimal" min="0" step="any" placeholder="Amount" aria-describedby="serving-adjustment-error">
+            <input id="serving-adjustment" name="serving-adjustment" type="number" inputmode="decimal" min="0" step="any" placeholder="Amount" aria-describedby="serving-adjustment-unit serving-adjustment-error">
+            <span class="serving-control__unit" id="serving-adjustment-unit">unit</span>
             <button id="increase-serving" type="button" aria-label="Increase serving amount">+</button>
           </div>
           <p class="form-error" id="serving-adjustment-error" role="status" hidden></p>

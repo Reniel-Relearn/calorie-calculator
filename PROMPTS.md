@@ -297,7 +297,7 @@ Validate positive finite normalized amounts and finite calculated output without
 
 # Prompt 7.1 — Measurement UI Integration and Regression
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 
