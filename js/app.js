@@ -2,7 +2,7 @@ import { foods } from "../data/foods.js";
 import { searchFoods, FOOD_MATCH_STATUSES } from "./food-search.js";
 import { parseFoodInput } from "./input-parser.js";
 import { calculateNutrition } from "./nutrition-calculator.js";
-import { convertServingToGrams } from "./serving-converter.js";
+import { convertServing } from "./serving-converter.js";
 import { APP_STATES } from "./state.js";
 import { createUI } from "./ui.js";
 
@@ -62,7 +62,7 @@ export function calculateFoodInput(rawInput, catalog = foods) {
   }
 
   const food = analysis.matches[0];
-  const conversion = convertServingToGrams(food, {
+  const conversion = convertServing(food, {
     quantity: analysis.parsedInput.quantity,
     unit: analysis.parsedInput.unit,
     servingDescriptor: analysis.parsedInput.servingDescriptor,
@@ -76,7 +76,7 @@ export function calculateFoodInput(rawInput, catalog = foods) {
     };
   }
 
-  const nutritionCalculation = calculateNutrition(food, conversion.grams);
+  const nutritionCalculation = calculateNutrition(food, conversion);
 
   if (!nutritionCalculation.ok) {
     return {
@@ -101,15 +101,20 @@ function getUserMessage(failure) {
 
   const messages = {
     MISSING_AMOUNT: "Enter an amount before calculating nutrition.",
-    INVALID_QUANTITY: "Amount must be greater than zero.",
-    NORMALIZED_AMOUNT_TOO_LARGE:
-      "That amount is too large for one calculation. Use 5,000 g or less.",
+    INVALID_QUANTITY: "Enter a finite amount greater than zero.",
+    INVALID_NORMALIZED_AMOUNT: "Enter a finite amount greater than zero.",
     INVALID_CONVERSION_METADATA:
       "Serving information is unavailable for this food.",
-    INVALID_REFERENCE_WEIGHT:
+    INVALID_REFERENCE_METADATA:
       "Nutrition reference information is unavailable for this food.",
+    REFERENCE_UNIT_MISMATCH:
+      "Nutrition reference units are unavailable for this food.",
+    MEASUREMENT_BASIS_MISMATCH:
+      "Choose a unit compatible with this food.",
     INVALID_NUTRITION_DATA:
       "Nutrition information is unavailable for this food.",
+    NON_FINITE_RESULT:
+      "That amount could not be calculated as a finite nutrition result.",
   };
 
   return messages[failure.code] ?? failure.message;
@@ -184,7 +189,7 @@ export function createApplicationController(ui, catalog = foods) {
       return false;
     }
 
-    const conversion = convertServingToGrams(
+    const conversion = convertServing(
       session.selectedFood,
       servingInput,
     );
@@ -195,7 +200,7 @@ export function createApplicationController(ui, catalog = foods) {
 
     const nutritionCalculation = calculateNutrition(
       session.selectedFood,
-      conversion.grams,
+      conversion,
     );
     if (!nutritionCalculation.ok) {
       showInvalid(getUserMessage(nutritionCalculation));
@@ -305,7 +310,7 @@ export function createApplicationController(ui, catalog = foods) {
       return;
     }
 
-    const conversion = convertServingToGrams(
+    const conversion = convertServing(
       session.selectedFood,
       nextServingInput,
     );
@@ -319,7 +324,7 @@ export function createApplicationController(ui, catalog = foods) {
 
     const nutritionCalculation = calculateNutrition(
       session.selectedFood,
-      conversion.grams,
+      conversion,
     );
     if (!nutritionCalculation.ok) {
       ui.showServingError(

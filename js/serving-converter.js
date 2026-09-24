@@ -1,5 +1,3 @@
-export const MAX_NORMALIZED_GRAMS = 5000;
-
 export const SERVING_ERROR_CODES = Object.freeze({
   INVALID_FOOD: "INVALID_FOOD",
   MISSING_AMOUNT: "MISSING_AMOUNT",
@@ -7,8 +5,16 @@ export const SERVING_ERROR_CODES = Object.freeze({
   UNSUPPORTED_UNIT: "UNSUPPORTED_UNIT",
   UNSUPPORTED_DESCRIPTOR: "UNSUPPORTED_DESCRIPTOR",
   UNSUPPORTED_SERVING: "UNSUPPORTED_SERVING",
-  NORMALIZED_AMOUNT_TOO_LARGE: "NORMALIZED_AMOUNT_TOO_LARGE",
   INVALID_CONVERSION_METADATA: "INVALID_CONVERSION_METADATA",
+  MEASUREMENT_BASIS_MISMATCH: "MEASUREMENT_BASIS_MISMATCH",
+});
+
+const MEASUREMENT_DEFINITIONS = Object.freeze({
+  mass: Object.freeze({ directUnit: "grams", normalizedUnit: "g" }),
+  volume: Object.freeze({
+    directUnit: "milliliters",
+    normalizedUnit: "ml",
+  }),
 });
 
 function createFailure(code, message, servingInput = {}) {
@@ -26,19 +32,11 @@ function toSafePrecision(value) {
   return Number(value.toPrecision(12));
 }
 
-function validateNormalizedGrams(grams, servingInput) {
-  if (!Number.isFinite(grams) || grams <= 0) {
+function validateNormalizedAmount(amount, servingInput) {
+  if (!Number.isFinite(amount) || amount <= 0) {
     return createFailure(
       SERVING_ERROR_CODES.INVALID_QUANTITY,
-      "The serving amount could not be converted to a valid gram amount.",
-      servingInput,
-    );
-  }
-
-  if (grams > MAX_NORMALIZED_GRAMS) {
-    return createFailure(
-      SERVING_ERROR_CODES.NORMALIZED_AMOUNT_TOO_LARGE,
-      "The normalized amount must not exceed 5,000 grams.",
+      "The serving amount could not be normalized to a finite value greater than zero.",
       servingInput,
     );
   }
@@ -46,18 +44,32 @@ function validateNormalizedGrams(grams, servingInput) {
   return null;
 }
 
-function createSuccess(grams, servingInput, conversionType) {
-  return {
+function createSuccess(
+  amount,
+  servingInput,
+  conversionType,
+  measurementBasis,
+  normalizedUnit,
+) {
+  const normalizedAmount = toSafePrecision(amount);
+  const result = {
     ok: true,
-    grams: toSafePrecision(grams),
+    normalizedAmount,
+    normalizedUnit,
+    measurementBasis,
     originalQuantity: servingInput.quantity,
     originalUnit: servingInput.unit ?? null,
     descriptor: servingInput.servingDescriptor ?? null,
     conversionType,
   };
+
+  if (measurementBasis === "mass") result.grams = normalizedAmount;
+  if (measurementBasis === "volume") result.milliliters = normalizedAmount;
+
+  return result;
 }
 
-export function convertServingToGrams(food, servingInput = {}) {
+export function convertServing(food, servingInput = {}) {
   servingInput =
     servingInput && typeof servingInput === "object" ? servingInput : {};
 
@@ -81,10 +93,23 @@ export function convertServingToGrams(food, servingInput = {}) {
     );
   }
 
-  if (typeof quantity !== "number" || !Number.isFinite(quantity) || quantity <= 0) {
+  if (
+    typeof quantity !== "number" ||
+    !Number.isFinite(quantity) ||
+    quantity <= 0
+  ) {
     return createFailure(
       SERVING_ERROR_CODES.INVALID_QUANTITY,
       "Amount must be a finite number greater than zero.",
+      servingInput,
+    );
+  }
+
+  const measurement = MEASUREMENT_DEFINITIONS[food.measurementBasis];
+  if (!measurement) {
+    return createFailure(
+      SERVING_ERROR_CODES.MEASUREMENT_BASIS_MISMATCH,
+      "This food has invalid measurement-basis metadata.",
       servingInput,
     );
   }
@@ -93,6 +118,14 @@ export function convertServingToGrams(food, servingInput = {}) {
     return createFailure(
       SERVING_ERROR_CODES.INVALID_CONVERSION_METADATA,
       "This food has invalid serving-unit metadata.",
+      servingInput,
+    );
+  }
+
+  if (unit && !food.supportedUnits.includes(unit)) {
+    return createFailure(
+      SERVING_ERROR_CODES.UNSUPPORTED_UNIT,
+      `${food.name} does not support ${unit}.`,
       servingInput,
     );
   }
@@ -108,6 +141,14 @@ export function convertServingToGrams(food, servingInput = {}) {
       return createFailure(
         SERVING_ERROR_CODES.UNSUPPORTED_DESCRIPTOR,
         `${food.name} does not support the ${descriptor} descriptor.`,
+        servingInput,
+      );
+    }
+
+    if (food.measurementBasis !== "mass") {
+      return createFailure(
+        SERVING_ERROR_CODES.MEASUREMENT_BASIS_MISMATCH,
+        `The ${descriptor} descriptor for ${food.name} does not normalize to its volume basis.`,
         servingInput,
       );
     }
@@ -150,11 +191,22 @@ export function convertServingToGrams(food, servingInput = {}) {
       );
     }
 
-    const grams = quantity * (descriptorGrams / descriptorQuantity);
-    const validationFailure = validateNormalizedGrams(grams, servingInput);
+    const normalizedAmount =
+      quantity * (descriptorGrams / descriptorQuantity);
+    const validationFailure = validateNormalizedAmount(
+      normalizedAmount,
+      servingInput,
+    );
 
     return (
-      validationFailure ?? createSuccess(grams, servingInput, "descriptor")
+      validationFailure ??
+      createSuccess(
+        normalizedAmount,
+        servingInput,
+        "descriptor",
+        food.measurementBasis,
+        measurement.normalizedUnit,
+      )
     );
   }
 
@@ -166,18 +218,25 @@ export function convertServingToGrams(food, servingInput = {}) {
     );
   }
 
-  if (!food.supportedUnits.includes(unit)) {
-    return createFailure(
-      SERVING_ERROR_CODES.UNSUPPORTED_UNIT,
-      `${food.name} does not support ${unit}.`,
-      servingInput,
+  if (unit === measurement.directUnit) {
+    const validationFailure = validateNormalizedAmount(quantity, servingInput);
+    return (
+      validationFailure ??
+      createSuccess(
+        quantity,
+        servingInput,
+        `direct-${measurement.directUnit}`,
+        food.measurementBasis,
+        measurement.normalizedUnit,
+      )
     );
   }
 
-  if (unit === "grams") {
-    const validationFailure = validateNormalizedGrams(quantity, servingInput);
-    return (
-      validationFailure ?? createSuccess(quantity, servingInput, "direct-grams")
+  if (food.measurementBasis !== "mass") {
+    return createFailure(
+      SERVING_ERROR_CODES.MEASUREMENT_BASIS_MISMATCH,
+      `${unit} does not normalize to the volume basis used by ${food.name}.`,
+      servingInput,
     );
   }
 
@@ -210,8 +269,25 @@ export function convertServingToGrams(food, servingInput = {}) {
     );
   }
 
-  const grams = quantity * conversion.gramsPerUnit;
-  const validationFailure = validateNormalizedGrams(grams, servingInput);
+  const normalizedAmount = quantity * conversion.gramsPerUnit;
+  const validationFailure = validateNormalizedAmount(
+    normalizedAmount,
+    servingInput,
+  );
 
-  return validationFailure ?? createSuccess(grams, servingInput, "unit");
+  return (
+    validationFailure ??
+    createSuccess(
+      normalizedAmount,
+      servingInput,
+      "unit",
+      food.measurementBasis,
+      measurement.normalizedUnit,
+    )
+  );
+}
+
+// Retained for callers from the original mass-only engine.
+export function convertServingToGrams(food, servingInput = {}) {
+  return convertServing(food, servingInput);
 }

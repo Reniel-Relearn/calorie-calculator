@@ -1,12 +1,18 @@
 import { NUTRIENT_FIELDS } from "../data/foods.js";
-import { MAX_NORMALIZED_GRAMS } from "./serving-converter.js";
 
 export const CALCULATION_ERROR_CODES = Object.freeze({
   INVALID_FOOD: "INVALID_FOOD",
-  INVALID_NORMALIZED_GRAMS: "INVALID_NORMALIZED_GRAMS",
-  NORMALIZED_AMOUNT_TOO_LARGE: "NORMALIZED_AMOUNT_TOO_LARGE",
-  INVALID_REFERENCE_WEIGHT: "INVALID_REFERENCE_WEIGHT",
+  INVALID_NORMALIZED_AMOUNT: "INVALID_NORMALIZED_AMOUNT",
+  INVALID_REFERENCE_METADATA: "INVALID_REFERENCE_METADATA",
+  REFERENCE_UNIT_MISMATCH: "REFERENCE_UNIT_MISMATCH",
+  MEASUREMENT_BASIS_MISMATCH: "MEASUREMENT_BASIS_MISMATCH",
   INVALID_NUTRITION_DATA: "INVALID_NUTRITION_DATA",
+  NON_FINITE_RESULT: "NON_FINITE_RESULT",
+});
+
+const REFERENCE_UNITS = Object.freeze({
+  mass: "g",
+  volume: "ml",
 });
 
 function createFailure(code, message) {
@@ -17,7 +23,27 @@ function toSafePrecision(value) {
   return Number(value.toPrecision(12));
 }
 
-export function calculateNutrition(food, grams) {
+function resolveNormalizedServing(food, normalizedServing) {
+  if (typeof normalizedServing === "number") {
+    if (food.measurementBasis !== "mass") return null;
+
+    return {
+      normalizedAmount: normalizedServing,
+      normalizedUnit: "g",
+      measurementBasis: "mass",
+    };
+  }
+
+  if (!normalizedServing || typeof normalizedServing !== "object") return null;
+
+  return {
+    normalizedAmount: normalizedServing.normalizedAmount,
+    normalizedUnit: normalizedServing.normalizedUnit,
+    measurementBasis: normalizedServing.measurementBasis,
+  };
+}
+
+export function calculateNutrition(food, normalizedServing) {
   if (!food || typeof food !== "object") {
     return createFailure(
       CALCULATION_ERROR_CODES.INVALID_FOOD,
@@ -25,29 +51,57 @@ export function calculateNutrition(food, grams) {
     );
   }
 
-  if (typeof grams !== "number" || !Number.isFinite(grams) || grams <= 0) {
-    return createFailure(
-      CALCULATION_ERROR_CODES.INVALID_NORMALIZED_GRAMS,
-      "Normalized grams must be a finite number greater than zero.",
-    );
-  }
-
-  if (grams > MAX_NORMALIZED_GRAMS) {
-    return createFailure(
-      CALCULATION_ERROR_CODES.NORMALIZED_AMOUNT_TOO_LARGE,
-      "Normalized grams must not exceed 5,000.",
-    );
-  }
-
-  const referenceWeightGrams = food.referenceWeightGrams;
+  const serving = resolveNormalizedServing(food, normalizedServing);
   if (
-    typeof referenceWeightGrams !== "number" ||
-    !Number.isFinite(referenceWeightGrams) ||
-    referenceWeightGrams <= 0
+    !serving ||
+    typeof serving.normalizedAmount !== "number" ||
+    !Number.isFinite(serving.normalizedAmount) ||
+    serving.normalizedAmount <= 0
   ) {
     return createFailure(
-      CALCULATION_ERROR_CODES.INVALID_REFERENCE_WEIGHT,
-      "The food reference weight is invalid.",
+      CALCULATION_ERROR_CODES.INVALID_NORMALIZED_AMOUNT,
+      "Normalized amount must be a finite number greater than zero.",
+    );
+  }
+
+  const expectedReferenceUnit = REFERENCE_UNITS[food.measurementBasis];
+  if (!expectedReferenceUnit) {
+    return createFailure(
+      CALCULATION_ERROR_CODES.INVALID_REFERENCE_METADATA,
+      "The food measurement basis is invalid.",
+    );
+  }
+
+  if (serving.measurementBasis !== food.measurementBasis) {
+    return createFailure(
+      CALCULATION_ERROR_CODES.MEASUREMENT_BASIS_MISMATCH,
+      "The normalized serving measurement basis does not match the food.",
+    );
+  }
+
+  if (serving.normalizedUnit !== expectedReferenceUnit) {
+    return createFailure(
+      CALCULATION_ERROR_CODES.MEASUREMENT_BASIS_MISMATCH,
+      "The normalized serving unit does not match its measurement basis.",
+    );
+  }
+
+  const referenceAmount = food.referenceAmount;
+  if (
+    typeof referenceAmount !== "number" ||
+    !Number.isFinite(referenceAmount) ||
+    referenceAmount <= 0
+  ) {
+    return createFailure(
+      CALCULATION_ERROR_CODES.INVALID_REFERENCE_METADATA,
+      "The food reference amount is invalid.",
+    );
+  }
+
+  if (food.referenceUnit !== expectedReferenceUnit) {
+    return createFailure(
+      CALCULATION_ERROR_CODES.REFERENCE_UNIT_MISMATCH,
+      "The food reference unit does not match its measurement basis.",
     );
   }
 
@@ -61,11 +115,11 @@ export function calculateNutrition(food, grams) {
     );
   }
 
-  const scaleFactor = grams / referenceWeightGrams;
+  const scaleFactor = serving.normalizedAmount / referenceAmount;
   if (!Number.isFinite(scaleFactor) || scaleFactor <= 0) {
     return createFailure(
-      CALCULATION_ERROR_CODES.INVALID_REFERENCE_WEIGHT,
-      "The food reference weight does not produce a valid scale factor.",
+      CALCULATION_ERROR_CODES.NON_FINITE_RESULT,
+      "The normalized serving does not produce a finite scale factor.",
     );
   }
 
@@ -93,19 +147,34 @@ export function calculateNutrition(food, grams) {
     const scaledValue = referenceValue * scaleFactor;
     if (!Number.isFinite(scaledValue)) {
       return createFailure(
-        CALCULATION_ERROR_CODES.INVALID_NUTRITION_DATA,
-        `The ${nutrient} value could not be scaled safely.`,
+        CALCULATION_ERROR_CODES.NON_FINITE_RESULT,
+        `The ${nutrient} value could not be scaled to a finite result.`,
       );
     }
 
     nutrition[nutrient] = toSafePrecision(scaledValue);
   }
 
-  return {
+  const normalizedAmount = toSafePrecision(serving.normalizedAmount);
+  const result = {
     ok: true,
-    grams: toSafePrecision(grams),
-    referenceWeightGrams,
+    normalizedAmount,
+    normalizedUnit: serving.normalizedUnit,
+    measurementBasis: serving.measurementBasis,
+    referenceAmount,
+    referenceUnit: food.referenceUnit,
     scaleFactor: toSafePrecision(scaleFactor),
     nutrition,
   };
+
+  if (serving.measurementBasis === "mass") {
+    result.grams = normalizedAmount;
+    result.referenceWeightGrams = referenceAmount;
+  }
+
+  if (serving.measurementBasis === "volume") {
+    result.milliliters = normalizedAmount;
+  }
+
+  return result;
 }
