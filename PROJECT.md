@@ -448,26 +448,27 @@ Food identification and serving identification are separate steps.
 
 ## Quantity Validation
 
-Version 1 accepts only positive serving amounts.
+Version 1 accepts only positive, finite serving amounts.
 
 Invalid examples:
 
+- null or undefined when an amount is required
 - 0 g
 - -50 g
 - negative servings
+- NaN
+- Infinity or -Infinity
 - non-numeric quantities where a number is required
 
-For Version 1, normalized mass quantity is limited to:
+Mass-based foods normalize to grams. A normalized mass amount is valid when it is numeric, finite, and greater than zero.
 
-5,000 g per individual calculation
+Volume-based foods normalize to milliliters. A normalized volume amount is valid when it is numeric, finite, and greater than zero.
 
-This is an application safeguard against accidental or extreme input.
+Version 1 does not impose an arbitrary maximum gram or milliliter amount. A compatible supported amount such as 10,000 g or 6,000 mL must not fail solely because it is unusually large.
 
-It is not a nutritional recommendation.
+Food-specific cups, pieces, servings, and descriptors follow the same validation after their sourced conversion produces a normalized amount.
 
-If the normalized amount exceeds the limit, show a clear validation message rather than calculating the result.
-
-The liquid pathway requires its own explicit maximum normalized mL decision before or during Prompt 6.1. This documentation revision does not invent that limit.
+The calculation layer must reject results when arithmetic produces a non-finite value. These checks are software validation and must not be presented as serving-size or health advice.
 
 The result amount control must provide direct numeric entry plus increment and decrement controls. Recommended Version 1 steps are:
 

@@ -8,7 +8,7 @@ Version 1 only.
 
 Do not combine all stages into one giant implementation unless explicitly requested.
 
-Prompts 1–7 record completed historical work. Prompt R1 revises the Version 1 measurement architecture and schedules refinement prompts without changing those completion statuses.
+Prompts 1–7 record completed historical work. Prompts R1 and R2 revise the Version 1 measurement architecture and validation policy without changing those completion statuses.
 
 ---
 
@@ -271,6 +271,18 @@ Extend deterministic parsing and matching for grams, cups, and mL while enforcin
 
 ---
 
+# Prompt R2 — Measurement Validation Normalization
+
+STATUS: DONE
+
+Goal:
+
+Remove the arbitrary 5,000 g nutrition-domain ceiling from active Version 1 requirements. Define valid normalized mass and volume as numeric, finite, greater than zero, unit-compatible, and capable of producing finite calculated output.
+
+Preserve historical Prompt 6 context while superseding its quantity limit through ADR-023.
+
+---
+
 # Prompt 6.1 — Mass and Volume Conversion Engine
 
 STATUS: NOT SENT
@@ -279,7 +291,7 @@ Goal:
 
 Implement separate normalized gram and milliliter paths, reference-amount calculation, food-specific cup conversion, and mass/volume validation.
 
-Explicitly decide the liquid safety limit before completing this prompt.
+Validate positive finite normalized amounts and finite calculated output without imposing an arbitrary gram or milliliter maximum.
 
 ---
 

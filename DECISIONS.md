@@ -296,7 +296,7 @@ is valid because the banana record may define what "medium" represents.
 
 # ADR-016 — Version 1 Quantity Safety Limit
 
-STATUS: SUPERSEDED BY ADR-018
+STATUS: SUPERSEDED BY ADR-023
 
 ## Decision
 
@@ -338,7 +338,7 @@ The client clarified that mass and volume are distinct required product paths. T
 
 # ADR-018 — Mass and Volume Normalize Separately
 
-STATUS: ACCEPTED
+STATUS: ACCEPTED; QUANTITY-LIMIT CLAUSE SUPERSEDED BY ADR-023
 
 ## Decision
 
@@ -351,6 +351,8 @@ reference nutrient × consumed normalized amount / reference amount
 The normalized amount unit must match the record's reference unit.
 
 The existing 5,000 g safeguard applies to normalized mass. An appropriate mL safeguard must be explicitly decided before or during Prompt 6.1 and is not inferred from the mass limit.
+
+The preceding quantity-limit rule is retained as decision history and is superseded by ADR-023. The separate mass and volume normalization decision remains accepted.
 
 ## Consequence
 
@@ -428,3 +430,37 @@ Candidate records for Prompt 4.1 are Whole Milk and Orange Juice. Their inclusio
 ## Consequence
 
 Prompt R1 does not add food records. Dataset enrichment belongs to Prompt 4.1.
+
+---
+
+# ADR-023 — No Arbitrary Quantity Ceiling for Version 1 Nutrition Calculation
+
+STATUS: ACCEPTED
+
+## Decision
+
+Version 1 validates normalized quantities by numeric correctness and measurement compatibility:
+
+- normalized mass in grams must be numeric, finite, and greater than zero
+- normalized volume in milliliters must be numeric, finite, and greater than zero
+- calculation output must remain finite
+
+Version 1 does not impose an arbitrary maximum gram or milliliter amount.
+
+Food-specific cups, pieces, servings, and descriptors follow the same rule after their sourced conversion produces a normalized amount.
+
+## Reason
+
+Nutrition scales proportionally from the food record's authoritative reference amount. The project has no nutrition-data standard, product requirement, or technical constraint that justifies rejecting an otherwise valid amount solely because it exceeds a chosen serving-size ceiling.
+
+Serving sizes are not maximum allowed quantities or health recommendations.
+
+## Consequence
+
+The application still rejects missing required amounts, malformed values, zero, negative values, NaN, Infinity, -Infinity, incompatible measurement bases, and non-finite calculation results.
+
+Any future input limit introduced for UI, abuse prevention, API, database, or business reasons requires an explicit documented justification. It must not be presented as nutrition or health guidance.
+
+## Supersedes
+
+This decision supersedes ADR-016 and the quantity-limit clause in ADR-018 while preserving ADR-018's separate mass and volume normalization model.

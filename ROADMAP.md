@@ -133,17 +133,15 @@ Demo nutrition dataset
 
 ### Quantity Rules
 
-Serving amounts must be greater than zero.
+Serving amounts must be numeric, finite, and greater than zero.
 
 If the user identifies a food without supplying an amount, enter the NEEDS_AMOUNT state.
 
-Version 1 uses a maximum normalized mass quantity of:
+Mass-based foods normalize to grams. Volume-based foods normalize to milliliters. Food-specific cups and optional units normalize through their sourced conversion metadata.
 
-5,000 g per individual calculation
+Version 1 does not impose an arbitrary maximum gram or milliliter amount. A supported input such as 10,000 g or 6,000 mL must not fail solely because of its size when its normalized amount and calculated results remain finite.
 
-Amounts above this limit should produce validation rather than a nutrition result.
-
-An appropriate normalized mL maximum remains an explicit decision for Prompt 6.1. No liquid maximum is assumed by this roadmap revision.
+Zero, negative, missing, malformed, NaN, and infinite amounts remain invalid. Non-finite calculated output must fail safely.
 
 Version 1 primary measurement acceptance requires:
 

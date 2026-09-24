@@ -146,13 +146,7 @@ Expected:
 
 # Invalid Quantity
 
-Test:
-
-0g chicken
-
-Negative quantities
-
-Unreasonably large invalid manually entered values
+Test zero, negative, missing, malformed, NaN, and infinite quantities.
 
 Expected:
 
@@ -291,25 +285,22 @@ Required cross-basis cases:
 - a liquid rejects cups unless its own metadata explicitly supports them
 - a solid without cup metadata rejects cups
 
-# Maximum Quantity Test
+# Quantity Validation Tests
 
-Test:
+Verify:
 
-5001 g grilled chicken breast
+- `0 g` produces INVALID
+- `-10 g` produces INVALID
+- positive grams are valid when compatible with the selected food
+- `10000 g` for a supported solid does not fail solely because of the amount
+- `0 mL` produces INVALID
+- `-250 mL` produces INVALID
+- positive milliliters are valid when compatible with the selected food
+- `6000 mL` for a supported liquid does not fail solely because of the amount
+- missing required amounts, malformed values, NaN, Infinity, and -Infinity produce INVALID
+- a calculation that produces a non-finite result fails safely
 
-Expected:
-
-- no nutrition result is calculated
-- clear validation is shown
-- no NaN, Infinity, or broken state occurs
-
-Version 1 normalized mass quantity limit:
-
-5,000 g
-
-This is an application safeguard, not a dietary recommendation.
-
-The normalized liquid limit is unresolved in Prompt R1. Before Prompt 6.1 is completed, add boundary tests for the explicitly approved mL maximum. Do not reuse 5,000 g as an implicit volume rule.
+Version 1 has no arbitrary maximum gram or milliliter amount. These tests verify numeric and arithmetic safety rather than serving-size or health guidance.
 
 # Rounding
 

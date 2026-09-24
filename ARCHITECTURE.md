@@ -227,21 +227,26 @@ Do not force liquid records through grams or density conversion. A cross-basis c
 
 Pieces, servings, and size descriptors are optional conveniences. Preserve reliable food-specific support, but the primary Version 1 paths are grams, food-specific cups, and mL.
 
+Normalization preserves the measurement basis rather than converting every food to grams. Its conceptual result contains:
+
+```text
+normalizedAmount
+normalizedUnit
+measurementBasis
+```
+
+Examples:
+
+```text
+{ normalizedAmount: 150, normalizedUnit: "g", measurementBasis: "mass" }
+{ normalizedAmount: 250, normalizedUnit: "ml", measurementBasis: "volume" }
+```
+
 ### Quantity Validation
 
-Normalized serving amount must be:
+Normalized serving amount must be numeric, finite, and greater than zero.
 
-greater than 0
-
-For mass-based inputs, it must also be no more than:
-
-5,000 g
-
-for Version 1.
-
-This mass upper bound exists to prevent accidental extreme input.
-
-The normalized mL maximum must be explicitly decided before or during Prompt 6.1. The architecture does not infer a liquid limit from the 5,000 g safeguard.
+Version 1 does not impose an arbitrary maximum for normalized grams or milliliters. Food-specific conversions for cups, pieces, servings, or descriptors follow the same rule after conversion.
 
 The normalization layer should never pass invalid, negative, zero, NaN, infinite, or unit-incompatible amounts to the nutrition calculator.
 
@@ -262,7 +267,12 @@ General formula:
 result nutrient =
 reference nutrient × consumed normalized amount / reference amount
 
-The normalized unit must match the food's reference unit: grams for a mass reference or mL for a volume reference.
+The normalized unit must match the food's reference unit:
+
+- mass requires normalized unit `g` and reference unit `g`
+- volume requires normalized unit `ml` and reference unit `ml`
+
+The calculator must reject incompatible measurement bases and any calculation that produces a non-finite result.
 
 The calculator must not know anything about DOM rendering.
 
