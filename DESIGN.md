@@ -155,6 +155,8 @@ Preparation
 
 The interface should remain compact and understandable on a phone.
 
+Available units must depend on the matched food's measurement basis and source-backed metadata. Solid foods use grams, compatible solids may add cups, and liquid foods use mL. Optional pieces or descriptors may appear when the food record supports them.
+
 ## Version 1 Result Hierarchy
 
 Result priority:
@@ -251,14 +253,20 @@ Use a quieter presentation than the calorie/macronutrient section.
 
 Must be easy to operate by touch.
 
-Possible controls:
+Required control structure:
 
-- numeric input
-- minus/plus controls
-- slider plus numeric value
-- combination of the above
+[-] [numeric amount + unit] [+]
 
-The selected quantity must always be visible.
+The selected quantity and unit must always be visible. The numeric amount must be directly editable; users must not be forced to reach a value only through repeated button presses.
+
+Recommended Version 1 steps:
+
+- grams: 10 g
+- cups: 0.25 cup
+- milliliters: 10 mL
+- pieces, when retained: 1 piece
+
+The decrement control must not produce zero or a negative amount. Direct entry and button adjustments use the same validation rules.
 
 Changing serving amount should recalculate the result.
 
@@ -319,15 +327,14 @@ Amount
 
 Unit
 
-Possible units depend on the food.
+Available units depend on the food's measurement basis and conversion metadata.
 
 Examples:
 
-- grams
-- pieces
-- cups
-- servings
-- food-specific descriptors when available
+- grams for solid foods
+- cups for compatible solid foods with a sourced conversion
+- mL for liquid foods
+- optional pieces or food-specific descriptors when available
 
 Primary action:
 
@@ -391,11 +398,13 @@ Optional Version 1 section.
 
 Examples:
 
-2 fried eggs
+150g grilled chicken breast
 
 1 cup cooked white rice
 
-1 medium banana
+250ml liquid food
+
+Optional piece or descriptor examples such as 2 fried eggs and 1 medium banana may remain when source-backed.
 
 Keep examples compact and tappable.
 

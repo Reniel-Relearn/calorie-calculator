@@ -222,13 +222,21 @@ Calories should remain the strongest numerical element.
 
 Serving adjustment must be touch-friendly.
 
-The quantity must always be visible.
+The serving control shown in the reference is conceptual. The implemented Version 1 control must show the numeric amount and its food-dependent unit.
 
 Example:
 
-- button
-- 150 g
-+ button
+[-] [amount + unit] [+]
+
+The amount must also support direct numeric editing.
+
+Available primary units depend on the matched food:
+
+- grams for solid foods
+- cups for compatible solid foods with a source-backed conversion
+- mL for liquid foods
+
+Recommended adjustment steps are 10 g, 0.25 cup, and 10 mL. Optional piece support may use a step of 1. Decrement must not produce zero or a negative amount.
 
 A slider may be used only when it remains easy to control accurately on a phone.
 

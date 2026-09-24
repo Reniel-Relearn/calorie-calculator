@@ -296,7 +296,7 @@ is valid because the banana record may define what "medium" represents.
 
 # ADR-016 — Version 1 Quantity Safety Limit
 
-STATUS: ACCEPTED
+STATUS: SUPERSEDED BY ADR-018
 
 ## Decision
 
@@ -313,3 +313,118 @@ This prevents accidental extreme quantities from producing meaningless applicati
 This is an application validation limit.
 
 It is not a dietary, nutritional, or medical recommendation.
+
+---
+
+# ADR-017 — Client-Required Version 1 Measurement Model
+
+STATUS: ACCEPTED
+
+## Decision
+
+Version 1 primary measurement support is:
+
+- grams for solid foods
+- cups for compatible solid foods with a source-backed conversion
+- milliliters (mL) for liquid foods
+
+The data model identifies whether a food is solid or liquid and whether its normalized measurement basis is mass or volume.
+
+## Reason
+
+The client clarified that mass and volume are distinct required product paths. Treating every consumed amount as a gram quantity cannot correctly represent volume-based nutrition references.
+
+---
+
+# ADR-018 — Mass and Volume Normalize Separately
+
+STATUS: ACCEPTED
+
+## Decision
+
+Mass-based foods normalize to grams. Volume-based foods normalize to milliliters.
+
+Nutrition scales using:
+
+reference nutrient × consumed normalized amount / reference amount
+
+The normalized amount unit must match the record's reference unit.
+
+The existing 5,000 g safeguard applies to normalized mass. An appropriate mL safeguard must be explicitly decided before or during Prompt 6.1 and is not inferred from the mass limit.
+
+## Consequence
+
+Food records need an explicit measurement basis, reference amount, and reference unit. Liquids are not converted through grams unless a future record supplies a source-backed cross-basis conversion.
+
+---
+
+# ADR-019 — Cups Remain Food-Specific
+
+STATUS: ACCEPTED
+
+## Decision
+
+Cups are supported only for compatible solid foods whose records define a meaningful, sourced gram conversion.
+
+## Reason
+
+A cup is a household volume whose mass depends on the food. A universal cup-to-gram constant would produce incorrect nutrition results.
+
+## Relationship
+
+This decision reaffirms ADR-008 under the revised primary measurement model.
+
+---
+
+# ADR-020 — Pieces and Serving Descriptors Are Optional
+
+STATUS: ACCEPTED
+
+## Decision
+
+Pieces, servings, and descriptors such as small, medium, and large are optional Version 1 conveniences rather than completion requirements.
+
+Reliable existing support remains valid and must stay food-specific. Unsupported piece or descriptor inputs do not cause Version 1 acceptance to fail when the required grams, cups, and mL paths pass.
+
+## Relationship
+
+ADR-015 remains valid for any optional descriptor that is retained.
+
+---
+
+# ADR-021 — Unit-Aware Amount Adjustment
+
+STATUS: ACCEPTED
+
+## Decision
+
+The Version 1 result control provides decrement, direct numeric entry, and increment actions.
+
+Recommended steps are:
+
+- 10 g for grams
+- 0.25 cup for cups
+- 10 mL for milliliters
+- 1 piece when optional piece support is retained
+
+Decrement must not produce zero or a negative quantity. All adjustment methods use the same validation and recalculation path.
+
+## Reason
+
+Users need both fast touch adjustment and precise direct entry on mobile.
+
+---
+
+# ADR-022 — Liquid Demo Coverage
+
+STATUS: ACCEPTED
+
+## Decision
+
+Before Version 1 can be complete under the revised measurement requirements, the demo catalog must contain at least one sourced liquid record and exercise the mL pathway end to end. Two simple liquid records are preferred so the implementation is not hard-coded to one record.
+
+Candidate records for Prompt 4.1 are Whole Milk and Orange Juice. Their inclusion and values require authoritative source verification.
+
+## Consequence
+
+Prompt R1 does not add food records. Dataset enrichment belongs to Prompt 4.1.

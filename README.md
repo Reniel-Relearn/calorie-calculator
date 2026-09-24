@@ -8,7 +8,7 @@ Version 1 — Core Calorie Calculator
 
 ## Current Project Status
 
-Prompt 7 result interaction and the end-to-end local nutrition flow are complete. UX-state refinement, responsive enhancement, and final Version 1 QA remain.
+Prompts 1–7 remain complete. Prompt R1 revised the Version 1 measurement architecture; the planned 4.1–7.1 refinements still need to implement liquid data, mL handling, source-backed cups, and measurement-aware UI behavior. UX-state refinement, responsive enhancement, and final Version 1 QA also remain.
 
 ## Run the current skeleton
 
@@ -49,6 +49,14 @@ food → amount → food match → calculation → nutrition result
 workflow.
 
 Version 1 initially uses a small local demo food dataset.
+
+Primary required measurements are:
+
+- grams for solid foods
+- cups for compatible solid foods with a source-backed conversion
+- milliliters (mL) for liquid foods
+
+Pieces and food-size descriptors are optional conveniences. Existing reliable support may remain, but they are not required for Version 1 completion.
 
 ## Version 1 Technology
 

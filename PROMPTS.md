@@ -8,6 +8,8 @@ Version 1 only.
 
 Do not combine all stages into one giant implementation unless explicitly requested.
 
+Prompts 1–7 record completed historical work. Prompt R1 revises the Version 1 measurement architecture and schedules refinement prompts without changing those completion statuses.
+
 ---
 
 # Prompt 1 — Project Audit
@@ -225,6 +227,69 @@ Implement:
 - serving adjustment
 - recalculation
 - Analyze Another
+
+---
+
+# Prompt R1 — Client Measurement Architecture Revision
+
+STATUS: DONE
+
+Goal:
+
+Revise Version 1 documentation to establish:
+
+- grams for solid foods
+- source-backed cups for compatible solid foods
+- mL for liquid foods
+- separate mass and volume normalization paths
+- optional pieces and size descriptors
+- direct entry and unit-aware increment/decrement controls
+
+This prompt changes documentation and architecture requirements only. It does not implement the revised data, parsing, conversion, calculation, or UI behavior.
+
+---
+
+# Prompt 4.1 — Measurement Dataset Enrichment
+
+STATUS: NOT SENT
+
+Goal:
+
+Revise the food schema for explicit food type, measurement basis, reference amount, and reference unit. Preserve the nine solid records, source and add a rice cup conversion when it can be authoritatively verified, and add sourced liquid demo coverage for the mL path.
+
+Nutrition and conversion values must remain source-backed. Decide and document the liquid records before adding them.
+
+---
+
+# Prompt 5.1 — Measurement-Aware Input Parsing
+
+STATUS: NOT SENT
+
+Goal:
+
+Extend deterministic parsing and matching for grams, cups, and mL while enforcing food-compatible units. Preserve reliable optional piece and descriptor support.
+
+---
+
+# Prompt 6.1 — Mass and Volume Conversion Engine
+
+STATUS: NOT SENT
+
+Goal:
+
+Implement separate normalized gram and milliliter paths, reference-amount calculation, food-specific cup conversion, and mass/volume validation.
+
+Explicitly decide the liquid safety limit before completing this prompt.
+
+---
+
+# Prompt 7.1 — Measurement UI Integration and Regression
+
+STATUS: NOT SENT
+
+Goal:
+
+Integrate food-dependent grams, cups, and mL into amount entry and results. Provide direct editing plus unit-aware decrement/increment steps and run regression coverage for the completed Prompt 7 flow.
 
 ---
 

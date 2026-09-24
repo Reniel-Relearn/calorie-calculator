@@ -54,8 +54,12 @@ Responsible for:
 - result display
 - validation messages
 - loading state
+- direct amount entry
+- unit-aware increment and decrement controls
 
 UI code should not contain the nutrition database itself.
+
+Recommended adjustment steps are 10 g, 0.25 cup, and 10 mL. Optional pieces use a step of 1. The decrement action must not create a zero or negative amount.
 
 ### Input Parser
 
@@ -65,11 +69,13 @@ Examples to support:
 
 150g grilled chicken breast
 
-2 fried eggs
+250g cooked white rice
 
 1 cup cooked white rice
 
-1 medium banana
+250ml whole milk
+
+Optional source-backed inputs may include 2 fried eggs and 1 medium banana.
 
 The parser may identify:
 
@@ -121,21 +127,29 @@ aliases
 
 preparation
 
-referenceWeightGrams
+foodType
+
+measurementBasis
+
+referenceAmount
+
+referenceUnit
 
 nutritionPerReference
 
-supportedServingUnits
+supportedUnits
 
 servingConversions
 
-servingDescriptors
+optionalServingDescriptors
 
 sourceType
 
 sourceName
 
 sourceReference
+
+The schema must represent both mass references such as 100 g and volume references such as 100 mL. Exact property names may be adapted during Prompt 4.1, but the basis and reference unit must be explicit.
 
 ### Example Serving Metadata
 
@@ -153,29 +167,35 @@ grams
 
 cup
 
+A liquid record may define:
+
+mL
+
 A chicken breast record may define:
 
 grams
 
-serving
-
 Conversions are specific to the matched food.
 
-### Unit Conversion
+### Measurement-Aware Normalization
 
-All internal nutrition calculation should use a normalized quantity.
+All internal nutrition calculation uses a normalized amount with an explicit unit.
 
-Preferred normalized unit:
+Mass-based solid foods normalize to:
 
-grams
+g
 
-When possible:
+Volume-based liquid foods normalize to:
+
+mL
+
+Compatible solid foods may accept a food-specific cup measure:
 
 user amount
 
 ↓
 
-food-specific conversion
+food-specific sourced cup conversion
 
 ↓
 
@@ -185,7 +205,7 @@ grams
 
 nutrition calculation
 
-Example:
+Example solid cup path:
 
 1 cup cooked rice
 
@@ -203,21 +223,27 @@ calculate nutrients
 
 Do not create universal cup/piece conversion constants.
 
+Do not force liquid records through grams or density conversion. A cross-basis conversion is valid only if a future food record explicitly defines and sources it.
+
+Pieces, servings, and size descriptors are optional conveniences. Preserve reliable food-specific support, but the primary Version 1 paths are grams, food-specific cups, and mL.
+
 ### Quantity Validation
 
 Normalized serving amount must be:
 
 greater than 0
 
-and no more than:
+For mass-based inputs, it must also be no more than:
 
-5,000 g equivalent
+5,000 g
 
 for Version 1.
 
-This upper bound exists to prevent accidental extreme input.
+This mass upper bound exists to prevent accidental extreme input.
 
-The nutrition calculator should never receive invalid, negative, zero, NaN, or infinite normalized quantities.
+The normalized mL maximum must be explicitly decided before or during Prompt 6.1. The architecture does not infer a liquid limit from the 5,000 g safeguard.
+
+The normalization layer should never pass invalid, negative, zero, NaN, infinite, or unit-incompatible amounts to the nutrition calculator.
 
 ### Nutrition Calculator
 
@@ -227,14 +253,16 @@ food reference nutrition
 
 +
 
-normalized serving amount
+normalized serving amount and unit
 
 and returns scaled nutrition.
 
 General formula:
 
 result nutrient =
-reference nutrient × consumed grams / reference grams
+reference nutrient × consumed normalized amount / reference amount
+
+The normalized unit must match the food's reference unit: grams for a mass reference or mL for a volume reference.
 
 The calculator must not know anything about DOM rendering.
 
@@ -380,6 +408,8 @@ Do not say:
 Verified nutrition database
 
 unless the application is actually connected to one.
+
+The existing nine-food catalog remains the solid-food baseline. Prompt 4.1 must add at least one sourced liquid record to verify the mL pathway; two simple liquid records are preferred to prevent a single-record special case.
 
 ## Future Version 2 Architecture
 

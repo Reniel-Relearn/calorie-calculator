@@ -91,6 +91,14 @@ Production nutrition data will later come from a trusted nutrition data provider
 
 Nutrition calculations must scale according to the consumed quantity.
 
+Version 1 distinguishes measurement bases:
+
+- solid foods normalize mass to grams
+- liquid foods normalize volume to milliliters
+- compatible solid foods may use cups only through a food-specific sourced conversion to grams
+
+Do not force liquid foods through grams unless a specific source-backed cross-basis conversion is explicitly defined.
+
 Conversions such as:
 
 - pieces
@@ -100,6 +108,8 @@ Conversions such as:
 must be defined per food.
 
 Do not assume that one cup, one piece, or one serving has a universal gram weight.
+
+Pieces and size descriptors are optional Version 1 conveniences. Preserve reliable food-specific support, but prioritize grams, compatible cups, and mL.
 
 ## Security
 

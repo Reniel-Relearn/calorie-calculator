@@ -26,11 +26,10 @@ workflow.
 
 - natural food text field
 - quantity support
-- grams
-- pieces
-- cups
-- servings
-- food-specific serving descriptors when defined by the food record
+- grams for solid foods
+- cups for compatible solid foods when a source-backed conversion exists
+- milliliters (mL) for liquid foods
+- optional pieces, servings, and food-specific descriptors when reliably defined
 - optional preparation method
 - optional Advanced Input mode
 
@@ -40,7 +39,7 @@ Examples of food-specific descriptors may include:
 - large egg
 - slice
 
-These descriptors must be defined per food and must not use universal conversions.
+These descriptors remain secondary conveniences. They must be defined per food and must not use universal conversions, but they are not required for Version 1 completion.
 
 ### Food Matching
 
@@ -65,9 +64,12 @@ Display:
 
 ### Quantity
 
-- serving adjustment
+- direct numeric amount entry
+- increment and decrement controls
+- unit-aware steps: 10 g, 0.25 cup, and 10 mL
 - automatic recalculation
 - food-specific unit conversion
+- decrement protection against zero and negative amounts
 
 ### Application States
 
@@ -105,15 +107,20 @@ Suggested starting foods:
 - fried chicken
 - roasted chicken thigh
 - fried egg
+- boiled egg
 - cooked white rice
 - banana
+- saba banana
 - cheeseburger
+
+These nine solid records remain part of Version 1. Prompt 4.1 should add at least one sourced liquid record, with two simple liquids preferred so the mL path is verified across more than one record.
 
 Each food record should include:
 
 - aliases
 - preparation information
-- reference weight
+- food type and measurement basis
+- reference amount and reference unit
 - nutrition values
 - supported serving conversions
 - source metadata
@@ -130,15 +137,25 @@ Serving amounts must be greater than zero.
 
 If the user identifies a food without supplying an amount, enter the NEEDS_AMOUNT state.
 
-Version 1 uses a maximum normalized quantity of:
+Version 1 uses a maximum normalized mass quantity of:
 
-5,000 g equivalent per individual calculation
+5,000 g per individual calculation
 
 Amounts above this limit should produce validation rather than a nutrition result.
 
+An appropriate normalized mL maximum remains an explicit decision for Prompt 6.1. No liquid maximum is assumed by this roadmap revision.
+
+Version 1 primary measurement acceptance requires:
+
+- solids measured in grams
+- compatible solids measured in cups using food-specific sourced conversions
+- liquids measured in mL
+
+Pieces and size descriptors are optional. Existing reliable support may remain without blocking completion when unsupported.
+
 ### Version 1 Completion
 
-Version 1 is complete when the complete core flow works reliably on mobile and desktop using the demo dataset.
+Version 1 is complete when the complete core flow works reliably on mobile and desktop using the demo dataset, including verified mass and volume pathways. Liquid data, mL parsing, volume calculation, and UI integration still require the planned 4.1–7.1 refinement prompts.
 
 ---
 

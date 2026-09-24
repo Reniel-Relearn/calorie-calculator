@@ -37,12 +37,13 @@ Example:
 
 Other examples:
 
-- 2 fried eggs
+- 250g cooked white rice
 - 1 cup cooked white rice
-- 1 medium banana
+- 250ml whole milk
+- 300 mL orange juice
+- 1 medium banana (optional descriptor support)
+- 2 fried eggs (optional piece support)
 - 250g chicken adobo
-- 2 slices of pizza
-- 1 serving spaghetti
 
 ## Input Concepts
 
@@ -69,20 +70,41 @@ Examples:
 
 ### Unit
 
-Initial units:
+Required Version 1 units:
 
-- grams
-- pieces
-- cups
-- servings
+- grams for solid foods
+- cups for compatible solid foods with a source-backed conversion
+- milliliters (mL) for liquid foods
 
-Future units may include:
+Optional convenience units may include:
 
 - ounces
-- milliliters
+- kilograms
+- pieces
+- servings
+- food-specific size descriptors
 - tablespoons
 - teaspoons
 - slices
+
+Pieces and descriptors such as small, medium, and large are secondary capabilities. They are not required for Version 1 completion, but reliable source-backed support may remain.
+
+## Measurement Model
+
+The application distinguishes solid and liquid foods.
+
+Solid foods use a mass measurement basis and normalize supported amounts to grams.
+
+Liquid foods use a volume measurement basis and normalize supported amounts to milliliters.
+
+Food-specific cups for compatible solid foods convert to sourced gram equivalents before nutrition calculation. Cups are not a universal mass conversion.
+
+The data model must be able to represent nutrition references such as:
+
+- 100 g for a mass-based solid
+- 100 mL for a volume-based liquid
+
+Liquid foods must not be forced through a grams conversion unless a future record has an explicit, source-backed density conversion.
 
 ### Preparation
 
@@ -135,7 +157,7 @@ If food is ambiguous, user selects the intended match
 
 ↓
 
-Serving amount is converted to a normalized quantity
+Serving amount is converted to a normalized mass or volume quantity
 
 ↓
 
@@ -275,11 +297,15 @@ Later versions will replace or supplement this dataset with real nutrition data 
 
 Nutrition should scale according to the consumed amount.
 
-Example:
+General calculation:
+
+scaled nutrient = reference nutrient × consumed normalized amount / reference amount
+
+Example solid:
 
 Reference food:
 
-165 kcal per 100 g
+151 kcal per 100 g
 
 Consumed amount:
 
@@ -287,23 +313,31 @@ Consumed amount:
 
 Calculation:
 
-165 × (150 / 100)
+151 × (150 / 100)
 
-Result:
+Example liquid:
 
-247.5 kcal
+Reference food:
 
-Display:
+61 kcal per 100 mL
 
-approximately 248 kcal
+Consumed amount:
+
+250 mL
+
+Calculation:
+
+61 × (250 / 100)
 
 The same ratio should scale applicable nutrients.
 
 ## Unit Conversion Principle
 
-Weight-based amounts such as grams are straightforward.
+Mass-based solids normalize to grams.
 
-Household units are food-specific.
+Volume-based liquids normalize to milliliters.
+
+Household cup units are food-specific and apply only where they are meaningful and source-backed.
 
 For example:
 
@@ -325,16 +359,11 @@ must come from metadata for the matched food.
 
 Never use a universal piece/cup/serving-to-gram conversion.
 
+Do not accept mL for a solid or grams for a liquid unless that specific record explicitly supports the cross-basis conversion.
+
 ## Food-Specific Serving Descriptors
 
-The global Version 1 units are:
-
-- grams
-- pieces
-- cups
-- servings
-
-Individual foods may additionally define food-specific serving descriptors when the descriptor has a known conversion for that food.
+Pieces, servings, and size descriptors are optional Version 1 conveniences. Individual foods may define them when the descriptor has a known conversion for that food.
 
 Examples:
 
@@ -428,15 +457,26 @@ Invalid examples:
 - negative servings
 - non-numeric quantities where a number is required
 
-For Version 1, normalized food quantity is limited to:
+For Version 1, normalized mass quantity is limited to:
 
-5,000 g equivalent per individual calculation
+5,000 g per individual calculation
 
 This is an application safeguard against accidental or extreme input.
 
 It is not a nutritional recommendation.
 
 If the normalized amount exceeds the limit, show a clear validation message rather than calculating the result.
+
+The liquid pathway requires its own explicit maximum normalized mL decision before or during Prompt 6.1. This documentation revision does not invent that limit.
+
+The result amount control must provide direct numeric entry plus increment and decrement controls. Recommended Version 1 steps are:
+
+- grams: 10 g
+- cups: 0.25 cup
+- milliliters: 10 mL
+- pieces, when retained: 1 piece
+
+Decrement must not produce zero or a negative amount. Validation remains authoritative for direct entry and button adjustments.
 
 ## Demo Data Provenance
 
@@ -487,6 +527,8 @@ Avoid displaying unnecessary decimal precision.
 Version 1 proves that the fundamental workflow works:
 
 food + amount → match → calculation → nutrition result
+
+Primary measurement acceptance covers grams for solids, source-backed cups for compatible solids, and mL for liquids. At least one liquid record is required to exercise the volume path; two simple liquid records are preferred so the implementation is not tailored to one food.
 
 It is not intended to contain the full final product.
 
