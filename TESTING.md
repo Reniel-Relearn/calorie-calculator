@@ -440,3 +440,30 @@ After fixing a bug:
 Re-test the workflow that caused the bug plus the core happy path.
 
 Do not consider a visually correct page sufficient proof that the calculation still works.
+
+# Version 1 Freeze Test Status
+
+Version 1 is complete and frozen for the validated demo scope.
+
+Final release verification covered:
+
+- all 11 dataset records and their exact reference-serving nutrition invariants
+- grams, the sourced cooked-rice cup conversion, and milliliter pathways
+- deterministic parsing, food matching, ambiguity, missing amount, invalid input, and not-found handling
+- positive finite validation without an arbitrary gram or milliliter maximum
+- direct serving edits and unit-aware increment and decrement controls
+- all seven application states and recovery paths
+- missing-versus-zero nutrient behavior, calculation determinism, and source-record immutability
+- the maintained viewport matrix, the 1280 × 600 short-height viewport, and effective 100%, 200%, and 400% reflow
+- semantic structure, labels, keyboard behavior, focus, live announcements, invalid-control feedback, reduced motion, contrast, and touch targets
+- local-only runtime requests, console output, and static frontend security boundaries
+
+Browser status at freeze:
+
+- Google Chrome 154: full QA and final release matrix passed
+- Microsoft Edge 153: compatibility and release matrix passed
+- Firefox: UNVERIFIED EXTERNAL ENVIRONMENT
+- Safari: UNVERIFIED EXTERNAL ENVIRONMENT
+- dedicated screen-reader and platform accessibility combinations: UNVERIFIED EXTERNAL ENVIRONMENTS
+
+The unverified environments are not recorded as passed or failed. Version 1 is not claimed to have formal WCAG certification or exhaustive assistive-technology certification.

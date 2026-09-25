@@ -464,3 +464,34 @@ Any future input limit introduced for UI, abuse prevention, API, database, or bu
 ## Supersedes
 
 This decision supersedes ADR-016 and the quantity-limit clause in ADR-018 while preserving ADR-018's separate mass and volume normalization model.
+
+---
+
+# ADR-024 — Version 1 Frozen Scope
+
+STATUS: ACCEPTED
+
+## Decision
+
+Freeze Version 1 as a static, mobile-first HTML/CSS/JavaScript application using an 11-record curated local demo nutrition dataset.
+
+The frozen measurement model is:
+
+- mass-based solids normalize to grams
+- compatible solids may use a food-specific sourced cup conversion to grams
+- volume-based liquids normalize to milliliters
+- pieces and serving descriptors remain optional and food-specific
+
+Nutrition scales from `referenceAmount`, `referenceUnit`, `measurementBasis`, and `nutritionPerReference`. Legacy `referenceWeightGrams` values on existing solid records are compatibility metadata rather than the authoritative reference model. Valid quantities are compatible, numeric, finite, and greater than zero; Version 1 has no arbitrary gram or milliliter ceiling.
+
+## Release Boundary
+
+Version 1 has no backend, production nutrition API, database, authentication, persistent tracking, analytics, or runtime secrets. Production nutrition search and other expanded product capabilities remain Version 2 or later work.
+
+## Validation Status
+
+The release matrix passed in Google Chrome and Microsoft Edge. Firefox, Safari, and dedicated screen-reader and platform accessibility combinations remain unverified external environments rather than passed or failed environments.
+
+## Consequence
+
+Version 1 is complete and frozen for its validated demo scope. Changes beyond release documentation or clearly justified maintenance require a new approved scope and must not silently expand Version 1.

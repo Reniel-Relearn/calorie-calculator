@@ -1,161 +1,132 @@
-# Calorie Calculator
+# CalorieCheck
 
-A mobile-first food calorie and nutrition calculator.
+CalorieCheck is a mobile-first food calorie and nutrition calculator built as a static vanilla HTML, CSS, and JavaScript application.
 
-## Current Version
+## Version 1 Status
 
-Version 1 — Core Calorie Calculator
+**Version 1 is complete and frozen for the validated demo scope.**
 
-## Current Project Status
+The release proves the core workflow:
 
-Prompts 1–11, measurement architecture revisions R1–R2, and refinements 4.1–7.1 are complete. The local demo catalog contains nine solid foods and two liquid foods, plus a source-backed cooked-rice cup conversion. The mobile-first interface supports end-to-end calculation and serving adjustment in grams, food-specific cups, and milliliters while preserving optional pieces and size descriptors. Its seven application states provide focused guidance, accessible feedback, input-preserving recovery, duplicate-submission protection, and clean transitions without stale results. Tablet and desktop layouts progressively enhance the same workflow with bounded content widths, wider forms, adaptive match grids, and reorganized result cards. The final Version 1 audit found the release candidate ready for freeze. Prompt 12 remains responsible for the formal Version 1 freeze and final documentation cleanup.
+food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-## Run the current skeleton
+No Version 2 functionality is included.
 
-Serve this directory with a local static HTTP server and open `index.html` through that server. No build tools or dependencies are required. The core local flow supports food analysis, ambiguity resolution, amount entry, calculated nutrition results, and serving recalculation.
+## Core Functionality
 
-## Product Goal
+- Natural food-and-amount input
+- Optional Advanced Input form
+- Deterministic food matching and preparation-aware aliases
+- Ambiguous-match selection
+- Missing-amount collection
+- Food-specific serving normalization
+- Calories, protein, carbohydrates, fat, fiber, sugar, and sodium
+- Direct serving edits with decrement and increment controls
+- Analyze Another and error-recovery flows
+- Seven explicit states: IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID
+- Mobile-first layouts with tablet and desktop enhancements
 
-Allow a user to enter a food and consumed amount and receive a clear calorie and nutrition result.
+## Measurement Model
 
-Example:
+- Solid foods use grams.
+- Compatible solid foods may use a food-specific sourced cup conversion.
+- Liquid foods use milliliters.
+- Pieces and size descriptors are optional and available only when the matched record contains sourced metadata.
 
-150g grilled chicken breast
+Mass and volume remain separate measurement bases. Version 1 does not convert every food to grams and does not impose an arbitrary gram or milliliter maximum.
 
-Result:
+Serving adjustment steps are 10g, 0.25 cup, 10mL, and 1 for supported discrete servings. Manual amounts are not snapped to these increments.
 
-- calories
-- protein
-- carbohydrates
-- fat
-- fiber
-- sugar
-- sodium
+## Demo Food Catalog
 
-## Primary Device
+Version 1 contains 11 curated local demo records:
 
-Smartphone.
+1. Grilled Chicken Breast
+2. Fried Chicken
+3. Roasted Chicken Thigh
+4. Fried Egg
+5. Boiled Egg
+6. Cooked White Rice
+7. Banana
+8. Saba Banana
+9. Cheeseburger
+10. Whole Milk
+11. Orange Juice
 
-The project follows a mobile-first design strategy.
+Nine records use mass references in grams. Whole Milk and Orange Juice use volume references in milliliters. Cooked White Rice defines the sourced food-specific conversion `1 cup = 158g`.
 
-Tablet and desktop layouts progressively enhance the phone experience.
+Nutrition values are stored locally with provenance from sources including USDA FoodData Central and the DOST-FNRI Philippine Food Composition Table. The interface identifies the catalog as a **Demo nutrition dataset** because it is a curated local subset rather than a live production nutrition service.
 
-## Version 1
+## Run Locally
 
-Version 1 focuses on the core:
+The application requires no build tools, package installation, Docker, backend, database, or API credentials.
 
-food → amount → food match → calculation → nutrition result
+Recommended VS Code workflow:
 
-workflow.
+1. Open the repository folder in VS Code.
+2. Install or enable a local static-server extension such as Live Server if needed.
+3. Use **Go Live** or **Open with Live Server**.
+4. Open the provided `localhost` or `127.0.0.1` address.
 
-Version 1 initially uses a small local demo food dataset.
+You may also use any simple local static HTTP server, for example:
 
-Primary required measurements are:
+```powershell
+python -m http.server 8000
+```
 
-- grams for solid foods
-- cups for compatible solid foods with a source-backed conversion
-- milliliters (mL) for liquid foods
+Then open `http://127.0.0.1:8000/`.
 
-Pieces and food-size descriptors are optional conveniences. Existing reliable support may remain, but they are not required for Version 1 completion.
+Opening `index.html` directly through `file://` is not the recommended test method because the application uses ES modules, whose local-file behavior and security restrictions vary by browser. Use a local HTTP server instead.
 
-## Version 1 Technology
+## Architecture
 
-- HTML
-- custom CSS
-- vanilla JavaScript
-- local demo nutrition data
+- `data/foods.js` — demo food data, serving metadata, and provenance
+- `js/input-parser.js` — deterministic input parsing
+- `js/food-search.js` — food matching
+- `js/serving-converter.js` — measurement validation and normalization
+- `js/nutrition-calculator.js` — proportional nutrient scaling
+- `js/state.js` — application states
+- `js/app.js` — application orchestration
+- `js/ui.js` — DOM rendering and interaction binding
+- `css/` — mobile-first components and progressive responsive enhancements
 
-No frontend framework is required.
+Runtime remains fully static and contains no external scripts, analytics, nutrition requests, credentials, or unsafe raw user HTML rendering.
 
-Bootstrap is not currently used.
+## Validation Status
 
-## Nutrition Data
+Version 1 passed functional, dataset, calculation, state, responsive, reflow, accessibility, console, network, and repository-hygiene checks.
 
-Version 1 nutrition data is for application-development/demo purposes.
+Directly tested:
 
-Production nutrition information will later be retrieved from trusted nutrition data sources.
+- Google Chrome 154 — full QA and release matrix
+- Microsoft Edge 153 — compatibility and release matrix
 
-AI must not invent nutrition values.
+Unverified external environments:
 
-## Documentation
+- Firefox
+- Safari
+- Dedicated screen-reader and platform accessibility combinations
 
-Read:
+These environments are unverified rather than passed or failed. The project does not claim formal WCAG certification or exhaustive assistive-technology certification.
 
-AGENTS.md
-Codex repository instructions.
+## Known Limitations
 
-PROJECT.md
-Complete product definition.
+- The catalog contains only 11 curated demo foods.
+- Matching is deterministic and limited to supported names, aliases, and preparations.
+- Optional piece and descriptor metadata varies by food.
+- Generic `2 fried eggs` is unsupported because the record requires the sourced `large` descriptor for piece-based conversion.
+- No production nutrition API is connected.
+- No accounts, meal tracking, history, goals, barcode scanning, image recognition, restaurant search, backend, database, or AI nutrition generation is included.
 
-ROADMAP.md
-Version 1 through future versions.
+## Project Documentation
 
-DESIGN.md
-Mobile-first UI requirements.
+- `PROJECT.md` — product requirements and frozen Version 1 scope
+- `ROADMAP.md` — completed Version 1 and future versions
+- `DESIGN.md` — mobile-first interface requirements
+- `ARCHITECTURE.md` — technical boundaries and data flow
+- `DECISIONS.md` — architecture and product decision records
+- `TESTING.md` — maintained acceptance criteria and freeze status
+- `PROMPTS.md` — implementation history
+- `assets/reference/approved-responsive-notes.md` — approved responsive interpretation
 
-ARCHITECTURE.md
-Technical structure and separation of responsibilities.
-
-DECISIONS.md
-Accepted architecture/product decisions.
-
-TESTING.md
-Version 1 acceptance and QA requirements.
-
-PROMPTS.md
-Codex implementation sequence and status.
-
-UI_REFERENCE_PROMPT.md
-Prompt used to create the primary mobile design reference.
-
-## Visual References
-
-The repository currently contains approved visual references under:
-
-assets/reference/
-
-Primary mobile reference:
-
-assets/reference/approved-mobile-ui.png
-
-Secondary desktop reference:
-
-assets/reference/approved-desktop-ui.png
-
-Responsive interpretation notes:
-
-assets/reference/approved-responsive-notes.md
-
-The project is mobile-first.
-
-The approved mobile reference is the primary visual source of truth.
-
-The desktop reference is secondary and must not override Version 1 scope or mobile interaction requirements.
-
-The reference images do not display every functional state.
-
-Additional states such as NEEDS_AMOUNT, INVALID, NOT_FOUND, and ANALYZING are defined in the written project specifications.
-
-## Environment Variables
-
-Version 1 currently requires no API credentials.
-
-See:
-
-.env.example
-
-for future configuration placeholders.
-
-## Future Development
-
-Later versions may introduce:
-
-- real nutrition APIs
-- larger food databases
-- natural-language parsing
-- meal building
-- daily nutrition tracking
-- barcode scanning
-- food image recognition
-
-See ROADMAP.md for version boundaries.
+Future work is documented in `ROADMAP.md` and begins with Version 2 only after explicit approval.

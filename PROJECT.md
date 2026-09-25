@@ -1,5 +1,13 @@
 # Calorie Calculator — Product Specification
 
+## Release Status
+
+Version 1 is complete and frozen for the validated demo scope.
+
+The frozen release provides the mobile-first food-to-nutrition workflow using 11 curated local demo records. Required measurement support is grams for solid foods, food-specific sourced cups for compatible solids, and milliliters for liquids. Pieces and serving descriptors remain optional and food-specific.
+
+Future product work belongs to Version 2 or later and is not part of the frozen Version 1 release.
+
 ## Product Vision
 
 Build a simple, trustworthy website where a user can describe a food they ate and specify how much they consumed.

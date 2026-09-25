@@ -10,7 +10,7 @@ Future functionality may influence architecture, but future features must not be
 
 # Version 1 — Core Calorie Calculator
 
-STATUS: CURRENT
+STATUS: COMPLETE / FROZEN
 
 ## Goal
 
@@ -153,7 +153,9 @@ Pieces and size descriptors are optional. Existing reliable support may remain w
 
 ### Version 1 Completion
 
-Version 1 is complete when the complete core flow works reliably on mobile and desktop using the demo dataset, including verified mass and volume pathways. The 4.1–7.1 measurement refinements implemented the required data, parsing, calculation, and UI paths. Final completion status remains part of the Version 1 freeze.
+Version 1 is complete and frozen for the validated demo scope. The full core flow works on mobile, tablet, and desktop using the 11-record local demo dataset, including verified mass, food-specific cup, and volume pathways. Prompts 1–12, R1–R2, and refinements 4.1–7.1 established and verified the release.
+
+Future functionality remains deferred to Version 2 or later.
 
 ---
 
