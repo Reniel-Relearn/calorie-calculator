@@ -12,6 +12,16 @@ const STATE_ELEMENT_IDS = Object.freeze({
   [APP_STATES.INVALID]: "state-invalid",
 });
 
+const STATE_ANNOUNCEMENTS = Object.freeze({
+  [APP_STATES.IDLE]: "Food search ready.",
+  [APP_STATES.ANALYZING]: "Analyzing your food.",
+  [APP_STATES.AMBIGUOUS]: "Food match choices available.",
+  [APP_STATES.NEEDS_AMOUNT]: "Amount required.",
+  [APP_STATES.SUCCESS]: "Nutrition result ready.",
+  [APP_STATES.NOT_FOUND]: "Food not found.",
+  [APP_STATES.INVALID]: "Validation error.",
+});
+
 function getRequiredElement(id) {
   const element = document.getElementById(id);
   if (!element) throw new Error(`Missing required UI element: #${id}`);
@@ -155,6 +165,7 @@ function getAdjustmentPresentation(servingInput) {
 }
 
 export function createUI(handlers) {
+  let announcementToken = 0;
   const states = Object.fromEntries(
     Object.entries(STATE_ELEMENT_IDS).map(([state, id]) => [
       state,
@@ -163,20 +174,26 @@ export function createUI(handlers) {
   );
 
   const elements = {
+    app: getRequiredElement("app"),
+    stateAnnouncement: getRequiredElement("state-announcement"),
     foodSearchForm: getRequiredElement("food-search-form"),
     foodQuery: getRequiredElement("food-query"),
+    foodQueryError: getRequiredElement("food-query-error"),
+    analyzeFoodButton: getRequiredElement("analyze-food-button"),
     advancedDetails: document.querySelector(".advanced-input"),
     advancedForm: getRequiredElement("advanced-input-form"),
     advancedFood: getRequiredElement("advanced-food"),
     advancedAmount: getRequiredElement("advanced-amount"),
     advancedUnit: getRequiredElement("advanced-unit"),
     advancedPreparation: getRequiredElement("advanced-preparation"),
+    advancedAnalyzeButton: getRequiredElement("advanced-analyze-button"),
     matchList: getRequiredElement("match-list"),
     editAmbiguousSearch: getRequiredElement("edit-ambiguous-search"),
     needsAmountForm: getRequiredElement("needs-amount-form"),
     needsAmountFood: getRequiredElement("needs-amount-food"),
     needsAmountValue: getRequiredElement("needs-amount-value"),
     needsAmountUnit: getRequiredElement("needs-amount-unit"),
+    needsAmountError: getRequiredElement("needs-amount-error"),
     resultFoodName: getRequiredElement("result-food-name"),
     resultDescription: getRequiredElement("result-description"),
     resultCalories: getRequiredElement("result-calories"),
@@ -202,9 +219,25 @@ export function createUI(handlers) {
     editInvalidSearch: getRequiredElement("edit-invalid-search"),
   };
 
-  function showState(state, { focus = true } = {}) {
+  function announce(message) {
+    const token = ++announcementToken;
+    elements.stateAnnouncement.textContent = "";
+    queueMicrotask(() => {
+      if (token === announcementToken) {
+        elements.stateAnnouncement.textContent = message;
+      }
+    });
+  }
+
+  function showState(
+    state,
+    { focus = true, announceState = true } = {},
+  ) {
     for (const section of Object.values(states)) section.hidden = true;
     states[state].hidden = false;
+    elements.app.dataset.appState = state;
+
+    if (announceState) announce(STATE_ANNOUNCEMENTS[state]);
 
     if (!focus) return;
 
@@ -241,18 +274,14 @@ export function createUI(handlers) {
       name.textContent = food.name;
 
       const description = document.createElement("span");
-      description.textContent = food.sourceDescription;
-
-      const reference = document.createElement("span");
-      reference.className = "match-card__reference";
-      reference.textContent = "Demo nutrition dataset";
+      description.textContent = titleCase(food.preparation);
 
       const arrow = document.createElement("span");
       arrow.className = "match-card__arrow";
       arrow.setAttribute("aria-hidden", "true");
       arrow.textContent = "›";
 
-      content.append(name, description, reference);
+      content.append(name, description);
       button.append(marker, content, arrow);
       elements.matchList.append(button);
     }
@@ -263,6 +292,7 @@ export function createUI(handlers) {
   function renderNeedsAmount(food) {
     elements.needsAmountFood.textContent = food.name;
     elements.needsAmountValue.value = "";
+    clearAmountError();
     elements.needsAmountUnit.replaceChildren();
 
     for (const choice of getServingChoices(food)) {
@@ -332,11 +362,39 @@ export function createUI(handlers) {
     elements.servingAdjustmentError.hidden = true;
     elements.servingAdjustmentError.textContent = "";
 
-    showState(APP_STATES.SUCCESS, { focus });
+    showState(APP_STATES.SUCCESS, {
+      focus,
+      announceState: focus,
+    });
+    if (!focus) announce("Nutrition result updated.");
   }
 
-  function showInvalid(message) {
+  function showIdleError(message) {
+    elements.foodQueryError.textContent = message;
+    elements.foodQueryError.hidden = false;
+    elements.foodQuery.setAttribute("aria-invalid", "true");
+    showState(APP_STATES.IDLE, { focus: false, announceState: false });
+    elements.foodQuery.focus();
+  }
+
+  function clearAmountError() {
+    elements.needsAmountError.textContent = "";
+    elements.needsAmountError.hidden = true;
+    elements.needsAmountValue.removeAttribute("aria-invalid");
+  }
+
+  function showAmountError(message) {
+    elements.needsAmountError.textContent = message;
+    elements.needsAmountError.hidden = false;
+    elements.needsAmountValue.setAttribute("aria-invalid", "true");
+    elements.needsAmountValue.focus();
+  }
+
+  function showInvalid(message, { recovery = "search" } = {}) {
     elements.invalidMessage.textContent = message;
+    elements.editInvalidSearch.dataset.recovery = recovery;
+    elements.editInvalidSearch.textContent =
+      recovery === "amount" ? "Change Measurement" : "Edit Search";
     showState(APP_STATES.INVALID);
   }
 
@@ -376,12 +434,28 @@ export function createUI(handlers) {
     elements.matchList.replaceChildren();
     elements.needsAmountForm.reset();
     elements.needsAmountUnit.replaceChildren();
+    clearAmountError();
     elements.advancedForm.reset();
     if (elements.advancedDetails) elements.advancedDetails.open = false;
+    elements.foodQueryError.textContent = "";
+    elements.foodQueryError.hidden = true;
+    elements.foodQuery.removeAttribute("aria-invalid");
     elements.invalidMessage.textContent = "Enter a food first.";
+    elements.editInvalidSearch.dataset.recovery = "search";
+    elements.editInvalidSearch.textContent = "Edit Search";
     clearResult();
 
     if (clearSearch) elements.foodSearchForm.reset();
+  }
+
+  function setAnalysisBusy(isBusy) {
+    elements.foodSearchForm.setAttribute("aria-busy", String(isBusy));
+    elements.advancedForm.setAttribute("aria-busy", String(isBusy));
+    elements.analyzeFoodButton.disabled = isBusy;
+    elements.advancedAnalyzeButton.disabled = isBusy;
+    const label = isBusy ? "Analyzing…" : "Analyze Food";
+    elements.analyzeFoodButton.textContent = label;
+    elements.advancedAnalyzeButton.textContent = label;
   }
 
   elements.foodSearchForm.addEventListener("submit", (event) => {
@@ -421,7 +495,9 @@ export function createUI(handlers) {
 
   elements.editAmbiguousSearch.addEventListener("click", handlers.onEditSearch);
   elements.tryAnotherSearch.addEventListener("click", handlers.onEditSearch);
-  elements.editInvalidSearch.addEventListener("click", handlers.onEditSearch);
+  elements.editInvalidSearch.addEventListener("click", () =>
+    handlers.onRecoverInvalid(elements.editInvalidSearch.dataset.recovery),
+  );
   elements.decreaseServing.addEventListener("click", () =>
     handlers.onAdjustServing(-1),
   );
@@ -435,12 +511,16 @@ export function createUI(handlers) {
   elements.changeAmount.addEventListener("click", handlers.onChangeAmount);
 
   return {
+    clearAmountError,
     clearResult,
     focusServingAdjustment: () => elements.servingAdjustment.focus(),
     renderAmbiguous,
     renderNeedsAmount,
     renderSuccess,
     reset,
+    setAnalysisBusy,
+    showAmountError,
+    showIdleError,
     showInvalid,
     showNotFound: () => showState(APP_STATES.NOT_FOUND),
     showServingError,

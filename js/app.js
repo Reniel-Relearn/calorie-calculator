@@ -6,6 +6,17 @@ import { convertServing } from "./serving-converter.js";
 import { APP_STATES } from "./state.js";
 import { createUI } from "./ui.js";
 
+const MEASUREMENT_ERROR_CODES = Object.freeze([
+  "UNSUPPORTED_UNIT",
+  "UNSUPPORTED_DESCRIPTOR",
+  "UNSUPPORTED_SERVING",
+  "MEASUREMENT_BASIS_MISMATCH",
+]);
+
+function isMeasurementError(code) {
+  return MEASUREMENT_ERROR_CODES.includes(code);
+}
+
 // Pure analysis remains available independently of the DOM controller.
 export function analyzeFoodInput(rawInput, catalog = foods) {
   const parsedInput = parseFoodInput(rawInput);
@@ -126,21 +137,14 @@ function getSupportedMeasurementMessage(food) {
 function getUserMessage(failure, food = null) {
   if (!failure) return "We couldn't complete that calculation.";
 
-  if (
-    [
-      "UNSUPPORTED_UNIT",
-      "UNSUPPORTED_DESCRIPTOR",
-      "UNSUPPORTED_SERVING",
-      "MEASUREMENT_BASIS_MISMATCH",
-    ].includes(failure.code)
-  ) {
+  if (isMeasurementError(failure.code)) {
     return getSupportedMeasurementMessage(food);
   }
 
   const messages = {
     MISSING_AMOUNT: "Enter an amount before calculating nutrition.",
-    INVALID_QUANTITY: "Enter a finite amount greater than zero.",
-    INVALID_NORMALIZED_AMOUNT: "Enter a finite amount greater than zero.",
+    INVALID_QUANTITY: "Enter an amount greater than zero.",
+    INVALID_NORMALIZED_AMOUNT: "Enter an amount greater than zero.",
     INVALID_CONVERSION_METADATA:
       "Serving information is unavailable for this food.",
     INVALID_REFERENCE_METADATA:
@@ -204,6 +208,8 @@ export function createApplicationController(ui, catalog = foods) {
     typeof requestAnimationFrame === "function"
       ? requestAnimationFrame
       : (callback) => callback();
+  let analysisInProgress = false;
+  let analysisToken = 0;
 
   function clearSession() {
     session.rawInput = "";
@@ -215,14 +221,30 @@ export function createApplicationController(ui, catalog = foods) {
     session.nutritionCalculation = null;
   }
 
-  function showInvalid(message) {
-    ui.showInvalid(message || "Check your entry and try again.");
+  function showInvalid(message, options = {}) {
+    ui.showInvalid(message || "Check your entry and try again.", options);
   }
 
-  function calculateSelectedFood(servingInput, { focus = true } = {}) {
+  function calculateSelectedFood(
+    servingInput,
+    { focus = true, onValidationError = null } = {},
+  ) {
+    const reportValidationError = (message, failure = null) => {
+      if (onValidationError) {
+        onValidationError(message);
+        return;
+      }
+
+      const recovery =
+        session.selectedFood && isMeasurementError(failure?.code)
+          ? "amount"
+          : "search";
+      showInvalid(message, { recovery });
+    };
+
     const discreteServingError = validateDiscreteServing(servingInput);
     if (discreteServingError) {
-      showInvalid(discreteServingError);
+      reportValidationError(discreteServingError);
       return false;
     }
 
@@ -231,7 +253,10 @@ export function createApplicationController(ui, catalog = foods) {
       servingInput,
     );
     if (!conversion.ok) {
-      showInvalid(getUserMessage(conversion, session.selectedFood));
+      reportValidationError(
+        getUserMessage(conversion, session.selectedFood),
+        conversion,
+      );
       return false;
     }
 
@@ -240,7 +265,10 @@ export function createApplicationController(ui, catalog = foods) {
       conversion,
     );
     if (!nutritionCalculation.ok) {
-      showInvalid(getUserMessage(nutritionCalculation, session.selectedFood));
+      reportValidationError(
+        getUserMessage(nutritionCalculation, session.selectedFood),
+        nutritionCalculation,
+      );
       return false;
     }
 
@@ -278,7 +306,9 @@ export function createApplicationController(ui, catalog = foods) {
     });
   }
 
-  function routeAnalysis(rawInput) {
+  function routeAnalysis(rawInput, token) {
+    if (token !== analysisToken) return;
+
     const analysis = analyzeFoodInput(rawInput, catalog);
     session.rawInput = rawInput;
     session.parsedInput = analysis.parsedInput;
@@ -304,10 +334,31 @@ export function createApplicationController(ui, catalog = foods) {
   }
 
   function analyze(rawInput) {
+    if (analysisInProgress) return;
+
+    if (typeof rawInput !== "string" || rawInput.trim() === "") {
+      clearSession();
+      ui.reset({ clearSearch: false });
+      ui.showIdleError("Enter a food and amount to continue.");
+      return;
+    }
+
     clearSession();
     ui.reset({ clearSearch: false });
+    const token = ++analysisToken;
+    analysisInProgress = true;
+    ui.setAnalysisBusy(true);
     ui.showState(APP_STATES.ANALYZING, { focus: false });
-    schedule(() => routeAnalysis(rawInput));
+    schedule(() => {
+      try {
+        routeAnalysis(rawInput, token);
+      } finally {
+        if (token === analysisToken) {
+          analysisInProgress = false;
+          ui.setAnalysisBusy(false);
+        }
+      }
+    });
   }
 
   function analyzeAdvanced({ food, amount, unit, preparation }) {
@@ -328,10 +379,14 @@ export function createApplicationController(ui, catalog = foods) {
     const quantity = amount.trim() === "" ? null : Number(amount);
     const serving = parseServingChoice(servingChoice);
 
-    calculateSelectedFood({
-      quantity,
-      ...serving,
-    });
+    ui.clearAmountError();
+    calculateSelectedFood(
+      {
+        quantity,
+        ...serving,
+      },
+      { onValidationError: (message) => ui.showAmountError(message) },
+    );
   }
 
   function recalculateServing(quantity) {
@@ -403,12 +458,18 @@ export function createApplicationController(ui, catalog = foods) {
   }
 
   function editSearch() {
+    analysisToken += 1;
+    analysisInProgress = false;
+    ui.setAnalysisBusy(false);
     clearSession();
     ui.reset({ clearSearch: false });
     ui.showState(APP_STATES.IDLE);
   }
 
   function analyzeAnother() {
+    analysisToken += 1;
+    analysisInProgress = false;
+    ui.setAnalysisBusy(false);
     clearSession();
     ui.reset({ clearSearch: true });
     ui.showState(APP_STATES.IDLE);
@@ -419,6 +480,15 @@ export function createApplicationController(ui, catalog = foods) {
     ui.renderNeedsAmount(session.selectedFood);
   }
 
+  function recoverInvalid(recovery) {
+    if (recovery === "amount" && session.selectedFood) {
+      ui.renderNeedsAmount(session.selectedFood);
+      return;
+    }
+
+    editSearch();
+  }
+
   return {
     adjustServing,
     analyze,
@@ -427,10 +497,15 @@ export function createApplicationController(ui, catalog = foods) {
     changeAmount,
     editSearch,
     initialize: () => {
+      ui.setAnalysisBusy(false);
       ui.reset({ clearSearch: true });
-      ui.showState(APP_STATES.IDLE, { focus: false });
+      ui.showState(APP_STATES.IDLE, {
+        focus: false,
+        announceState: false,
+      });
     },
     provideAmount,
+    recoverInvalid,
     selectFood,
     setServingAmount,
   };
@@ -446,6 +521,7 @@ export function initializeApp() {
     onChangeAmount: () => controller.changeAmount(),
     onEditSearch: () => controller.editSearch(),
     onProvideAmount: (serving) => controller.provideAmount(serving),
+    onRecoverInvalid: (recovery) => controller.recoverInvalid(recovery),
     onSelectFood: (foodId) => controller.selectFood(foodId),
     onSetServingAmount: (amount) => controller.setServingAmount(amount),
   });

@@ -324,6 +324,18 @@ Verify each state:
 
 No state should accidentally display content that belongs to another state.
 
+Maintain the Prompt 8 state-flow regression checks:
+
+- empty main submission stays in IDLE with inline feedback and input focus
+- rapid repeated analysis requests produce one transition and one rendered outcome
+- ambiguous selection preserves a parsed amount when one was supplied
+- NEEDS_AMOUNT validation stays inline and preserves the selected food and unit
+- NOT_FOUND and INVALID recovery preserve useful search or food context
+- serving adjustments update SUCCESS without showing the full ANALYZING state
+- invalid serving edits retain the last valid result
+- Analyze Another clears candidates, results, normalized serving, and validation messages
+- every transition leaves exactly one primary state visible
+
 # Mobile UX Tests
 
 Primary testing target.

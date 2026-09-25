@@ -23,6 +23,8 @@
     </header>
 
     <main class="app-shell page-container" id="app">
+      <p class="visually-hidden" id="state-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+
       <section class="app-state app-state--idle" id="state-idle" data-state="IDLE" aria-labelledby="idle-heading">
         <div class="hero">
           <p class="eyebrow">A healthier you</p>
@@ -37,8 +39,9 @@
               <circle cx="11" cy="11" r="7"></circle>
               <path d="m16 16 5 5"></path>
             </svg>
-            <input id="food-query" name="food-query" type="search" inputmode="search" autocomplete="off" placeholder="Try: 150g grilled chicken breast">
+            <input id="food-query" name="food-query" type="search" inputmode="search" autocomplete="off" placeholder="Try: 150g grilled chicken breast" aria-describedby="food-query-error">
           </div>
+          <p class="form-error search-form__error" id="food-query-error" role="alert" hidden></p>
           <button class="button button--primary" id="analyze-food-button" type="submit">Analyze Food</button>
         </form>
 
@@ -75,7 +78,7 @@
                 <option value="raw">Raw</option>
               </select>
             </div>
-            <button class="button button--primary form-field--full" type="submit">Analyze Food</button>
+            <button class="button button--primary form-field--full" id="advanced-analyze-button" type="submit">Analyze Food</button>
           </form>
         </details>
 
@@ -98,7 +101,7 @@
         </section>
       </section>
 
-      <section class="app-state state-panel state-panel--centered" id="state-analyzing" data-state="ANALYZING" aria-labelledby="analyzing-heading" aria-live="polite" hidden>
+      <section class="app-state state-panel state-panel--centered" id="state-analyzing" data-state="ANALYZING" aria-labelledby="analyzing-heading" hidden>
         <span class="spinner" aria-hidden="true"></span>
         <h2 id="analyzing-heading">Analyzing food...</h2>
         <p>Checking the supported demo foods for a match.</p>
@@ -107,7 +110,7 @@
       <section class="app-state" id="state-ambiguous" data-state="AMBIGUOUS" aria-labelledby="ambiguous-heading" hidden>
         <div class="state-heading">
           <h2 id="ambiguous-heading">Which food did you mean?</h2>
-          <p>Choose the closest match for a more accurate estimate.</p>
+          <p>Choose the closest match.</p>
         </div>
         <div class="match-list" id="match-list" aria-label="Possible food matches"></div>
         <button class="button button--text button--back" id="edit-ambiguous-search" type="button">← Edit Search</button>
@@ -116,8 +119,7 @@
       <section class="app-state state-panel" id="state-needs-amount" data-state="NEEDS_AMOUNT" aria-labelledby="needs-amount-heading" hidden>
         <div class="state-heading">
           <p class="state-kicker">Food identified</p>
-          <h2 id="needs-amount-heading">How much did you eat?</h2>
-          <p>Add the amount before calculating nutrition.</p>
+          <h2 id="needs-amount-heading">How much did you have?</h2>
         </div>
         <p class="selected-food" id="needs-amount-food">Selected food</p>
         <form class="amount-form" id="needs-amount-form">
@@ -129,11 +131,12 @@
             <label for="needs-amount-unit">Unit</label>
             <select id="needs-amount-unit" name="unit"></select>
           </div>
+          <p class="form-error form-field--full" id="needs-amount-error" role="alert" hidden></p>
           <button class="button button--primary form-field--full" type="submit">Calculate Nutrition</button>
         </form>
       </section>
 
-      <section class="app-state result" id="state-success" data-state="SUCCESS" aria-labelledby="result-food-name" aria-live="polite" hidden>
+      <section class="app-state result" id="state-success" data-state="SUCCESS" aria-labelledby="result-food-name" hidden>
         <p class="success-banner"><span class="success-banner__icon" aria-hidden="true">✓</span>Food matched</p>
         <header class="result__header">
           <div><h2 id="result-food-name" tabindex="-1">Food name</h2><p id="result-description">Matched food description</p></div>
@@ -177,18 +180,18 @@
         </div>
       </section>
 
-      <section class="app-state state-panel state-panel--centered" id="state-not-found" data-state="NOT_FOUND" aria-labelledby="not-found-heading" aria-live="polite" hidden>
+      <section class="app-state state-panel state-panel--centered" id="state-not-found" data-state="NOT_FOUND" aria-labelledby="not-found-heading" hidden>
         <span class="state-symbol" aria-hidden="true">?</span>
         <h2 id="not-found-heading" tabindex="-1">Food not found</h2>
         <p>We couldn't find that food in the current demo database.</p>
         <p class="state-guidance">Check the spelling or add more detail to your search.</p>
-        <button class="button button--primary" id="try-another-search" type="button">Try Another Search</button>
+        <button class="button button--primary" id="try-another-search" type="button">Edit Search</button>
       </section>
 
-      <section class="app-state state-panel state-panel--centered state-panel--invalid" id="state-invalid" data-state="INVALID" aria-labelledby="invalid-heading" role="alert" hidden>
+      <section class="app-state state-panel state-panel--centered state-panel--invalid" id="state-invalid" data-state="INVALID" aria-labelledby="invalid-heading" hidden>
         <span class="state-symbol" aria-hidden="true">!</span>
         <h2 id="invalid-heading" tabindex="-1">Check your entry</h2>
-        <p id="invalid-message">Enter a food first.</p>
+        <p id="invalid-message" role="alert">Enter a food first.</p>
         <button class="button button--primary" id="edit-invalid-search" type="button">Edit Search</button>
       </section>
     </main>

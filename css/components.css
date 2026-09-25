@@ -2,6 +2,17 @@
   min-width: 0;
 }
 
+.app-state:not([hidden]) {
+  animation: state-reveal 160ms ease-out;
+}
+
+@keyframes state-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+}
+
 .hero {
   padding-block: var(--space-6) var(--space-5);
 }
@@ -109,6 +120,11 @@
 .button--primary:active {
   background: var(--color-primary-dark);
   transform: translateY(1px);
+}
+
+.button:disabled {
+  cursor: wait;
+  opacity: 0.68;
 }
 
 .button--text {
@@ -221,7 +237,7 @@
 
 .example-chip {
   display: inline-flex;
-  min-height: 2.65rem;
+  min-height: 2.75rem;
   align-items: center;
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--color-border-strong);
@@ -528,6 +544,15 @@
   font-weight: 650;
 }
 
+.search-form__error,
+.amount-form .form-error {
+  margin: 0;
+}
+
+input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
 .nutrition-list,
 .result-meta {
   margin-block-end: 0;
@@ -590,6 +615,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .app-state:not([hidden]),
   .spinner {
     animation: none;
   }

@@ -305,9 +305,9 @@ Integrate food-dependent grams, cups, and mL into amount entry and results. Prov
 
 ---
 
-# Prompt 8 — UX States
+# Prompt 8 — UX State Refinement
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 
