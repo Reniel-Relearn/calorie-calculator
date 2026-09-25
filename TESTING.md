@@ -365,6 +365,30 @@ Verify:
 
 Verify intermediate layouts do not become awkward or excessively stretched.
 
+# Maintained Responsive Viewport Matrix
+
+Run the complete state and overflow checks at these exact viewport sizes:
+
+- 320 × 568
+- 360 × 800
+- 390 × 844
+- 430 × 932
+- 768 × 1024
+- 820 × 1180
+- 1024 × 768
+- 1280 × 800
+- 1440 × 900
+- 1920 × 1080
+
+At every viewport, verify:
+
+- IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID each render as the only visible primary state
+- there is no page-level horizontal overflow
+- long match and source text wraps inside its container
+- visible interactive controls remain at least 44 × 44 CSS pixels
+- the primary food input and Analyze Food button remain visible without scrolling on the 1280 × 800 desktop viewport
+- responsive changes are controlled by CSS and do not alter parsing, matching, conversion, calculation, or application-state behavior
+
 # Desktop Tests
 
 Verify:

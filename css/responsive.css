@@ -1,4 +1,8 @@
 @media (min-width: 48rem) {
+  :root {
+    --page-width: 46rem;
+  }
+
   .page-container {
     padding-inline: var(--space-8);
   }
@@ -8,6 +12,7 @@
   }
 
   .app-state--idle,
+  #state-ambiguous,
   .state-panel,
   .result {
     padding: var(--space-8);
@@ -19,5 +24,213 @@
 
   .hero {
     padding-block-start: 0;
+  }
+
+  .hero__description {
+    max-width: 44ch;
+  }
+
+  .search-form {
+    grid-template:
+      "input submit" auto
+      "error error" auto /
+      minmax(0, 1fr) minmax(11rem, 13rem);
+    align-items: start;
+  }
+
+  .input-with-icon {
+    grid-area: input;
+  }
+
+  .search-form__error {
+    grid-area: error;
+  }
+
+  #analyze-food-button {
+    grid-area: submit;
+    min-height: 4.25rem;
+  }
+
+  #state-ambiguous .state-heading {
+    margin-block-start: 0;
+  }
+
+  .match-list {
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  }
+
+  #state-analyzing,
+  #state-needs-amount,
+  #state-not-found,
+  #state-invalid {
+    width: 100%;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .result {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "status status"
+      "summary summary"
+      "macros macros"
+      "serving nutrition"
+      "actions actions";
+    align-items: start;
+  }
+
+  .success-banner {
+    grid-area: status;
+  }
+
+  .result__header {
+    grid-area: summary;
+  }
+
+  .macro-grid {
+    grid-area: macros;
+  }
+
+  .result-card--serving {
+    grid-area: serving;
+  }
+
+  .result-card--nutrition {
+    grid-area: nutrition;
+  }
+
+  .result__actions {
+    grid-area: actions;
+    grid-template-columns: repeat(2, minmax(0, auto));
+    justify-content: end;
+    gap: var(--space-3);
+  }
+
+  .result__actions .button--primary {
+    width: auto;
+    min-width: 13rem;
+  }
+
+  .serving-control {
+    max-width: 24rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --page-width: 76rem;
+  }
+
+  .page-container {
+    padding-inline: var(--space-10);
+  }
+
+  .site-header {
+    padding-block: var(--space-8) var(--space-5);
+  }
+
+  .app-state--idle {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.55fr);
+    grid-template-areas:
+      "hero hero"
+      "search search"
+      "advanced advanced"
+      "helper popular";
+    column-gap: var(--space-8);
+  }
+
+  .hero {
+    grid-area: hero;
+  }
+
+  .hero h1 {
+    max-width: 18ch;
+  }
+
+  .search-form {
+    grid-area: search;
+  }
+
+  .advanced-input {
+    grid-area: advanced;
+  }
+
+  .search-help {
+    grid-area: helper;
+    padding-block-end: 0;
+  }
+
+  .popular-searches {
+    grid-area: popular;
+    min-width: 0;
+  }
+
+  .advanced-input__form {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .advanced-input__form .form-field--full {
+    grid-column: auto;
+  }
+
+  .advanced-input__form .form-field:first-child,
+  .advanced-input__form .form-field:nth-child(4),
+  .advanced-input__form .button {
+    grid-column: span 2;
+  }
+
+  .result {
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(28rem, 1.2fr);
+    grid-template-areas:
+      "status status"
+      "summary macros"
+      "serving nutrition"
+      "actions actions";
+    gap: var(--space-5);
+  }
+
+  .result__header {
+    align-self: center;
+    padding: var(--space-4);
+  }
+
+  .calorie-value {
+    font-size: 3.75rem;
+  }
+
+  .macro-grid {
+    align-self: end;
+    gap: var(--space-3);
+  }
+
+  .nutrient-card {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .nutrition-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .nutrition-list > div,
+  .nutrition-list > div:first-child {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    border: 1px solid #e6ebf2;
+    border-radius: var(--radius-small);
+    background: #fbfcfe;
+  }
+
+  .result__actions {
+    margin-block-start: var(--space-1);
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --page-width: 80rem;
   }
 }

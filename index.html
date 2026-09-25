@@ -151,7 +151,7 @@
           <div class="nutrient-card nutrient-card--carbs"><span>Carbs</span><strong><output id="result-carbs">—</output></strong></div>
           <div class="nutrient-card nutrient-card--fat"><span>Fat</span><strong><output id="result-fat">—</output></strong></div>
         </section>
-        <section class="result-card" aria-labelledby="serving-adjustment-heading">
+        <section class="result-card result-card--serving" aria-labelledby="serving-adjustment-heading">
           <h3 id="serving-adjustment-heading">Adjust serving</h3>
           <label for="serving-adjustment">Amount <span class="serving-context" id="serving-adjustment-context"></span></label>
           <div class="serving-control">
@@ -162,7 +162,7 @@
           </div>
           <p class="form-error" id="serving-adjustment-error" role="status" hidden></p>
         </section>
-        <section class="result-card" aria-labelledby="other-nutrition-heading">
+        <section class="result-card result-card--nutrition" aria-labelledby="other-nutrition-heading">
           <h3 id="other-nutrition-heading">Other Nutrition</h3>
           <dl class="nutrition-list">
             <div><dt>Fiber</dt><dd><output id="result-fiber">—</output></dd></div>

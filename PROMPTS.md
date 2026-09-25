@@ -335,9 +335,9 @@ Verify that application states do not overlap incorrectly.
 
 ---
 
-# Prompt 9 — Tablet and Desktop Enhancement
+# Prompt 9 — Tablet/Desktop Enhancement
 
-STATUS: NOT SENT
+STATUS: DONE
 
 Goal:
 
