@@ -22,7 +22,7 @@
       </div>
     </header>
 
-    <main class="app-shell page-container" id="app">
+    <main class="app-shell page-container" id="app" tabindex="-1">
       <p class="visually-hidden" id="state-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <section class="app-state app-state--idle" id="state-idle" data-state="IDLE" aria-labelledby="idle-heading">
@@ -50,11 +50,11 @@
           <form class="advanced-input__form" id="advanced-input-form">
             <div class="form-field form-field--full">
               <label for="advanced-food">Food</label>
-              <input id="advanced-food" name="food" type="text" autocomplete="off">
+              <input id="advanced-food" name="food" type="text" autocomplete="off" aria-describedby="advanced-input-error">
             </div>
             <div class="form-field">
               <label for="advanced-amount">Amount</label>
-              <input id="advanced-amount" name="amount" type="number" inputmode="decimal" min="0" step="any">
+              <input id="advanced-amount" name="amount" type="number" inputmode="decimal" min="0" step="any" autocomplete="off">
             </div>
             <div class="form-field">
               <label for="advanced-unit">Unit</label>
@@ -78,6 +78,7 @@
                 <option value="raw">Raw</option>
               </select>
             </div>
+            <p class="form-error form-field--full" id="advanced-input-error" role="alert" hidden></p>
             <button class="button button--primary form-field--full" id="advanced-analyze-button" type="submit">Analyze Food</button>
           </form>
         </details>
@@ -125,7 +126,7 @@
         <form class="amount-form" id="needs-amount-form">
           <div class="form-field">
             <label for="needs-amount-value">Amount</label>
-            <input id="needs-amount-value" name="amount" type="number" inputmode="decimal" min="0" step="any">
+            <input id="needs-amount-value" name="amount" type="number" inputmode="decimal" min="0" step="any" autocomplete="off" aria-describedby="needs-amount-error">
           </div>
           <div class="form-field">
             <label for="needs-amount-unit">Unit</label>
@@ -156,7 +157,7 @@
           <label for="serving-adjustment">Amount <span class="serving-context" id="serving-adjustment-context"></span></label>
           <div class="serving-control">
             <button id="decrease-serving" type="button" aria-label="Decrease serving amount">−</button>
-            <input id="serving-adjustment" name="serving-adjustment" type="number" inputmode="decimal" min="0" step="any" placeholder="Amount" aria-describedby="serving-adjustment-unit serving-adjustment-error">
+            <input id="serving-adjustment" name="serving-adjustment" type="number" inputmode="decimal" min="0" step="any" autocomplete="off" placeholder="Amount" aria-describedby="serving-adjustment-unit serving-adjustment-error">
             <span class="serving-control__unit" id="serving-adjustment-unit">unit</span>
             <button id="increase-serving" type="button" aria-label="Increase serving amount">+</button>
           </div>

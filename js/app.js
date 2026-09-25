@@ -362,6 +362,11 @@ export function createApplicationController(ui, catalog = foods) {
   }
 
   function analyzeAdvanced({ food, amount, unit, preparation }) {
+    if (typeof food !== "string" || food.trim() === "") {
+      ui.showAdvancedError("Enter a food first.");
+      return;
+    }
+
     const serving = amount.trim() ? `${amount.trim()} ${unit}` : "";
     const rawInput = [serving, preparation, food.trim()]
       .filter(Boolean)

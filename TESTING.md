@@ -389,6 +389,20 @@ At every viewport, verify:
 - the primary food input and Analyze Food button remain visible without scrolling on the 1280 × 800 desktop viewport
 - responsive changes are controlled by CSS and do not alter parsing, matching, conversion, calculation, or application-state behavior
 
+## Prompt 10 QA Record
+
+Completed on September 25, 2026:
+
+- Chrome 154 received the complete semantic, keyboard, focus, form, state, responsive, reflow, rapid-interaction, console, and network test pass.
+- Edge 153 received a Chromium cross-browser smoke pass covering grams, food-specific cups, milliliters, ambiguity, not-found and invalid outcomes, Enter submission, reduced motion, overflow, console errors, and runtime requests.
+- All seven application states passed at the ten maintained viewports and the 1280 × 600 short-height viewport with one primary state visible and no page-level horizontal overflow.
+- Effective 100%, 200%, and 400% reflow checks passed for IDLE, Advanced Input, AMBIGUOUS, and SUCCESS, including serving controls.
+- Keyboard checks covered forward and reverse tabbing, native details operation, Enter submission, example-chip activation, ambiguity selection, serving controls, and recovery focus.
+- Automated DOM checks found no duplicate IDs, missing label targets, unnamed controls, or accidental implicit-submit buttons.
+- Contrast checks passed for body, muted, placeholder, error, source, primary-action, nutrient, and focus-indicator colors.
+- Dataset validation, large valid quantities, non-finite quantity rejection, missing-versus-zero nutrients, determinism, and source-record immutability passed.
+- Firefox, Safari, dedicated screen-reader software, and their platform-specific accessibility APIs were not available for direct testing. Semantic markup, the Chromium accessibility tree, live-region behavior, and compatibility risks were reviewed instead.
+
 # Desktop Tests
 
 Verify:

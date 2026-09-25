@@ -166,6 +166,7 @@ function getAdjustmentPresentation(servingInput) {
 
 export function createUI(handlers) {
   let announcementToken = 0;
+  let committedServingValue = "";
   const states = Object.fromEntries(
     Object.entries(STATE_ELEMENT_IDS).map(([state, id]) => [
       state,
@@ -183,6 +184,7 @@ export function createUI(handlers) {
     advancedDetails: document.querySelector(".advanced-input"),
     advancedForm: getRequiredElement("advanced-input-form"),
     advancedFood: getRequiredElement("advanced-food"),
+    advancedInputError: getRequiredElement("advanced-input-error"),
     advancedAmount: getRequiredElement("advanced-amount"),
     advancedUnit: getRequiredElement("advanced-unit"),
     advancedPreparation: getRequiredElement("advanced-preparation"),
@@ -354,6 +356,7 @@ export function createUI(handlers) {
     );
     elements.resultMatchDescription.textContent = food.sourceDescription;
     elements.servingAdjustment.value = servingInput.quantity;
+    committedServingValue = String(servingInput.quantity);
     elements.servingAdjustment.step = "any";
     elements.servingAdjustmentContext.textContent = `(${adjustment.context})`;
     elements.servingAdjustmentUnit.textContent = adjustment.unitLabel;
@@ -361,6 +364,7 @@ export function createUI(handlers) {
       servingInput.quantity - adjustment.step <= 0;
     elements.servingAdjustmentError.hidden = true;
     elements.servingAdjustmentError.textContent = "";
+    elements.servingAdjustment.removeAttribute("aria-invalid");
 
     showState(APP_STATES.SUCCESS, {
       focus,
@@ -383,6 +387,19 @@ export function createUI(handlers) {
     elements.needsAmountValue.removeAttribute("aria-invalid");
   }
 
+  function clearAdvancedError() {
+    elements.advancedInputError.textContent = "";
+    elements.advancedInputError.hidden = true;
+    elements.advancedFood.removeAttribute("aria-invalid");
+  }
+
+  function showAdvancedError(message) {
+    elements.advancedInputError.textContent = message;
+    elements.advancedInputError.hidden = false;
+    elements.advancedFood.setAttribute("aria-invalid", "true");
+    elements.advancedFood.focus();
+  }
+
   function showAmountError(message) {
     elements.needsAmountError.textContent = message;
     elements.needsAmountError.hidden = false;
@@ -402,6 +419,7 @@ export function createUI(handlers) {
     elements.servingAdjustmentError.textContent = message;
     elements.servingAdjustmentError.hidden = false;
     elements.servingAdjustment.value = validQuantity;
+    elements.servingAdjustment.setAttribute("aria-invalid", "true");
     elements.servingAdjustment.focus();
   }
 
@@ -424,10 +442,12 @@ export function createUI(handlers) {
       output.textContent = MISSING_VALUE;
     }
     elements.servingAdjustment.value = "";
+    committedServingValue = "";
     elements.servingAdjustmentUnit.textContent = "unit";
     elements.decreaseServing.disabled = false;
     elements.servingAdjustmentError.hidden = true;
     elements.servingAdjustmentError.textContent = "";
+    elements.servingAdjustment.removeAttribute("aria-invalid");
   }
 
   function reset({ clearSearch = true } = {}) {
@@ -436,6 +456,7 @@ export function createUI(handlers) {
     elements.needsAmountUnit.replaceChildren();
     clearAmountError();
     elements.advancedForm.reset();
+    clearAdvancedError();
     if (elements.advancedDetails) elements.advancedDetails.open = false;
     elements.foodQueryError.textContent = "";
     elements.foodQueryError.hidden = true;
@@ -465,6 +486,7 @@ export function createUI(handlers) {
 
   elements.advancedForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    clearAdvancedError();
     handlers.onAdvancedAnalyze({
       food: elements.advancedFood.value,
       amount: elements.advancedAmount.value,
@@ -504,14 +526,24 @@ export function createUI(handlers) {
   elements.increaseServing.addEventListener("click", () =>
     handlers.onAdjustServing(1),
   );
-  elements.servingAdjustment.addEventListener("change", () =>
-    handlers.onSetServingAmount(elements.servingAdjustment.value),
-  );
+  function commitServingAdjustment() {
+    const value = elements.servingAdjustment.value;
+    if (value === committedServingValue) return;
+    handlers.onSetServingAmount(value);
+  }
+
+  elements.servingAdjustment.addEventListener("change", commitServingAdjustment);
+  elements.servingAdjustment.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    commitServingAdjustment();
+  });
   elements.analyzeAnother.addEventListener("click", handlers.onAnalyzeAnother);
   elements.changeAmount.addEventListener("click", handlers.onChangeAmount);
 
   return {
     clearAmountError,
+    clearAdvancedError,
     clearResult,
     focusServingAdjustment: () => elements.servingAdjustment.focus(),
     renderAmbiguous,
@@ -520,6 +552,7 @@ export function createUI(handlers) {
     reset,
     setAnalysisBusy,
     showAmountError,
+    showAdvancedError,
     showIdleError,
     showInvalid,
     showNotFound: () => showState(APP_STATES.NOT_FOUND),

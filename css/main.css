@@ -39,14 +39,12 @@
 }
 
 html {
-  min-width: 20rem;
   background: var(--color-background);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
-  overflow-x: hidden;
   background: linear-gradient(180deg, #f9fbfe 0%, var(--color-background) 100%);
   color: var(--color-text);
   font-size: 1rem;
@@ -142,6 +140,9 @@ h3 {
   z-index: 10;
   inset-block-start: var(--space-3);
   inset-inline-start: var(--space-3);
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
   padding: var(--space-2) var(--space-3);
   transform: translateY(-180%);
   border-radius: var(--radius-small);
@@ -166,6 +167,6 @@ h3 {
 }
 
 :focus-visible {
-  outline: 3px solid rgb(36 111 229 / 38%);
+  outline: 3px solid var(--color-primary-dark);
   outline-offset: 3px;
 }

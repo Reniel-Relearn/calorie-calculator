@@ -84,7 +84,7 @@
 }
 
 .input-with-icon input::placeholder {
-  color: #74809a;
+  color: #65718b;
   opacity: 1;
 }
 
@@ -93,7 +93,7 @@
 .form-field select:focus,
 .serving-control input:focus {
   border-color: var(--color-primary);
-  outline: 3px solid rgb(36 111 229 / 16%);
+  outline: 3px solid var(--color-primary-dark);
   outline-offset: 1px;
 }
 
