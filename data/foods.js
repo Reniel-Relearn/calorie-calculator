@@ -2,9 +2,10 @@
  * Version 1 local demo nutrition data.
  *
  * Nutrients are reported for each food's reference amount and unit. Legacy
- * referenceWeightGrams remains on solid records until Prompt 6.1 migrates the
- * calculator. A numeric zero means the source reports zero; a missing source
- * value must be represented as null.
+ * referenceWeightGrams remains on the original solid records as transitional
+ * compatibility metadata; referenceAmount and referenceUnit are authoritative.
+ * A numeric zero means the source reports zero; a missing source value must be
+ * represented as null.
  */
 
 export const NUTRIENT_FIELDS = Object.freeze([
@@ -554,11 +555,12 @@ export function validateFoodDataset(catalog = foods) {
 
     if (
       isMassRecord &&
+      Object.hasOwn(food, "referenceWeightGrams") &&
       (!isPositiveFiniteNumber(food.referenceWeightGrams) ||
         food.referenceWeightGrams !== food.referenceAmount)
     ) {
       errors.push(
-        `${label}: transitional mass records require a matching referenceWeightGrams.`,
+        `${label}: referenceWeightGrams must match referenceAmount when present.`,
       );
     }
 

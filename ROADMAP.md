@@ -153,7 +153,7 @@ Pieces and size descriptors are optional. Existing reliable support may remain w
 
 ### Version 1 Completion
 
-Version 1 is complete when the complete core flow works reliably on mobile and desktop using the demo dataset, including verified mass and volume pathways. Liquid data is now present; mL parsing, volume calculation, and UI integration still require the planned 5.1–7.1 refinement prompts.
+Version 1 is complete when the complete core flow works reliably on mobile and desktop using the demo dataset, including verified mass and volume pathways. The 4.1–7.1 measurement refinements implemented the required data, parsing, calculation, and UI paths. Final completion status remains part of the Version 1 freeze.
 
 ---
 
