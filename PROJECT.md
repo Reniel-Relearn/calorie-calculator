@@ -6,7 +6,17 @@ Version 1 is complete and frozen for the validated demo scope.
 
 The frozen release provides the mobile-first food-to-nutrition workflow using 11 curated local demo records. Required measurement support is grams for solid foods, food-specific sourced cups for compatible solids, and milliliters for liquids. Pieces and serving descriptors remain optional and food-specific.
 
-Future product work belongs to Version 2 or later and is not part of the frozen Version 1 release.
+Version 2 is now the active development roadmap. It extends the frozen calculator with authentication, private profiles, evidence-based calorie estimates, explicit food logging, daily and weekly tracking, persistence, and deployment. No Version 2 production feature has been implemented during the planning phase.
+
+## Version 2 Planning Documents
+
+- [V2_MASTER_SPEC.md](V2_MASTER_SPEC.md) — authoritative Version 2 product specification
+- [V2_PLAN.md](V2_PLAN.md) — complete executable phase roadmap
+- [V2_STATUS.md](V2_STATUS.md) — concise operational phase control
+- [V2_DECISIONS.md](V2_DECISIONS.md) — Version 2 architecture decisions
+- [V2_RESEARCH.md](V2_RESEARCH.md) — source-backed scientific and platform research
+
+The detailed sections below remain the frozen Version 1 product specification and should not be rewritten as Version 2 requirements.
 
 ## Product Vision
 

@@ -2,7 +2,7 @@
 
 CalorieCheck is a mobile-first food calorie and nutrition calculator built as a static vanilla HTML, CSS, and JavaScript application.
 
-## Version 1 Status
+## Version Status
 
 **Version 1 is complete and frozen for the validated demo scope.**
 
@@ -10,7 +10,15 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-No Version 2 functionality is included.
+**Version 2 planning is complete and Version 2 is now the active roadmap.** No Version 2 production functionality is included yet. The next phase establishes Vite, local provider tooling, and an isolated staging foundation while preserving Version 1 behavior.
+
+Version 2 planning and operational documents:
+
+- [Master specification](V2_MASTER_SPEC.md)
+- [Phase plan](V2_PLAN.md)
+- [Current status](V2_STATUS.md)
+- [Architecture decisions](V2_DECISIONS.md)
+- [Research record](V2_RESEARCH.md)
 
 ## Core Functionality
 

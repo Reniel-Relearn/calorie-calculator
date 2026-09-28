@@ -155,32 +155,58 @@ Pieces and size descriptors are optional. Existing reliable support may remain w
 
 Version 1 is complete and frozen for the validated demo scope. The full core flow works on mobile, tablet, and desktop using the 11-record local demo dataset, including verified mass, food-specific cup, and volume pathways. Prompts 1–12, R1–R2, and refinements 4.1–7.1 established and verified the release.
 
-Future functionality remains deferred to Version 2 or later.
+The frozen release does not include later functionality. The active Version 2 roadmap begins below.
 
 ---
 
-# Version 2 — Production Nutrition Search
+# Version 2 — Personalized Calorie Tracking
 
-STATUS: NOT STARTED
+STATUS: CURRENT / PLANNING
 
 ## Goal
 
-Replace the limited demo food catalog with real nutrition search.
+Extend the frozen Version 1 calculator into a private authenticated application with personalized calorie estimates, explicit consumption logging, and useful daily and weekly tracking.
 
-Potential work:
+Committed Version 2 areas:
+
+- email/password authentication and persistent sessions
+- private profile onboarding and settings
+- evidence-based, versioned calorie target methodology
+- user-selected maintain/lose/gain goal concepts with scientific gates
+- explicit Add to Today's Log action
+- persistent food and nutrition snapshots
+- daily calorie tracking and neutral target comparison
+- Monday-through-Sunday seven-day history
+- edit/delete controls and account deletion
+- database migrations, constraints, and per-user authorization
+- early staging plus late production deployment
+- mobile-first responsive and accessibility QA
+
+The existing 11-food curated catalog remains the Version 2 nutrition source and continues to be labeled **Demo nutrition dataset**. Production-scale nutrition search is deferred.
+
+The authoritative scope and implementation sequence are maintained in:
+
+- `V2_MASTER_SPEC.md`
+- `V2_PLAN.md`
+- `V2_STATUS.md`
+- `V2_DECISIONS.md`
+- `V2_RESEARCH.md`
+
+---
+
+# Future Version — Production Nutrition Search
+
+STATUS: DEFERRED / VERSION UNASSIGNED
+
+The former Version 2 production nutrition search milestone is retained as future work rather than deleted. Its potential scope remains:
 
 - evaluate trusted nutrition providers
-- introduce backend/API layer
-- protect API credentials
-- food search service
-- food normalization
-- real nutrition source information
-- larger food catalog
-- branded foods when available
-- improved serving metadata
-- better matching
+- introduce a protected backend/API layer where required
+- food search and normalization
+- expanded standard, branded, and Philippine food coverage
+- improved serving metadata and matching
 
-The final provider should be selected during Version 2 rather than hard-coded during Version 1 planning.
+This work requires separate approval and must not be introduced during the current Version 2 tracker roadmap.
 
 ---
 
@@ -249,7 +275,7 @@ Potential actions:
 
 # Version 5 — Daily Nutrition Tracking
 
-STATUS: NOT STARTED
+STATUS: HISTORICAL PLAN / SUPERSEDED BY VERSION 2
 
 ## Goal
 
@@ -277,7 +303,7 @@ Potential features:
 - calorie target
 - macro target
 
-User accounts/storage requirements must be designed before this version is implemented.
+This historical milestone is preserved for context. Its account, target, history, and daily tracking scope has been deliberately moved into the active Version 2 roadmap and should not be implemented again as a separate Version 5.
 
 ---
 
@@ -308,7 +334,6 @@ Potential future areas should only be considered after the core product proves u
 
 Examples:
 
-- personalized dashboards
 - cross-device accounts
 - nutrition trends
 - exports

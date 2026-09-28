@@ -26,11 +26,11 @@ Use UI_REFERENCE_PROMPT.md only for understanding how the approved visual refere
 
 ## Current Scope
 
-CURRENT VERSION: Version 1
+CURRENT VERSION: Version 2
 
-Only implement Version 1 unless the user explicitly approves moving to another version.
+Version 1 is complete and frozen. Version 2 is the active roadmap and must extend the frozen Version 1 baseline.
 
-Do not implement Version 2–6 features early.
+Implement only the active Version 2 phase authorized through `V2_STATUS.md` and `V2_PLAN.md`. Do not implement later phases or post-Version-2 features early.
 
 ## Primary User
 
@@ -85,7 +85,7 @@ Version 1 uses a clearly identified local DEMO nutrition dataset.
 
 Never present Version 1 demo nutrition values as live API data or guaranteed medical-grade values.
 
-Production nutrition data will later come from a trusted nutrition data provider.
+Version 2 retains the curated local demo dataset unless the user explicitly approves a nutrition-source scope change. Production nutrition search is deferred to a future version.
 
 ## Serving Rules
 
@@ -147,6 +147,8 @@ There must be no page-level horizontal overflow.
 Touch targets should remain comfortable on phones.
 
 ## Documentation Update Rule
+
+For Version 2 phases, `V2_STATUS.md` is the operational tracker and `V2_PLAN.md` is the executable roadmap. Update the applicable V2 documents after each phase. `PROMPTS.md` remains the Version 1 historical prompt tracker unless the user explicitly changes its role.
 
 After completing a planned implementation prompt:
 
@@ -217,3 +219,33 @@ Prioritize:
 4. maintainability
 5. accessibility
 6. future extensibility
+
+## VERSION 2 AUTONOMOUS PHASE WORKFLOW
+
+Whenever the user says **“Proceed with the next V2 phase.”** or an equivalent instruction:
+
+1. Read `AGENTS.md`.
+2. Read `V2_MASTER_SPEC.md`.
+3. Read `V2_PLAN.md`.
+4. Read `V2_STATUS.md`.
+5. Read `V2_DECISIONS.md`.
+6. Read the relevant entries in `V2_RESEARCH.md`.
+7. Determine the next unfinished phase from `V2_STATUS.md` and `V2_PLAN.md`.
+8. Execute only that phase.
+9. Perform required research when the phase calls for it, using current authoritative sources.
+10. Implement the phase scope.
+11. Run the phase's required tests.
+12. Fix failures within phase scope.
+13. Update the relevant documentation.
+14. Mark the phase `DONE` only after every acceptance criterion passes.
+15. Update `V2_STATUS.md` with the completed phase, next phase, blockers, human actions, verified tests, and next intended action.
+16. Inspect git status and the relevant diff.
+17. Report the phase results and changed files.
+18. Recommend one commit message; do not commit, push, tag, merge, or create a branch unless the user explicitly asks.
+19. Stop for human review. Do not begin the next phase in the same turn unless the active phase explicitly requires it.
+
+The user does not need to provide the detailed phase prompt again. `V2_PLAN.md` is the executable phase specification.
+
+At the end of a successful phase, state the next planned phase and tell the user they can say **“Proceed with the next V2 phase.”** after review and any desired commit/push.
+
+If a mandatory external action is genuinely required, complete all independent work first, then set the phase to `BLOCKED — USER ACTION REQUIRED` in `V2_STATUS.md`. Provide exact beginner-friendly instructions, including where to click, what non-secret value belongs in each field, what must never be exposed, and what successful completion looks like. Never invent provider IDs, keys, URLs, credentials, or deployment values.
