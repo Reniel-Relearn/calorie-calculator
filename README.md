@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 planning is complete and Version 2 is now the active roadmap.** No Version 2 production functionality is included yet. The next phase establishes Vite, local provider tooling, and an isolated staging foundation while preserving Version 1 behavior.
+**Version 2 is the active roadmap.** V2-P1 has established the local Vite, dependency, environment-validation, and Supabase CLI foundation while preserving Version 1 behavior. The phase remains blocked until the isolated Supabase and Vercel staging projects are configured and the HTTPS staging build is verified. No Version 2 product feature is included yet.
 
 Version 2 planning and operational documents:
 
@@ -67,24 +67,53 @@ Nutrition values are stored locally with provenance from sources including USDA 
 
 ## Run Locally
 
-The application requires no build tools, package installation, Docker, backend, database, or API credentials.
-
-Recommended VS Code workflow:
-
-1. Open the repository folder in VS Code.
-2. Install or enable a local static-server extension such as Live Server if needed.
-3. Use **Go Live** or **Open with Live Server**.
-4. Open the provided `localhost` or `127.0.0.1` address.
-
-You may also use any simple local static HTTP server, for example:
+The supported Version 2 development workflow requires Node.js 22.12 or newer and npm. The interface remains vanilla HTML, CSS, and JavaScript; Vite supplies the development server and static production build.
 
 ```powershell
-python -m http.server 8000
+npm install
+npm run dev
 ```
 
-Then open `http://127.0.0.1:8000/`.
+Open the Vite URL shown in the terminal, normally `http://127.0.0.1:5173/` or `http://localhost:5173/`.
 
-Opening `index.html` directly through `file://` is not the recommended test method because the application uses ES modules, whose local-file behavior and security restrictions vary by browser. Use a local HTTP server instead.
+Run the automated regression checks and production build with:
+
+```powershell
+npm run check
+```
+
+Preview the built `dist` artifact with:
+
+```powershell
+npm run preview
+```
+
+On Windows systems where PowerShell blocks `npm.ps1`, use `npm.cmd` in place of `npm`.
+
+### Public environment configuration
+
+Version 1 calculator behavior does not require Supabase configuration. Version 2 provider features will load the client lazily and fail fast when their public configuration is missing or malformed.
+
+1. Copy `.env.example` to `.env.local`.
+2. Keep `VITE_APP_ENV=local` for local development.
+3. Set the local Supabase URL and current `sb_publishable_...` key printed by the local CLI.
+
+Every `VITE_*` value is embedded in the browser bundle. Never put a Supabase secret key, legacy `service_role` key, database password, SMTP credential, or Vercel token in `.env.local`, frontend code, or a Vercel variable whose name starts with `VITE_`.
+
+### Local Supabase stack
+
+Docker Desktop must be installed and its Linux container engine must be running. Then use:
+
+```powershell
+npm run supabase:start
+npm run supabase:status
+```
+
+The version-controlled configuration is in `supabase/config.toml`. It currently initializes provider services only; Version 2 tables and migrations belong to later phases. Stop the local stack with `npm run supabase:stop`.
+
+### Staging
+
+Staging requires a dedicated Supabase project and a dedicated Vercel project with synthetic data only. The actual staging URL and public provider values are intentionally absent from the repository. Current setup blockers and dashboard steps are maintained in `V2_STATUS.md`.
 
 ## Architecture
 
@@ -96,9 +125,13 @@ Opening `index.html` directly through `file://` is not the recommended test meth
 - `js/state.js` — application states
 - `js/app.js` — application orchestration
 - `js/ui.js` — DOM rendering and interaction binding
+- `js/config/environment.js` — validated public runtime configuration
+- `js/services/supabase-client.js` — lazy browser client construction for later V2 features
 - `css/` — mobile-first components and progressive responsive enhancements
+- `supabase/config.toml` — reproducible local Supabase service configuration
+- `tests/` — Node-based environment and frozen V1 regression checks
 
-Runtime remains fully static and contains no external scripts, analytics, nutrition requests, credentials, or unsafe raw user HTML rendering.
+The production output remains a static Vite build. The current calculator still makes no provider request because the Supabase client is not connected to the frozen Version 1 flow.
 
 ## Validation Status
 

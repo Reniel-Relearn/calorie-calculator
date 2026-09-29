@@ -373,6 +373,29 @@ Firebase offers client offline persistence, but adopting sync/conflict behavior 
 
 No offline write queue. Local calculator operations can continue in an already loaded authenticated app, but saving and remote dashboards show clear retryable network errors. Do not present cached totals as current without an explicit stale indication.
 
+## R-018 — V2-P1 provider and toolchain recheck
+
+**Status:** Verified for implementation on 2026-09-29; remote staging setup remains pending.
+
+**Official sources**
+
+- Vite, [Getting Started](https://vite.dev/guide/) and [Vite 8 announcement](https://vite.dev/blog/announcing-vite8).
+- Supabase, [Local development with CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) and [API keys](https://supabase.com/docs/guides/api/api-keys).
+- Vercel, [Vite](https://vercel.com/docs/frameworks/frontend/vite), [Environment Variables](https://vercel.com/docs/environment-variables), and [Hobby plan](https://vercel.com/docs/plans/hobby).
+
+**Finding**
+
+- Vite 8 requires Node.js 20.19+ or 22.12+. CalorieCheck selects Node 22.12+ as its documented development baseline and pins Vite 8.3.1.
+- The Supabase CLI supports project-local npm installation and requires Node.js 20+. CalorieCheck pins CLI 2.118.0 and Supabase JS 2.117.2.
+- Current browser configuration uses a publishable key beginning with `sb_publishable_`. Supabase secret keys are privileged, bypass normal RLS protection, and must remain outside source and browser bundles. Legacy `anon` and `service_role` key terminology is being phased out.
+- Vercel supports Vite's static `dist` output and environment-scoped values. A separate Vercel project remains the chosen staging boundary because a Vercel project's production environment can represent CalorieCheck staging without sharing the later production project.
+- Vercel's Hobby plan is restricted to personal, non-commercial use. The user must confirm that the intended use fits those terms or select an eligible paid plan before staging is approved.
+- Local Supabase requires a Docker-compatible container engine. Repository initialization succeeded, but runtime verification is blocked because Docker Desktop's Linux engine is stopped.
+
+**Implementation consequence**
+
+Use the pinned project-local tools and lockfile, expose only the staging URL and publishable key through `VITE_*`, validate them before constructing the client, and keep staging isolated from production. V2-P1 cannot be marked done until the dedicated Supabase/Vercel staging projects and HTTPS URL are verified.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |

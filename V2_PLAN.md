@@ -42,7 +42,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P1 — Development Platform and Staging Foundation
 
-**Status:** NOT STARTED — NEXT  
+**Status:** BLOCKED — USER ACTION REQUIRED
 **Objective:** Convert the development workflow to Vite, establish reproducible local tooling, configure Supabase/Vercel environment boundaries, and publish a safe staging baseline that preserves V1 behavior.  
 **Why this phase exists:** Auth and persistence need dependency management, environment configuration, redirects, migrations, and an early real HTTPS origin.  
 **Dependencies:** V2-P0; supported Node/npm; human access to Supabase, Vercel, and the Git repository.  
