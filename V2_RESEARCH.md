@@ -375,7 +375,7 @@ No offline write queue. Local calculator operations can continue in an already l
 
 ## R-018 — V2-P1 provider and toolchain recheck
 
-**Status:** Verified for implementation on 2026-09-29; remote staging setup remains pending.
+**Status:** Verified and implemented; local and remote staging checks completed on 2026-09-30.
 
 **Official sources**
 
@@ -390,11 +390,11 @@ No offline write queue. Local calculator operations can continue in an already l
 - Current browser configuration uses a publishable key beginning with `sb_publishable_`. Supabase secret keys are privileged, bypass normal RLS protection, and must remain outside source and browser bundles. Legacy `anon` and `service_role` key terminology is being phased out.
 - Vercel supports Vite's static `dist` output and environment-scoped values. A separate Vercel project remains the chosen staging boundary because a Vercel project's production environment can represent CalorieCheck staging without sharing the later production project.
 - Vercel's Hobby plan is restricted to personal, non-commercial use. The user must confirm that the intended use fits those terms or select an eligible paid plan before staging is approved.
-- Local Supabase requires a Docker-compatible container engine. Repository initialization succeeded, but runtime verification is blocked because Docker Desktop's Linux engine is stopped.
+- Local Supabase requires a Docker-compatible container engine. The stack runs successfully on Docker Desktop after disabling the unused local analytics/log-collector service; database, Auth, REST, Storage, Realtime, Studio, Edge Runtime, and Mailpit remain enabled.
 
 **Implementation consequence**
 
-Use the pinned project-local tools and lockfile, expose only the staging URL and publishable key through `VITE_*`, validate them before constructing the client, and keep staging isolated from production. V2-P1 cannot be marked done until the dedicated Supabase/Vercel staging projects and HTTPS URL are verified.
+Use the pinned project-local tools and lockfile, expose only the staging URL and publishable key through `VITE_*`, validate them before constructing the client, and keep staging isolated from production. The dedicated Supabase/Vercel staging projects and `https://calorie-calculator-gamma-ten.vercel.app/` HTTPS deployment satisfy the V2-P1 environment boundary.
 
 ## Research Gates by Phase
 

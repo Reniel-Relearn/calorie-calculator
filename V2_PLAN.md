@@ -42,7 +42,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P1 — Development Platform and Staging Foundation
 
-**Status:** BLOCKED — USER ACTION REQUIRED
+**Status:** DONE
 **Objective:** Convert the development workflow to Vite, establish reproducible local tooling, configure Supabase/Vercel environment boundaries, and publish a safe staging baseline that preserves V1 behavior.  
 **Why this phase exists:** Auth and persistence need dependency management, environment configuration, redirects, migrations, and an early real HTTPS origin.  
 **Dependencies:** V2-P0; supported Node/npm; human access to Supabase, Vercel, and the Git repository.  
@@ -61,7 +61,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P2 — Authentication and Persistent Session Foundation
 
-**Status:** NOT STARTED  
+**Status:** NOT STARTED — NEXT
 **Objective:** Implement complete email/password authentication and the protected application boundary on local and staging environments.  
 **Why this phase exists:** Every later profile and log operation needs a trustworthy authenticated identity and predictable session lifecycle.  
 **Dependencies:** V2-P1 staging origin and Supabase client configuration.  
@@ -307,8 +307,8 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 ## Phase Order
 
 1. V2-P0 — Master Planning and Architecture — **DONE**
-2. V2-P1 — Development Platform and Staging Foundation — **NEXT**
-3. V2-P2 — Authentication and Persistent Session Foundation
+2. V2-P1 — Development Platform and Staging Foundation — **DONE**
+3. V2-P2 — Authentication and Persistent Session Foundation — **NEXT**
 4. V2-P3 — Database Schema, Migrations, and Row-Level Authorization
 5. V2-P4 — Evidence-Based Energy Target Engine
 6. V2-P5 — Profile Onboarding, Personal Data, and Target History

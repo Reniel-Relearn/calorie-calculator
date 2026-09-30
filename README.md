@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P1 has established the local Vite, dependency, environment-validation, and Supabase CLI foundation while preserving Version 1 behavior. The phase remains blocked until the isolated Supabase and Vercel staging projects are configured and the HTTPS staging build is verified. No Version 2 product feature is included yet.
+**Version 2 is the active roadmap.** V2-P1 completed the local Vite and Supabase development foundation plus an isolated HTTPS staging deployment while preserving Version 1 behavior. V2-P2 authentication is next; no Version 2 product feature is included yet.
 
 Version 2 planning and operational documents:
 
@@ -113,7 +113,7 @@ The version-controlled configuration is in `supabase/config.toml`. It currently 
 
 ### Staging
 
-Staging requires a dedicated Supabase project and a dedicated Vercel project with synthetic data only. The actual staging URL and public provider values are intentionally absent from the repository. Current setup blockers and dashboard steps are maintained in `V2_STATUS.md`.
+Staging uses dedicated Supabase and Vercel projects with synthetic data only. The verified public build is available at `https://calorie-calculator-gamma-ten.vercel.app/`. Provider values remain in Vercel environment settings and are intentionally absent from the repository. Current phase status is maintained in `V2_STATUS.md`.
 
 ## Architecture
 

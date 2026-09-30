@@ -161,7 +161,7 @@ The frozen release does not include later functionality. The active Version 2 ro
 
 # Version 2 — Personalized Calorie Tracking
 
-STATUS: CURRENT / PLANNING
+STATUS: CURRENT / IN PROGRESS
 
 ## Goal
 

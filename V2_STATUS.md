@@ -2,97 +2,60 @@
 
 **Current Version:** V2
 **Current Phase:** V2-P1 — Development Platform and Staging Foundation
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-P2 — Authentication and Persistent Session Foundation, after V2-P1 is completed
+**Current Phase Status:** DONE
+**Next Phase:** V2-P2 — Authentication and Persistent Session Foundation
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
 
 - V2-P0 — Master Planning and Architecture — completed 2026-09-28
-
-## V2-P1 Work Completed Locally
-
-- Added pinned Vite 8.3.1, Supabase JS 2.117.2, and Supabase CLI 2.118.0 dependencies with a reproducible lockfile.
-- Added development, build, preview, test/check, and local Supabase scripts.
-- Kept the semantic HTML, custom CSS, vanilla JavaScript, frozen V1 entry point, and existing module boundaries.
-- Added lazy Supabase client creation and fail-fast validation for app environment, HTTPS remote URLs, and current publishable keys.
-- Documented public browser values and protected privileged values in `.env.example` and `README.md`.
-- Initialized `supabase/config.toml` with Vite-compatible local auth origins and no tables, migrations, or production values.
-- Added environment-validation tests and representative frozen V1 regression tests.
-- Completed clean install, test, build, development-server, production-preview, asset, and bundle-secret checks.
+- V2-P1 — Development Platform and Staging Foundation — completed 2026-09-30
 
 ## Current Blockers
 
-1. Docker Desktop's Linux engine is not running, so the initialized local Supabase stack cannot start. The CLI reported that `dockerDesktopLinuxEngine` was unavailable.
-2. No dedicated staging Supabase project, staging Vercel project, or HTTPS staging URL is available in this workspace.
-3. The applicable Vercel plan must fit the project's intended use. Current Vercel guidance limits Hobby to personal, non-commercial use; commercial use requires an eligible paid plan.
-4. Staging phone/desktop loading and browser console/network checks cannot be completed until the staging URL exists.
+- None for starting V2-P2.
+- V2-P2 will require a human check of real staging email receipt and the configured confirmation/reset redirects before that phase can be marked complete.
 
 ## Required Human Actions
 
-Complete these steps without sending any password, secret key, legacy `service_role` key, SMTP credential, or Vercel token through chat or committing one to Git.
+1. Review the V2-P1 completion diff and verified staging URL.
+2. Commit and push the completion changes if approved. Codex has not committed or pushed them.
+3. Start V2-P2 by saying: **“Proceed with the next V2 phase.”**
 
-### 1. Start the local container engine
+Do not send passwords, database credentials, Supabase secret keys, legacy `service_role` keys, SMTP credentials, session tokens, or Vercel tokens through chat or commit them to Git.
 
-1. Open Docker Desktop.
-2. Wait until Docker Desktop reports that the engine is running and Linux containers are available.
-3. From this repository, run `docker info`. Success means the command displays both client and server information without a daemon connection error.
-4. Do not expose the local Supabase ports to the public internet.
+## V2-P1 Completion Summary
 
-### 2. Create the isolated staging Supabase project
-
-1. Sign in at [Supabase Dashboard](https://supabase.com/dashboard).
-2. Select the intended organization and choose **New project**.
-3. Use a clear staging name such as `caloriecheck-v2-staging`.
-4. Choose a region near the expected test users and a plan appropriate for staging.
-5. Generate a strong database password and store it in a password manager. Do not put it in this repository, a `VITE_*` variable, or chat.
-6. Wait for project provisioning to finish.
-7. Open the project's **Connect** dialog and locate the Project URL and current publishable key beginning with `sb_publishable_`.
-8. Do not copy a secret key or legacy `service_role` key into frontend configuration.
-
-Success means a dedicated non-production project exists and its Project URL and publishable key are available for direct entry into Vercel. Do not add tables or real personal data during this phase.
-
-### 3. Create the isolated staging Vercel project
-
-1. After reviewing this working-tree diff, commit and push the P1 foundation so the remote repository contains `package.json` and the Vite setup. Codex has not committed or pushed anything; explicitly request that action if you want Codex to perform it.
-2. Confirm that the Vercel plan is permitted for the intended personal/non-commercial or commercial use.
-3. Sign in at [Vercel](https://vercel.com/) and choose **Add New → Project**.
-4. Import this Git repository into a dedicated project such as `caloriecheck-v2-staging`. Do not reuse a production project.
-5. Select the **Vite** framework preset.
-6. Use `npm install` as the install command, `npm run build` as the build command, and `dist` as the output directory if Vercel does not detect them automatically.
-7. In **Project Settings → Environment Variables**, add these values to the environment used by this staging project:
-   - `VITE_APP_ENV` = `staging`
-   - `VITE_SUPABASE_URL` = the staging Supabase Project URL
-   - `VITE_SUPABASE_PUBLISHABLE_KEY` = the staging `sb_publishable_...` key
-8. Do not create any `VITE_*` variable containing a database password, Supabase secret key, legacy `service_role` key, SMTP credential, or Vercel token.
-9. Deploy the project and retain the resulting HTTPS URL.
-
-Success means the deployed URL loads the unchanged Version 1 calculator over HTTPS and uses only the dedicated staging public configuration.
-
-### 4. Configure staging auth origins
-
-1. In the staging Supabase project, open **Authentication → URL Configuration**.
-2. Set **Site URL** to the exact HTTPS staging Vercel URL.
-3. Add the exact staging URL to the redirect allow list. Route-specific auth callback paths will be added and tested in V2-P2.
-4. Do not add a production domain during V2-P1.
-
-### 5. Return for phase completion
-
-After the projects and Docker engine are ready, place any local public values directly in ignored `.env.local` if needed and provide only the HTTPS staging URL in the next message. Codex will then start the local stack, verify the staging build on phone and desktop sizes, inspect console/network behavior, confirm staging isolation, and mark V2-P1 `DONE` only if every acceptance criterion passes.
+- The repository uses pinned Vite 8.3.1, Supabase JS 2.117.2, and Supabase CLI 2.118.0 dependencies with a reproducible lockfile.
+- Development, build, preview, test/check, and local Supabase scripts are available without adding a UI framework.
+- Public Supabase configuration is validated before client creation. Remote URLs require HTTPS, and only current `sb_publishable_...` keys are accepted.
+- `.env.local` is ignored and contains only the local environment name, local API URL, and local publishable key.
+- The local Supabase stack is reproducible. Database, Auth, REST, Storage, Realtime, Studio, Edge Runtime, gateway, metadata, and Mailpit services run locally.
+- Local analytics is disabled because its optional Vector log collector could not connect to Docker Desktop's log socket on this Windows host. Version 2 does not require local analytics.
+- Database seeding is disabled until a later database phase introduces an actual seed file.
+- The dedicated free staging Supabase and Vercel projects contain no real personal data. The user confirmed Vercel Hobby is used only for personal, non-commercial testing.
+- Staging public configuration is stored in Vercel rather than the repository, and staging Auth origins are configured in Supabase.
+- The verified staging URL is `https://calorie-calculator-gamma-ten.vercel.app/`.
+- No authentication screen, private table, RLS policy, onboarding, food logging, dashboard, target formula, or production environment was implemented in V2-P1.
 
 ## Last Verified Tests
 
-- `npm ci` — passed; 32 packages installed, 0 audit vulnerabilities reported.
-- `npm run check` after the clean install — passed; 10 Node tests and the Vite production build succeeded.
+- Docker Desktop Linux engine 29.7.2 responded successfully.
+- The local Supabase stack started successfully; all required containers remained running and all containers with defined health checks reported healthy.
+- The local stack stopped cleanly after verification with its development state preserved for V2-P2.
+- Local Auth settings, Studio, and Mailpit returned HTTP 200.
+- The ignored local public configuration passed validation and constructed a Supabase browser client.
+- `npm run check` passed: 10 Node tests and the Vite production build succeeded.
 - Frozen V1 regression coverage passed for mass, food-specific cups, mL, ambiguity, missing amount, incompatible bases, large finite quantities, and Banana/Saba separation.
-- Environment validation passed for valid local/staging values and rejection of missing, insecure, legacy, placeholder, and malformed values.
-- Vite development server returned HTTP 200 for the page and existing source assets.
-- Vite production preview returned HTTP 200 for the page, JavaScript bundle, and CSS bundle.
-- Production `dist` scan found no Supabase secret key, legacy `service_role` value, private key, or embedded publishable value.
-- `git diff --check` passed after the final code and documentation updates; final diff and status were inspected.
-- Local Supabase startup remains unverified because Docker Desktop's Linux engine is stopped.
-- Staging HTTPS, responsive, console, network, and provider-isolation checks remain unverified because no staging URL exists.
+- Missing, insecure, legacy, placeholder, and malformed public configurations were rejected without exposing values.
+- The production `dist` artifact contained no secret, private key, legacy `service_role` value, or embedded publishable value.
+- Tracked source contained no secret-key or private-key pattern.
+- The staging page returned HTTPS 200 with HSTS; its HTML, JavaScript, and CSS artifacts matched the verified local Vite build.
+- Chrome device emulation at 390 × 844 and 1440 × 900 reported equal client and scroll widths, confirming no page-level horizontal overflow.
+- At both staging viewports, `150g grilled chicken breast` reached `SUCCESS`, displayed Grilled Chicken Breast, and returned 227 kcal.
+- Staging browser diagnostics found no actionable failed request, console warning/error, or runtime exception.
+- Mobile and desktop staging screenshots were inspected and preserved the frozen Version 1 hierarchy and responsive layout.
 
 ## Next Intended Action
 
-Finish and verify V2-P1 after the required Docker and staging-provider setup. Do not begin V2-P2 until V2-P1 is marked `DONE`.
+After human review, execute only V2-P2 from [V2_PLAN.md](V2_PLAN.md): implement and verify email/password authentication, confirmation/reset flows, session restoration, protected application boundaries, and the unchanged V1 calculator inside the authenticated shell.

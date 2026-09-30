@@ -1,6 +1,6 @@
 # CalorieCheck Version 2 — Master Product Specification
 
-Status: **ACTIVE — PLANNING COMPLETE; IMPLEMENTATION NOT STARTED**  
+Status: **ACTIVE — IMPLEMENTATION IN PROGRESS**
 Baseline: Version 1 at commit `ee81f9d` is complete and frozen.  
 Operational plan: [V2_PLAN.md](V2_PLAN.md)  
 Current phase: [V2_STATUS.md](V2_STATUS.md)
