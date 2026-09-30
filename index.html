@@ -8,19 +8,156 @@
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/components.css">
+    <link rel="stylesheet" href="./css/auth.css">
     <link rel="stylesheet" href="./css/responsive.css">
-    <script type="module" src="./js/app.js"></script>
+    <script type="module" src="./js/main.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#app">Skip to food search</a>
+    <a class="skip-link" id="skip-auth" href="#auth-main">Skip to account access</a>
+    <a class="skip-link" id="skip-app" href="#app" hidden>Skip to food search</a>
 
     <header class="site-header">
-      <div class="page-container">
+      <div class="page-container site-header__content">
         <p class="brand" aria-label="CalorieCheck">
           <span>Calorie</span><span class="brand__accent">Check</span>
         </p>
+        <div class="account-controls" id="account-controls" hidden>
+          <span class="account-controls__email" id="account-email"></span>
+          <button class="button button--text account-controls__logout" id="logout-button" type="button">Log Out</button>
+        </div>
       </div>
     </header>
+
+    <p class="visually-hidden" id="auth-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+
+    <main class="auth-shell page-container" id="auth-main" tabindex="-1">
+      <section class="auth-card auth-card--centered" id="auth-session-checking" aria-labelledby="session-checking-heading">
+        <span class="spinner" aria-hidden="true"></span>
+        <h1 class="auth-heading" id="session-checking-heading" tabindex="-1">Checking your session...</h1>
+        <p>Preparing your private CalorieCheck space.</p>
+      </section>
+
+      <section class="auth-card" id="auth-signed-out" aria-labelledby="signed-out-heading" hidden>
+        <p class="eyebrow">Private nutrition tracking</p>
+        <h1 class="auth-heading" id="signed-out-heading" tabindex="-1">Your nutrition space starts here.</h1>
+        <p>Log in or create an account to use the food calculator and build your personal history.</p>
+        <div class="auth-actions">
+          <button class="button button--primary" type="button" data-auth-view="login">Log In</button>
+          <button class="button button--secondary" type="button" data-auth-view="signup">Create Account</button>
+        </div>
+      </section>
+
+      <section class="auth-card" id="auth-login" aria-labelledby="login-heading" hidden>
+        <button class="button button--text auth-back" type="button" data-auth-view="signed-out">&larr; Back</button>
+        <h1 class="auth-heading" id="login-heading" tabindex="-1">Welcome back</h1>
+        <p>Log in to continue to your private calculator.</p>
+        <form class="auth-form" id="login-form" novalidate>
+          <div class="form-field">
+            <label for="login-email">Email</label>
+            <input id="login-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="login-error">
+          </div>
+          <div class="form-field">
+            <label for="login-password">Password</label>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" minlength="8" required aria-describedby="login-error">
+          </div>
+          <p class="form-error" id="login-error" role="alert" hidden></p>
+          <button class="button button--primary" id="login-submit" type="submit">Log In</button>
+        </form>
+        <div class="auth-links">
+          <button class="button button--text" type="button" data-auth-view="forgot">Forgot password?</button>
+          <button class="button button--text" type="button" data-auth-view="signup">Create an account</button>
+        </div>
+      </section>
+
+      <section class="auth-card" id="auth-signup" aria-labelledby="signup-heading" hidden>
+        <button class="button button--text auth-back" type="button" data-auth-view="signed-out">&larr; Back</button>
+        <h1 class="auth-heading" id="signup-heading" tabindex="-1">Create your account</h1>
+        <p>Use an email address you can open to confirm your account.</p>
+        <form class="auth-form" id="signup-form" novalidate>
+          <div class="form-field">
+            <label for="signup-email">Email</label>
+            <input id="signup-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="signup-error">
+          </div>
+          <div class="form-field">
+            <label for="signup-password">Password</label>
+            <input id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="signup-password-help signup-error">
+            <p class="field-help" id="signup-password-help">Use at least 8 characters.</p>
+          </div>
+          <div class="form-field">
+            <label for="signup-password-confirmation">Confirm password</label>
+            <input id="signup-password-confirmation" name="passwordConfirmation" type="password" autocomplete="new-password" minlength="8" required aria-describedby="signup-error">
+          </div>
+          <p class="form-error" id="signup-error" role="alert" hidden></p>
+          <button class="button button--primary" id="signup-submit" type="submit">Create Account</button>
+        </form>
+        <button class="button button--text auth-single-link" type="button" data-auth-view="login">Already have an account? Log in</button>
+      </section>
+
+      <section class="auth-card" id="auth-forgot-password" aria-labelledby="forgot-password-heading" hidden>
+        <button class="button button--text auth-back" type="button" data-auth-view="login">&larr; Back to login</button>
+        <h1 class="auth-heading" id="forgot-password-heading" tabindex="-1">Reset your password</h1>
+        <p>Enter your email and we’ll send a reset link if it belongs to an account.</p>
+        <form class="auth-form" id="forgot-password-form" novalidate>
+          <div class="form-field">
+            <label for="forgot-email">Email</label>
+            <input id="forgot-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="forgot-error">
+          </div>
+          <p class="form-error" id="forgot-error" role="alert" hidden></p>
+          <button class="button button--primary" id="forgot-submit" type="submit">Send Reset Link</button>
+        </form>
+      </section>
+
+      <section class="auth-card auth-card--centered" id="auth-verification-pending" aria-labelledby="verification-pending-heading" hidden>
+        <span class="auth-symbol" aria-hidden="true">@</span>
+        <h1 class="auth-heading" id="verification-pending-heading" tabindex="-1">Check your email</h1>
+        <p>We sent an account confirmation link to <strong id="verification-email"></strong>.</p>
+        <p class="state-guidance">Open the link to finish creating your account.</p>
+        <button class="button button--secondary" type="button" data-auth-view="login">Return to Log In</button>
+      </section>
+
+      <section class="auth-card auth-card--centered" id="auth-reset-requested" aria-labelledby="reset-requested-heading" hidden>
+        <span class="auth-symbol" aria-hidden="true">@</span>
+        <h1 class="auth-heading" id="reset-requested-heading" tabindex="-1">Check your email</h1>
+        <p>If an account uses that address, a password reset link is on its way.</p>
+        <p class="state-guidance">Open the link to continue. The link expires for your protection.</p>
+        <button class="button button--secondary" type="button" data-auth-view="login">Return to Log In</button>
+      </section>
+
+      <section class="auth-card" id="auth-update-password" aria-labelledby="update-password-heading" hidden>
+        <h1 class="auth-heading" id="update-password-heading" tabindex="-1">Choose a new password</h1>
+        <p>Your reset link was accepted. Enter a new password for this account.</p>
+        <form class="auth-form" id="update-password-form" novalidate>
+          <div class="form-field">
+            <label for="update-password">New password</label>
+            <input id="update-password" name="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="update-password-help update-error">
+            <p class="field-help" id="update-password-help">Use at least 8 characters.</p>
+          </div>
+          <div class="form-field">
+            <label for="update-password-confirmation">Confirm new password</label>
+            <input id="update-password-confirmation" name="passwordConfirmation" type="password" autocomplete="new-password" minlength="8" required aria-describedby="update-error">
+          </div>
+          <p class="form-error" id="update-error" role="alert" hidden></p>
+          <button class="button button--primary" id="update-password-submit" type="submit">Update Password</button>
+        </form>
+      </section>
+
+      <section class="auth-card auth-card--centered auth-card--error" id="auth-error" aria-labelledby="auth-error-heading" hidden>
+        <span class="state-symbol" aria-hidden="true">!</span>
+        <h1 class="auth-heading" id="auth-error-heading" tabindex="-1">Account access unavailable</h1>
+        <p id="auth-error-message" role="alert">This account request could not be completed.</p>
+        <button class="button button--primary" type="button" data-auth-view="login">Go to Log In</button>
+        <button class="button button--text" type="button" data-auth-view="forgot">Request a New Reset Link</button>
+      </section>
+    </main>
+
+    <div id="protected-app" hidden>
+      <section class="onboarding-notice page-container" id="onboarding-required" aria-labelledby="onboarding-required-heading">
+        <div>
+          <p class="eyebrow">Account setup</p>
+          <h2 id="onboarding-required-heading" tabindex="-1">Your account is ready.</h2>
+          <p>Personal profile setup is coming next. You can use the food calculator now.</p>
+        </div>
+      </section>
 
     <main class="app-shell page-container" id="app" tabindex="-1">
       <p class="visually-hidden" id="state-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
@@ -196,5 +333,6 @@
         <button class="button button--primary" id="edit-invalid-search" type="button">Edit Search</button>
       </section>
     </main>
+    </div>
   </body>
 </html>

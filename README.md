@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P1 completed the local Vite and Supabase development foundation plus an isolated HTTPS staging deployment while preserving Version 1 behavior. V2-P2 authentication is next; no Version 2 product feature is included yet.
+**Version 2 is the active roadmap.** V2-P2 now implements the local email/password authentication foundation and protects the frozen Version 1 calculator behind a validated session. Staging deployment and real email-flow verification remain a required human gate before V2-P2 can be marked complete.
 
 Version 2 planning and operational documents:
 
@@ -33,6 +33,8 @@ Version 2 planning and operational documents:
 - Analyze Another and error-recovery flows
 - Seven explicit states: IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID
 - Mobile-first layouts with tablet and desktop enhancements
+
+Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, and a protected application shell. Profile onboarding and persistent application tables begin in later phases.
 
 ## Measurement Model
 
@@ -92,7 +94,7 @@ On Windows systems where PowerShell blocks `npm.ps1`, use `npm.cmd` in place of 
 
 ### Public environment configuration
 
-Version 1 calculator behavior does not require Supabase configuration. Version 2 provider features will load the client lazily and fail fast when their public configuration is missing or malformed.
+Version 1 calculation logic remains local, while Version 2 account access requires Supabase configuration. The application fails safely when its public provider configuration is missing or malformed.
 
 1. Copy `.env.example` to `.env.local`.
 2. Keep `VITE_APP_ENV=local` for local development.
@@ -109,11 +111,26 @@ npm run supabase:start
 npm run supabase:status
 ```
 
-The version-controlled configuration is in `supabase/config.toml`. It currently initializes provider services only; Version 2 tables and migrations belong to later phases. Stop the local stack with `npm run supabase:stop`.
+The version-controlled configuration is in `supabase/config.toml`. Local email confirmation is required, passwords have an eight-character minimum, and callback URLs are limited to the local Vite origins. Version 2 tables and migrations belong to later phases. Stop the local stack with `npm run supabase:stop`.
+
+Local confirmation and password-reset emails are captured by Mailpit at `http://127.0.0.1:54324/`; they are not delivered to the internet. With the Supabase stack and Vite server running, execute the browser integration flow with:
+
+```powershell
+npm run test:auth:local
+```
+
+The integration script uses an isolated headless Chrome profile and synthetic local accounts. Set `AUTH_TEST_CHROME_PATH` only when Chrome is installed outside the common platform locations.
 
 ### Staging
 
-Staging uses dedicated Supabase and Vercel projects with synthetic data only. The verified public build is available at `https://calorie-calculator-gamma-ten.vercel.app/`. Provider values remain in Vercel environment settings and are intentionally absent from the repository. Current phase status is maintained in `V2_STATUS.md`.
+Staging uses dedicated Supabase and Vercel projects with synthetic data only. The public origin is `https://calorie-calculator-gamma-ten.vercel.app/`. Provider values remain in Vercel environment settings and are intentionally absent from the repository.
+
+For V2-P2, the staging Supabase Auth URL configuration must use that origin as the Site URL and allow these application-generated callbacks:
+
+- `https://calorie-calculator-gamma-ten.vercel.app/?auth=confirm`
+- `https://calorie-calculator-gamma-ten.vercel.app/?auth=recovery`
+
+Remote email confirmation must remain enabled and the remote minimum password length must be at least eight characters. Production SMTP remains deferred; staging may use Supabase's limited test sender. Current completion and human-verification status is maintained in `V2_STATUS.md`.
 
 ## Architecture
 
@@ -125,17 +142,22 @@ Staging uses dedicated Supabase and Vercel projects with synthetic data only. Th
 - `js/state.js` — application states
 - `js/app.js` — application orchestration
 - `js/ui.js` — DOM rendering and interaction binding
+- `js/main.js` — authentication-first browser bootstrap
+- `js/auth/` — auth validation, redirects, service calls, session state, controller, and accessible view binding
 - `js/config/environment.js` — validated public runtime configuration
-- `js/services/supabase-client.js` — lazy browser client construction for later V2 features
+- `js/services/supabase-client.js` — persistent Supabase browser client construction
+- `css/auth.css` — mobile-first account and protected-shell presentation
 - `css/` — mobile-first components and progressive responsive enhancements
 - `supabase/config.toml` — reproducible local Supabase service configuration
-- `tests/` — Node-based environment and frozen V1 regression checks
+- `tests/` — auth unit/integration checks plus environment and frozen V1 regressions
 
-The production output remains a static Vite build. The current calculator still makes no provider request because the Supabase client is not connected to the frozen Version 1 flow.
+The production output remains a static Vite build. Supabase handles account sessions; food parsing and nutrition calculations remain local and use the frozen demo dataset.
 
 ## Validation Status
 
 Version 1 passed functional, dataset, calculation, state, responsive, reflow, accessibility, console, network, and repository-hygiene checks.
+
+V2-P2 locally passes signup validation, confirmation through Mailpit, existing/new signup response parity, valid/invalid login, logout, refresh restoration, expired-session rejection, password request/update, bad-link recovery, mobile overflow, keyboard focus, protected-view boundaries, and frozen V1 regressions. Real staging email delivery and callback verification are still pending.
 
 Directly tested:
 
@@ -157,7 +179,8 @@ These environments are unverified rather than passed or failed. The project does
 - Optional piece and descriptor metadata varies by food.
 - Generic `2 fried eggs` is unsupported because the record requires the sourced `large` descriptor for piece-based conversion.
 - No production nutrition API is connected.
-- No accounts, meal tracking, history, goals, barcode scanning, image recognition, restaurant search, backend, database, or AI nutrition generation is included.
+- Profile onboarding, meal tracking, history, goals, barcode scanning, image recognition, restaurant search, private application tables, and AI nutrition generation are not included yet.
+- Production SMTP is deferred to the production release phase.
 
 ## Project Documentation
 

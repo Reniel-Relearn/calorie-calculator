@@ -535,5 +535,3 @@ export function initializeApp() {
   controller.initialize();
   return controller;
 }
-
-if (typeof document !== "undefined") initializeApp();

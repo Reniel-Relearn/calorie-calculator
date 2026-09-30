@@ -396,6 +396,31 @@ No offline write queue. Local calculator operations can continue in an already l
 
 Use the pinned project-local tools and lockfile, expose only the staging URL and publishable key through `VITE_*`, validate them before constructing the client, and keep staging isolated from production. The dedicated Supabase/Vercel staging projects and `https://calorie-calculator-gamma-ten.vercel.app/` HTTPS deployment satisfy the V2-P1 environment boundary.
 
+## R-019 — V2-P2 authentication behavior recheck
+
+**Status:** Verified and implemented locally on 2026-10-01; remote staging verification pending.
+
+**Official sources**
+
+- Supabase, [Password-based Auth](https://supabase.com/docs/guides/auth/passwords), [Password security](https://supabase.com/docs/guides/auth/password-security), and [Auth error codes](https://supabase.com/docs/guides/auth/debugging/error-codes).
+- Supabase JavaScript, [`signUp`](https://supabase.com/docs/reference/javascript/auth-signup), [`getUser`](https://supabase.com/docs/reference/javascript/auth-getuser), [`onAuthStateChange`](https://supabase.com/docs/reference/javascript/auth-onauthstatechange), and [`signOut`](https://supabase.com/docs/reference/javascript/auth-signout).
+- Supabase, [Redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls) and [User sessions](https://supabase.com/docs/guides/auth/sessions).
+
+**Finding**
+
+- Hosted Supabase projects normally require email confirmation, while local/self-hosted Auth does not by default. Local configuration must enable confirmations to reproduce the deployed flow.
+- With confirmation enabled, signup can intentionally obscure whether an address already exists. Password-reset requests also do not reveal whether an account exists. The application should show the same safe success response in both cases.
+- `onAuthStateChange` reports initial, sign-in, sign-out, password-recovery, token-refresh, and user-update events. Provider calls must not be awaited inside its callback; application work is deferred to avoid a documented client deadlock.
+- A stored browser session can be read locally, but `getUser()` performs a server request and returns an authentic current user. CalorieCheck validates a restored session before showing protected content.
+- JavaScript signout defaults to all sessions. Passing `{ scope: "local" }` ends only the current browser session, which matches the product's Log Out control.
+- Confirmation and recovery `redirectTo` values must match the provider allow list. Wildcards are appropriate for local/preview use, while exact deployed callback URLs are preferred for stable remote origins.
+- Supabase recommends a minimum password length of at least eight characters. Leaked-password protection is a paid-plan feature, so it is unavailable for the confirmed free staging project.
+- Supabase's hosted test sender is best effort and limited. Local Mailpit captures messages without external delivery; a production SMTP sender remains required before production release.
+
+**Implementation consequence**
+
+Require confirmations and an eight-character minimum locally and on staging. Build confirmation/recovery URLs only from the current application origin, sanitize all provider errors, defer auth events, validate restored identities, use current-session logout, and keep the calculator hidden until authentication resolves. Treat real staging email receipt and both remote callbacks as a human acceptance gate.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |

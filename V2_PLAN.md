@@ -61,7 +61,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P2 — Authentication and Persistent Session Foundation
 
-**Status:** NOT STARTED — NEXT
+**Status:** BLOCKED — USER ACTION REQUIRED (local implementation and verification complete; staging deployment/email verification pending)
 **Objective:** Implement complete email/password authentication and the protected application boundary on local and staging environments.  
 **Why this phase exists:** Every later profile and log operation needs a trustworthy authenticated identity and predictable session lifecycle.  
 **Dependencies:** V2-P1 staging origin and Supabase client configuration.  
@@ -308,7 +308,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 1. V2-P0 — Master Planning and Architecture — **DONE**
 2. V2-P1 — Development Platform and Staging Foundation — **DONE**
-3. V2-P2 — Authentication and Persistent Session Foundation — **NEXT**
+3. V2-P2 — Authentication and Persistent Session Foundation — **BLOCKED — USER ACTION REQUIRED**
 4. V2-P3 — Database Schema, Migrations, and Row-Level Authorization
 5. V2-P4 — Evidence-Based Energy Target Engine
 6. V2-P5 — Profile Onboarding, Personal Data, and Target History
