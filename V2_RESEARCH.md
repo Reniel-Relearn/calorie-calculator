@@ -398,7 +398,7 @@ Use the pinned project-local tools and lockfile, expose only the staging URL and
 
 ## R-019 — V2-P2 authentication behavior recheck
 
-**Status:** Verified and implemented locally on 2026-10-01; remote staging verification pending.
+**Status:** Verified locally on 2026-10-01 and on remote staging on 2026-10-02.
 
 **Official sources**
 
@@ -419,7 +419,7 @@ Use the pinned project-local tools and lockfile, expose only the staging URL and
 
 **Implementation consequence**
 
-Require confirmations and an eight-character minimum locally and on staging. Build confirmation/recovery URLs only from the current application origin, sanitize all provider errors, defer auth events, validate restored identities, use current-session logout, and keep the calculator hidden until authentication resolves. Treat real staging email receipt and both remote callbacks as a human acceptance gate.
+Require confirmations and an eight-character minimum locally and on staging. Build confirmation/recovery URLs only from the current application origin, sanitize all provider errors, defer auth events, validate restored identities, use current-session logout, and keep the calculator hidden until authentication resolves. Real staging confirmation and reset emails, callbacks, session restoration, logout, and changed-password login passed human verification. A later repeated reset request reached the expected hosted test-sender rate limit after the required flow had succeeded.
 
 ## Research Gates by Phase
 

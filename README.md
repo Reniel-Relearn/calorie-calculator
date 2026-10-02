@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 now implements the local email/password authentication foundation and protects the frozen Version 1 calculator behind a validated session. Staging deployment and real email-flow verification remain a required human gate before V2-P2 can be marked complete.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation and protects the frozen Version 1 calculator behind a validated session locally and on staging. V2-P3 database schema and row-level authorization is next.
 
 Version 2 planning and operational documents:
 
@@ -130,7 +130,7 @@ For V2-P2, the staging Supabase Auth URL configuration must use that origin as t
 - `https://calorie-calculator-gamma-ten.vercel.app/?auth=confirm`
 - `https://calorie-calculator-gamma-ten.vercel.app/?auth=recovery`
 
-Remote email confirmation must remain enabled and the remote minimum password length must be at least eight characters. Production SMTP remains deferred; staging may use Supabase's limited test sender. Current completion and human-verification status is maintained in `V2_STATUS.md`.
+Remote email confirmation must remain enabled and the remote minimum password length must be at least eight characters. Production SMTP remains deferred; staging uses Supabase's limited test sender. Repeated staging email requests may temporarily return a rate-limit error, so wait for the provider quota to reset before requesting another message. Current phase status is maintained in `V2_STATUS.md`.
 
 ## Architecture
 
@@ -157,7 +157,7 @@ The production output remains a static Vite build. Supabase handles account sess
 
 Version 1 passed functional, dataset, calculation, state, responsive, reflow, accessibility, console, network, and repository-hygiene checks.
 
-V2-P2 locally passes signup validation, confirmation through Mailpit, existing/new signup response parity, valid/invalid login, logout, refresh restoration, expired-session rejection, password request/update, bad-link recovery, mobile overflow, keyboard focus, protected-view boundaries, and frozen V1 regressions. Real staging email delivery and callback verification are still pending.
+V2-P2 passes signup validation, confirmation, existing/new signup response parity, valid/invalid login, logout, refresh restoration, expired-session rejection, password request/update, bad-link recovery, mobile overflow, keyboard focus, protected-view boundaries, and frozen V1 regressions. Local Mailpit and real staging confirmation/reset delivery and callbacks were verified.
 
 Directly tested:
 
