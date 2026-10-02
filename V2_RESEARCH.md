@@ -421,6 +421,28 @@ Use the pinned project-local tools and lockfile, expose only the staging URL and
 
 Require confirmations and an eight-character minimum locally and on staging. Build confirmation/recovery URLs only from the current application origin, sanitize all provider errors, defer auth events, validate restored identities, use current-session logout, and keep the calculator hidden until authentication resolves. Real staging confirmation and reset emails, callbacks, session restoration, logout, and changed-password login passed human verification. A later repeated reset request reached the expected hosted test-sender rate limit after the required flow had succeeded.
 
+## R-020 — V2-P3 migration and row-authorization recheck
+
+**Status:** Verified and implemented locally on 2026-10-03; staging application pending.
+
+**Official sources**
+
+- Supabase, [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security), [Managing user data](https://supabase.com/docs/guides/auth/managing-user-data), and [Testing overview](https://supabase.com/docs/guides/local-development/testing/overview).
+- Supabase, [Database migrations](https://supabase.com/docs/guides/deployment/database-migrations) and [CLI local workflow](https://supabase.com/docs/guides/local-development/cli-workflows).
+- PostgreSQL, [Date/Time Types](https://www.postgresql.org/docs/current/datatype-datetime.html), [`pg_timezone_names`](https://www.postgresql.org/docs/current/view-pg-timezone-names.html), and [Range Types](https://www.postgresql.org/docs/current/rangetypes.html).
+
+**Finding**
+
+- Table grants and RLS policies are separate authorization checks. Exposed private tables should revoke broad client grants, grant only required operations, enable RLS, and use a separate policy for each operation. Updates require a matching select policy and should use both `USING` and `WITH CHECK` when ownership must remain stable.
+- `auth.uid()` identifies the authenticated owner and returns null without an authenticated identity. Owner policies therefore use an explicit non-null check and equality with `user_id`.
+- Application tables should reference the managed `auth.users` primary key and use `ON DELETE CASCADE` where account deletion must remove owned data.
+- Versioned migrations should be recreated locally with `supabase db reset`; remote changes should be reviewed with `supabase db push --dry-run` and applied through migration history rather than dashboard-only edits.
+- PostgreSQL stores `timestamptz` values as unambiguous instants and exposes recognized IANA names through `pg_timezone_names`. Range exclusion constraints are appropriate for rejecting overlapping effective target periods.
+
+**Implementation consequence**
+
+Create migration-owned `profiles`, `calorie_targets`, and `food_logs` tables. Validate canonical values, recognized timezone names, stable log dates, positive serving amounts, nonnegative available nutrients, JSON snapshot shapes, and effective target ranges. Preserve missing nutrients as null. Use a partial unique current-target index plus a GiST exclusion constraint for non-overlapping target history. Give authenticated users table-level select plus only the insert/update columns each workflow needs; limit target updates to `effective_to`, allow food-log deletion, and give `anon` no table access. Test schema, grants, constraints, two-user isolation, anonymous denial, ownership reassignment, and auth-user cascades with pgTAP.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |

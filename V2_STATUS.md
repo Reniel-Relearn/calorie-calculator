@@ -1,9 +1,9 @@
 # CalorieCheck Version 2 — Operational Status
 
 **Current Version:** V2
-**Current Phase:** V2-P2 — Authentication and Persistent Session Foundation
-**Current Phase Status:** DONE
-**Next Phase:** V2-P3 — Database Schema, Migrations, and Row-Level Authorization
+**Current Phase:** V2-P3 — Database Schema, Migrations, and Row-Level Authorization
+**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
+**Next Phase:** V2-P4 — Evidence-Based Energy Target Engine (not authorized until V2-P3 is verified on staging and marked DONE)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -14,42 +14,66 @@
 
 ## Current Blockers
 
-None. V2-P2 passed its local and staging acceptance checks.
+- The V2-P3 migration and database tests pass locally, but the project-local Supabase CLI is not linked to the staging Supabase project.
+- The staging dry run has not been reviewed, and the migration has not been authorized or applied to staging.
+- Staging migration history therefore cannot yet be compared with the repository migration history.
 
-The later `too many requests` response from an additional password-reset attempt is an expected hosted Supabase email rate limit. The required reset flow had already passed, so this does not block V2-P2 completion. Wait for the email quota to reset before making one new reset request.
+No V2-P4 work has started.
 
 ## Required Human Actions
 
-1. Review the V2-P2 completion documentation changes.
-2. If approved, commit them with the recommended message `Complete V2-P2 staging verification` and push when ready. Do not commit or share passwords, confirmation links, recovery links, URL fragments, tokens, Supabase secret keys, SMTP credentials, or Vercel tokens.
-3. If access to the synthetic staging account is needed before V2-P3, wait for the hosted email quota to reset and make one password-reset request. Repeated requests can extend the disruption.
-4. After review, authorize V2-P3 by saying **“Proceed with the next V2 phase.”**
+Complete these steps in the VS Code terminal from the repository root:
 
-## V2-P2 Implementation Summary
+1. Run `npx supabase login`. The CLI opens a browser to generate a personal access token and stores it locally. Do not paste the token into chat or add it to any project file.
+2. In the Supabase dashboard, open the `calorie-calculator` staging project. Copy its project ID from the dashboard URL: `https://supabase.com/dashboard/project/<project-id>`.
+3. Run `npx supabase link --project-ref <project-id>`, replacing the placeholder with that project ID. Enter the staging database password only in the terminal if prompted. Do not send or commit the password.
+4. Tell Codex: **“The staging Supabase project is linked. Proceed with the V2-P3 dry run.”**
 
-- Added signed-out, login, signup, verification-pending, forgot-password, reset-requested, update-password, session-checking, callback-error, and authenticated onboarding-required views.
-- Added separate auth state, validation, redirect, error, service, controller, and DOM-binding modules.
-- The browser bootstrap resolves and validates the session before constructing or revealing the frozen Version 1 calculator.
-- Signup, login, current-session logout, reset request, password update, session restoration, and auth-state listening use Supabase Auth.
-- Signup and reset messaging resist account enumeration. Provider errors are mapped to stable messages and never show tokens, stack traces, or raw provider details.
-- Confirmation and recovery URLs are fixed to the current application origin; no user-controlled redirect is accepted. Auth callback parameters are removed after processing.
-- Duplicate submissions are rejected while an account request is pending.
-- Users without a Version 2 profile see a temporary account-setup notice and can use the protected Version 1 calculator. Profile data and onboarding forms remain V2-P3+ work.
-- Local Supabase requires email confirmation and an eight-character minimum password. Local callbacks are restricted to the two Vite development origins.
+Codex will then run the read-only migration-history and `db push --dry-run` checks, report the exact pending migration, and ask for the required approval before applying it. Do not run `supabase db reset --linked`; that command is destructive to the staging database.
+
+Successful completion will show that only `20261003090000_create_v2_private_data.sql` is pending, the migration applies without error, the remote migration history matches the repository, and staging exposes the expected private tables and policies without exposing any user data.
+
+## V2-P3 Local Implementation Summary
+
+- Added one reproducible migration for `profiles`, `calorie_targets`, and `food_logs`.
+- Profile records use canonical centimeters/kilograms, normalized activity and goal values, recognized timezone names, and auth-user cascade ownership.
+- Target records preserve methodology and input snapshots, allow only `effective_to` to be updated by clients, reject invalid ranges, reject overlaps, and allow only one current target per user.
+- Food logs store stable local dates, entry timezones, serving and nutrient scalars, dataset/source provenance, and bounded object snapshots. Missing nutrients remain null and explicit zero remains zero.
+- Timestamp triggers maintain `updated_at`; time validation rejects unknown timezone names and inconsistent local dates.
+- Broad `anon` and `authenticated` grants are revoked. Authenticated users receive only the operations required for each table.
+- RLS uses separate owner-only policies for each granted operation. Ownership reassignment and cross-user access are denied.
+- No seed data, frontend persistence service, profile UI, target formula, dashboard query, account-deletion function, or production database work was added.
 
 ## Last Verified Tests
 
-- `npm run check` passed: 30 Node tests and the Vite production build succeeded.
-- Unit coverage passed for validation, existing/new signup response parity, confirmation misconfiguration, sanitized provider errors, fixed same-origin redirects, callback cleanup, session restoration, expired sessions, valid/invalid login, logout, recovery-session enforcement, duplicate submission, local-scope signout, and deferred auth events.
-- `npm run test:auth:local` passed against the real local Supabase Auth service and Mailpit using an isolated 390 × 844 headless Chrome profile.
-- The local browser flow passed signup, required confirmation, existing-account response parity, invalid/valid login, refresh restoration, expired-session rejection, logout, reset request, recovery-link password update, changed-password login, and bad/expired-link handling.
-- The protected calculator remained hidden before session resolution and while signed out. A valid session exposed it, and `150g grilled chicken breast` still returned the frozen Version 1 result of 227 kcal.
-- Mobile checks found no page-level horizontal overflow, all visible buttons met the 44-pixel touch-height check, keyboard activation opened signup, view focus moved to the new heading, and invalid email focus/error announcement behaved correctly.
-- The built artifact contains no concrete Supabase secret-key value or JWT-shaped credential.
-- The public staging origin returned HTTP 200 with the authentication gateway deployed and the protected calculator shell initially hidden.
-- Human staging verification passed account creation, confirmation-email delivery, confirmation callback, protected calculator access, session restoration after refresh, logout protection, reset-email delivery, recovery callback, password update, and login with the changed password.
-- Human staging verification also confirmed the required authentication configuration. A later extra reset request reached the hosted email sender rate limit after the required reset scenario had already passed.
+- `npm run supabase:db:reset` passed from a clean local database and applied `20261003090000_create_v2_private_data.sql`.
+- 97 pgTAP assertions passed directly against the local Supabase PostgreSQL container: 42 schema/grant assertions, 34 owner/anonymous RLS assertions, and 21 constraint/cascade assertions.
+- User A own-row operations passed for every granted operation; User A could not read, insert, update, or delete User B data where applicable.
+- Anonymous reads and inserts were denied for all three private tables.
+- Profile and food-log ownership reassignment was denied by RLS. Target ownership and immutable value changes were denied by column grants.
+- Invalid canonical values, unsupported units, non-positive quantities, negative nutrients, malformed JSON shapes, invalid timezone names, inconsistent local dates, invalid target ranges, overlapping target history, and a second current target were rejected.
+- Missing nutrient values remained null while explicit zero remained zero.
+- Deleting a synthetic auth user cascaded to that user's profile, target history, and food logs inside a rolled-back test transaction.
+- `npx supabase db lint --local` reported no schema errors.
+- `npx supabase db diff --local --schema public,private` reported no schema changes after the clean reset.
+- `npm run check` passed all 30 Node tests and the Vite production build.
+- `npm run test:auth:local` passed the real local signup, confirmation, login, session, logout, recovery, password-update, and protected-calculator regression flow after the migration.
+- The official `supabase test db` wrapper could not download its uncached `pg_prove` runner because Docker DNS could not resolve any container registry. The same checked-in pgTAP SQL passed through `psql` in the running Supabase database container; this tooling download issue is not a database-test failure.
+
+## Reviewed Staging Migration Plan
+
+The pending migration is designed to:
+
+1. enable `btree_gist` for effective-range exclusion;
+2. create the private helper schema and three user-owned public tables;
+3. add checks, foreign-key cascades, owner/date indexes, one-current-target uniqueness, and non-overlapping target ranges;
+4. add safe timestamp and timezone/local-date validation triggers;
+5. revoke broad client grants and grant only the required authenticated operations;
+6. enable RLS and add separate owner policies;
+7. leave managed auth identities and existing staging users intact.
+
+No seed data or destructive table operation is included.
 
 ## Next Intended Action
 
-Review and optionally commit the V2-P2 completion documentation. V2-P3 has not started. After review, the user can say **“Proceed with the next V2 phase.”**
+Link the CLI to the dedicated staging Supabase project, then let Codex perform and report the remote dry run. V2-P3 remains blocked until the reviewed migration is explicitly approved, applied, and verified on staging.

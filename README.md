@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation and protects the frozen Version 1 calculator behind a validated session locally and on staging. V2-P3 database schema and row-level authorization is next.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 database schema and row-level authorization are implemented and verified locally; staging migration review and application are the current completion gate.
 
 Version 2 planning and operational documents:
 
@@ -34,7 +34,7 @@ Version 2 planning and operational documents:
 - Seven explicit states: IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID
 - Mobile-first layouts with tablet and desktop enhancements
 
-Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, and a protected application shell. Profile onboarding and persistent application tables begin in later phases.
+Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, and a protected application shell. Its private profile, target-history, and food-log tables are implemented locally behind grants and RLS; profile onboarding and persistence services remain later phases.
 
 ## Measurement Model
 
@@ -111,7 +111,14 @@ npm run supabase:start
 npm run supabase:status
 ```
 
-The version-controlled configuration is in `supabase/config.toml`. Local email confirmation is required, passwords have an eight-character minimum, and callback URLs are limited to the local Vite origins. Version 2 tables and migrations belong to later phases. Stop the local stack with `npm run supabase:stop`.
+The version-controlled configuration is in `supabase/config.toml`. Local email confirmation is required, passwords have an eight-character minimum, and callback URLs are limited to the local Vite origins. V2 database changes live in `supabase/migrations/` and must be applied from a clean local database before staging:
+
+```powershell
+npm run supabase:db:reset
+npm run test:db
+```
+
+The database tests cover schema shape, constraints, grants, RLS ownership, anonymous denial, target-history invariants, missing nutrients, and auth-user cascades. Stop the local stack with `npm run supabase:stop`.
 
 Local confirmation and password-reset emails are captured by Mailpit at `http://127.0.0.1:54324/`; they are not delivered to the internet. With the Supabase stack and Vite server running, execute the browser integration flow with:
 
@@ -149,6 +156,8 @@ Remote email confirmation must remain enabled and the remote minimum password le
 - `css/auth.css` — mobile-first account and protected-shell presentation
 - `css/` — mobile-first components and progressive responsive enhancements
 - `supabase/config.toml` — reproducible local Supabase service configuration
+- `supabase/migrations/` — versioned private-data schema, constraints, grants, and RLS policies
+- `supabase/tests/database/` — pgTAP schema, constraint, ownership, and cascade checks
 - `tests/` — auth unit/integration checks plus environment and frozen V1 regressions
 
 The production output remains a static Vite build. Supabase handles account sessions; food parsing and nutrition calculations remain local and use the frozen demo dataset.
@@ -158,6 +167,8 @@ The production output remains a static Vite build. Supabase handles account sess
 Version 1 passed functional, dataset, calculation, state, responsive, reflow, accessibility, console, network, and repository-hygiene checks.
 
 V2-P2 passes signup validation, confirmation, existing/new signup response parity, valid/invalid login, logout, refresh restoration, expired-session rejection, password request/update, bad-link recovery, mobile overflow, keyboard focus, protected-view boundaries, and frozen V1 regressions. Local Mailpit and real staging confirmation/reset delivery and callbacks were verified.
+
+V2-P3 is implemented and verified locally. Its migration creates private profiles, effective target history, and food-log snapshots with least-privilege grants and owner-only RLS. Staging migration review and application remain the completion gate.
 
 Directly tested:
 
