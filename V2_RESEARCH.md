@@ -1,6 +1,7 @@
 # CalorieCheck Version 2 — Research Record
 
-Research date: **2026-09-28**  
+Initial research date: **2026-09-28**
+Latest phase recheck: **2026-10-05**
 Policy: Prefer current official or primary sources. Recheck provider behavior, prices, limits, and SDK versions in the phase that installs or configures them.
 
 ## Research Status Key
@@ -11,7 +12,7 @@ Policy: Prefer current official or primary sources. Recheck provider behavior, p
 
 ## R-001 — Which method should estimate maintenance calories?
 
-**Status:** Resolved, with V2-P5 coefficient verification required.
+**Status:** Resolved and verified in V2-P4.
 
 **Authoritative sources**
 
@@ -23,7 +24,7 @@ Policy: Prefer current official or primary sources. Recheck provider behavior, p
 
 The 2023 report supplies sex-specific Estimated Energy Requirement equations using age in years, height in centimeters, weight in kilograms, and physical activity category. Table 5-16 covers adults age 19+ and states that EER equals predicted total energy expenditure for weight-stable adults. The report has a separate 14-to-18.99 branch, so an 18-year-old must not be run through the 19+ coefficients.
 
-Adult 19+ equations to verify in V2-P5:
+Adult 19+ equations verified in V2-P4:
 
 | Equation sex | PAL category | EER (kcal/day) |
 |---|---|---|
@@ -46,9 +47,9 @@ The report emphasizes that PAL selection is difficult and approximate. Adult PAL
 - Store normalized inputs, equation identifier, methodology version, and output in target history.
 - Describe the number as an estimate, not a prescription.
 
-**Uncertainty / next verification**
+**V2-P4 verification**
 
-V2-P5 must transcribe and independently verify the 18-to-18.99 coefficients, energy-cost-of-growth term, exact age calculation, boundaries, and reference values before implementation.
+The primary report's Tables S-2 and S-3 confirm all 16 sex, PAL, and supported-age branches. Age 18 through values below 19 use the 14-to-18.99 equations plus 20 kcal/day for growth; age 19 and above uses the adult equations without the growth term. The implementation matches the report's worked example for a 22-year-old, low-active woman at 165 cm and 63 kg: 2,275.37 kcal/day before presentation rounding and 2,275 kcal/day when displayed as a whole calorie value.
 
 ## R-002 — What should “sex” mean in the profile?
 
@@ -88,7 +89,7 @@ The public NIDDK planner is for adults age 18+ and explicitly excludes younger p
 
 ## R-004 — How should weight-loss and weight-gain targets be calculated?
 
-**Status:** Loss is a phase gate; gain is unresolved.
+**Status:** No Version 2 weight-change method passed the V2-P4 gate; maintain-only scope approved on 2026-10-05.
 
 **Primary sources**
 
@@ -106,17 +107,17 @@ NIDDK also describes a newer Personalized Body Weight Management System as paten
 **Consequence for CalorieCheck**
 
 - Do not implement a fixed deficit or surplus.
-- In V2-P5, verify the published model, permissible implementation basis, inputs, bounds, convergence behavior, and independent reference vectors.
-- A loss target may be accepted only after those checks pass and likely requires current weight, goal weight, goal date/timeframe, age, sex, height, and activity assumptions.
-- A gain target needs a separate evidence and validation decision. If it remains unsupported, show it as unavailable and stop for an explicit scope decision rather than approximating.
+- V2-P4 rechecked the published model, implementation boundary, required inputs, public tool behavior, and available validation evidence.
+- A loss target would require at least current weight, goal weight, goal date or timeframe, age, sex, height, and continuous activity assumptions, plus body-composition and numerical-simulation defaults that the current product does not define.
+- A gain target still lacks a separate set of authoritative consumer target vectors and official product validation.
 - Keep the National Academies maintenance estimate visible even when a separate goal model supplies a goal-specific target; label each methodology.
 
 **Unresolved uncertainty**
 
-- Whether the full published Hall implementation is appropriate and supportable in a small vanilla JavaScript consumer app.
-- Exact safe input domains and minimum-calorie or rate guardrails without turning software checks into medical advice.
-- Whether the model is adequately validated for intentional weight gain.
-- Whether any license restrictions apply to code or assets beyond implementing the published equations independently.
+- The official Body Weight Planner implementation is listed by NIH Technology Transfer as a licensable invention, while the linked peer-reviewed appendix publishes model equations but no reusable software license was identified.
+- The public planner adds a 1,000 kcal/day floor and goal-weight/BMI warnings. Importing those product rules would require separate evidence and product decisions rather than treating them as equation constants.
+- The official sources center on adult weight loss and weight-loss maintenance. They do not provide sufficient independent consumer target vectors for intentional gain.
+- A later implementation would need an approved licensing position, exact numerical integration specification, independently reproduced outputs, safe input domains, and user-facing limits.
 
 ## R-005 — Is “healthy” a separate goal formula?
 
@@ -423,7 +424,7 @@ Require confirmations and an eight-character minimum locally and on staging. Bui
 
 ## R-020 — V2-P3 migration and row-authorization recheck
 
-**Status:** Verified and implemented locally on 2026-10-03; staging application pending.
+**Status:** Verified and implemented locally on 2026-10-03 and on staging on 2026-10-05.
 
 **Official sources**
 
@@ -443,6 +444,42 @@ Require confirmations and an eight-character minimum locally and on staging. Bui
 
 Create migration-owned `profiles`, `calorie_targets`, and `food_logs` tables. Validate canonical values, recognized timezone names, stable log dates, positive serving amounts, nonnegative available nutrients, JSON snapshot shapes, and effective target ranges. Preserve missing nutrients as null. Use a partial unique current-target index plus a GiST exclusion constraint for non-overlapping target history. Give authenticated users table-level select plus only the insert/update columns each workflow needs; limit target updates to `effective_to`, allow food-log deletion, and give `anon` no table access. Test schema, grants, constraints, two-user isolation, anonymous denial, ownership reassignment, and auth-user cascades with pgTAP.
 
+## R-021 — V2-P4 energy-target scientific gate recheck
+
+**Status:** Maintenance verified and implemented; maintain-only Version 2 scope approved on 2026-10-05.
+
+**Primary and official sources**
+
+- National Academies of Sciences, Engineering, and Medicine, [Dietary Reference Intakes for Energy (2023), Summary tables S-2 and S-3](https://www.nationalacademies.org/read/26818/chapter/2), DOI `10.17226/26818`.
+- National Academies, [Chapter 5: Development of Prediction Equations](https://www.nationalacademies.org/read/26818/chapter/7) and [Chapter 7: Applications](https://www.nationalacademies.org/read/26818/chapter/9).
+- NIDDK, [Research Behind the Body Weight Planner](https://www.niddk.nih.gov/research-funding/at-niddk/labs-branches/laboratory-biological-modeling/integrative-physiology-section/research/body-weight-planner) and the linked peer-reviewed [Hall model appendix](https://www.niddk.nih.gov/-/media/Files/BWP/Hall_Lancet_Web_Appendix.pdf).
+- Hall et al., [*Quantification of the effect of energy imbalance on bodyweight*](https://pubmed.ncbi.nlm.nih.gov/21872751/), *The Lancet* 378 (2011), DOI `10.1016/S0140-6736(11)60812-X`.
+- NIDDK/NIH Technology Transfer, [Body Weight Simulator, E-160-2012-0](https://www.techtransfer.nih.gov/tech/tab-2436).
+- NIDDK, [Body Weight Planner](https://www.niddk.nih.gov/bwp).
+
+All sources were accessed on 2026-10-05. The NIDDK research and simulator pages were last reviewed by the provider in February 2025.
+
+**Maintenance findings**
+
+- Tables S-2 and S-3 publish eight equations for age 14–18.99 and eight for age 19+, covering male/female source categories and inactive, low active, active, and very active PAL categories.
+- Version 2 eligibility begins at age 18. Values from age 18 through values below 19 use S-2 plus the 20 kcal/day growth allowance. Values at age 19 and above use S-3.
+- The report uses age in years, height in centimeters, and weight in kilograms. The engine rejects unitless strings and non-finite or non-positive canonical values.
+- The official application chapter's 22-year-old low-active woman example independently confirms 2,275.37 kcal/day before display rounding and 2,275 kcal/day when rounded for presentation.
+- Published RMSE values are retained as structured uncertainty metadata: 259 kcal/day for adolescent males, 237 for adolescent females, 339 for adult males, and 246 for adult females.
+- PAL selection is approximate. The report states that actual requirements vary materially among people with the same equation inputs and recommends monitoring weight over time rather than treating EER as an exact prescription.
+
+**Weight-change feasibility findings**
+
+- The Hall model is a coupled dynamic simulation rather than a fixed calorie adjustment. It models glycogen and associated water, extracellular fluid and sodium, fat and lean tissue, thermic effect of food, adaptive thermogenesis, and activity-related expenditure.
+- The public planner requires current weight, sex, age, height, physical activity, goal weight, and goal time. Its advanced controls add uncertainty, carbohydrate share, sodium, body-fat percentage, resting metabolic rate, and activity changes.
+- The official planner enforces additional product rules, including a 1,000 kcal/day floor and BMI warnings. Those rules are not part of the National Academies maintenance equations and cannot be imported without separate product justification.
+- NIH describes the simulator as an invention with a licensing contact. The peer-reviewed equations are published, but the official tool does not provide a reusable software license that would support copying its implementation or assets.
+- Published validation and official product language focus on adult weight loss and maintenance. The sources reviewed do not provide adequate independent consumer target vectors for intentional weight gain.
+
+**Implementation consequence**
+
+Implement deterministic National Academies maintenance EER with structured success, invalid, ineligible, and unavailable outcomes. Preserve full calculation precision and round only in a separate presentation helper. Keep the nonpersistent life-stage confirmation out of the returned input snapshot. Return maintenance with `targetKcal = null` and `GOAL_METHOD_UNAVAILABLE` for `LOSE` and `GAIN`; do not implement a fixed deficit, fixed surplus, or partial Hall approximation. The user approved this maintain-only Version 2 scope on 2026-10-05.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -450,6 +487,6 @@ Create migration-owned `profiles`, `calorie_targets`, and `food_logs` tables. Va
 | V2-P1 | Current Vite/Node requirements, Vercel terms/limits, Supabase CLI setup, publishable-key terminology |
 | V2-P2 | Supabase Auth SDK flow, email confirmation, redirect allow list, password policy, SMTP requirements |
 | V2-P3 | Current grants/RLS recommendations, migration commands, pgTAP helpers |
-| V2-P5 | All EER coefficients and test vectors; Hall model equations, licensing, domains, goal inputs, loss/gain acceptance |
+| V2-P4 | All EER coefficients and test vectors; Hall model equations, licensing, domains, goal inputs, loss/gain acceptance |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

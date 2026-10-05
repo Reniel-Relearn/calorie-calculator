@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema, migrations, least-privilege grants, and owner-only row-level authorization locally and on staging. V2-P4 is the next planned phase.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 is the next planned phase.
 
 Version 2 planning and operational documents:
 
@@ -34,7 +34,7 @@ Version 2 planning and operational documents:
 - Seven explicit states: IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID
 - Mobile-first layouts with tablet and desktop enhancements
 
-Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, and a protected application shell. Its private profile, target-history, and food-log tables are implemented locally behind grants and RLS; profile onboarding and persistence services remain later phases.
+Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, a protected application shell, private profile/target/log tables, and a pure maintenance energy engine. The engine returns structured invalid, ineligible, unavailable, and success outcomes without rendering or persistence. Profile onboarding and persistence services remain later phases.
 
 ## Measurement Model
 
@@ -153,6 +153,9 @@ Remote email confirmation must remain enabled and the remote minimum password le
 - `js/auth/` — auth validation, redirects, service calls, session state, controller, and accessible view binding
 - `js/config/environment.js` — validated public runtime configuration
 - `js/services/supabase-client.js` — persistent Supabase browser client construction
+- `js/targets/eer-equations.js` — verified National Academies 2023 EER coefficients and equation evaluation
+- `js/targets/energy-target.js` — pure target eligibility, validation, methodology, and outcome orchestration
+- `js/targets/target-format.js` — presentation-only whole-kcal rounding
 - `css/auth.css` — mobile-first account and protected-shell presentation
 - `css/` — mobile-first components and progressive responsive enhancements
 - `supabase/config.toml` — reproducible local Supabase service configuration
@@ -169,6 +172,8 @@ Version 1 passed functional, dataset, calculation, state, responsive, reflow, ac
 V2-P2 passes signup validation, confirmation, existing/new signup response parity, valid/invalid login, logout, refresh restoration, expired-session rejection, password request/update, bad-link recovery, mobile overflow, keyboard focus, protected-view boundaries, and frozen V1 regressions. Local Mailpit and real staging confirmation/reset delivery and callbacks were verified.
 
 V2-P3 is implemented and verified locally and on staging. Its migration creates private profiles, effective target history, and food-log snapshots with least-privilege grants and owner-only RLS. The repository and staging migration histories match, the linked schema linter reports no errors, and no seed data was applied.
+
+V2-P4 maintenance calculations pass fixed references for all 16 supported age/sex/activity branches plus the National Academies worked example. Exact age 18/19 routing, canonical finite inputs, life-stage exclusions, unsupported categories, nonmutation, determinism, source uncertainty, and separate display rounding are covered. Under the approved maintain-only Version 2 scope, `LOSE` and `GAIN` return unavailable without applying a fixed deficit or surplus.
 
 Directly tested:
 
@@ -190,7 +195,8 @@ These environments are unverified rather than passed or failed. The project does
 - Optional piece and descriptor metadata varies by food.
 - Generic `2 fried eggs` is unsupported because the record requires the sourced `large` descriptor for piece-based conversion.
 - No production nutrition API is connected.
-- Profile onboarding, meal tracking, history, goals, barcode scanning, image recognition, restaurant search, private application tables, and AI nutrition generation are not included yet.
+- Profile onboarding, profile persistence services, meal tracking, history, barcode scanning, image recognition, restaurant search, and AI nutrition generation are not included yet.
+- `LOSE` and `GAIN` have no approved Version 2 target method and return an explicit unavailable outcome under the approved maintain-only scope.
 - Production SMTP is deferred to the production release phase.
 
 ## Project Documentation

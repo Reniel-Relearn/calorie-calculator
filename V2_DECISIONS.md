@@ -63,7 +63,7 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 
 ## V2-ADR-009 — Maintenance Energy Method
 
-**Status:** ACCEPTED, subject to V2-P5 transcription verification  
+**Status:** ACCEPTED — VERIFIED IN V2-P4
 **Decision:** Use the 2023 National Academies Dietary Reference Intakes for Energy equations. Age 18 through 18.99 uses the report's matching adolescent branch; age 19+ uses the adult branch.  
 **Reason:** This is a current authoritative method and avoids extending adult coefficients to an unsupported age.  
 **Consequences:** The pure engine records methodology, version, equation branch, normalized inputs, activity category, assumptions, and output. The UI presents an estimate with uncertainty, not a prescription.
@@ -77,10 +77,10 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 
 ## V2-ADR-011 — Weight-Change Target Method
 
-**Status:** PROPOSED / PHASE GATE  
-**Decision:** Evaluate an independent implementation of the published NIH/NIDDK Hall dynamic adult model. Never use a fixed `±500 kcal` rule.  
-**Reason:** Dynamic body-weight response is more defensible than a fixed energy adjustment, but the model, inputs, validation, and gain applicability need further verification.  
-**Consequences:** V2-P5 must verify equations, licensing boundaries, inputs, domains, reference outputs, and user messaging. Weight loss may be accepted after the gate. Weight gain needs separate evidence; if it fails, V2-P5 stops for a documented product-scope decision rather than inventing a target.
+**Status:** ACCEPTED — APPROVED 2026-10-05
+**Decision:** Ship Version 2 with the verified maintenance method only. Keep `LOSE` and `GAIN` as recognized user goal concepts that return an explicit unavailable outcome. Do not implement the Hall model, copy the NIDDK planner, or use a fixed `±500 kcal` adjustment.
+**Reason:** The published Hall model requires additional goal, timeframe, continuous activity, body-composition, diet-composition, sodium, and numerical-simulation behavior. The official implementation is listed through NIH technology transfer, no reusable software license was identified, and independent consumer target vectors—especially for intentional gain—were not available for a defensible implementation.
+**Consequences:** V2-P4 includes no deficit, surplus, or dynamic weight-change model. Onboarding may calculate and persist a target only for `MAINTAIN`; selecting `LOSE` or `GAIN` must explain that Version 2 has no approved target method. A later version may revisit weight change after a separately approved scientific, licensing, input, and validation plan.
 
 ## V2-ADR-012 — Eligibility and Life-Stage Scope
 

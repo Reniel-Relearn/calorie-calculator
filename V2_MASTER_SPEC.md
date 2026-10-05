@@ -144,7 +144,7 @@ The target engine is deterministic, independent of the DOM, versioned, and cover
 
 ### Maintenance
 
-Use the 2023 National Academies *Dietary Reference Intakes for Energy* equations by sex, age band, and physical activity category. Users age 19 and older use the adult equations. Users age 18 through 18.99 use the report's 14-to-18.99 equation branch; the adult 19+ coefficients must not be extended downward. Exact coefficients, rounding, boundary behavior, and independent expected values must be verified again in V2-P5 before code is accepted.
+Use the 2023 National Academies *Dietary Reference Intakes for Energy* equations by sex, age band, and physical activity category. Users age 19 and older use the adult equations. Users age 18 through 18.99 use the report's 14-to-18.99 equation branch; the adult 19+ coefficients must not be extended downward. V2-P4 verified the exact coefficients, 20 kcal/day adolescent growth term, precision behavior, all 16 sex/activity/age branches, and the exact age 18 and 19 boundaries against the primary report.
 
 The product labels the result **Estimated Daily Calorie Target**, **Estimated Energy Requirement**, or **Estimated Maintenance Calories**. It does not call the estimate a prescription or exact physiological truth.
 
@@ -152,7 +152,7 @@ The product labels the result **Estimated Daily Calorie Target**, **Estimated En
 
 No fixed `±500 kcal` rule is permitted. Goal-specific loss and gain targets require a coherent dynamic model, justified inputs, bounds, validation vectors, and user-facing limitations.
 
-The NIH/NIDDK Body Weight Planner and its published Hall model are the leading basis for further work. Loss is **proposed pending V2-P5 verification**. Gain remains **unresolved pending V2-P5 evidence and validation**, because the official public material is primarily framed and validated for weight loss and maintenance. V2-P5 must stop for a documented scope decision if either model cannot be implemented responsibly; it must never fill the gap with an invented surplus or deficit.
+The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in V2-P4. The gate did not produce a supportable Version 2 implementation: required inputs and numerical behavior exceed the accepted profile model, the official implementation has a technology-transfer licensing path without a clearly identified reusable software license, and independent consumer target vectors were insufficient, particularly for intentional gain. The approved Version 2 scope therefore returns an explicit unavailable outcome for `LOSE` and `GAIN` and never fills the gap with an invented surplus or deficit.
 
 ### Eligibility and life stages
 
@@ -167,12 +167,12 @@ The NIH/NIDDK Body Weight Planner and its published Hall model are the leading b
 The user chooses one of the product goal concepts:
 
 - `MAINTAIN`: the accepted maintenance estimate;
-- `LOSE`: a goal-specific target only after the dynamic-model gate passes;
-- `GAIN`: a goal-specific target only after its separate evidence gate passes.
+- `LOSE`: recognized but unavailable in Version 2 because no goal-specific method passed the scientific and licensing gate;
+- `GAIN`: recognized but unavailable in Version 2 because no goal-specific method passed its separate evidence gate.
 
 “Healthy” or “general wellness” may appear as neutral context or guidance. It is not a fourth formula and does not alter the calorie result.
 
-Inputs such as goal weight and target date may be added only when V2-P5 confirms the selected model requires them. Target rate must not be inferred silently.
+Goal weight, target date, and target rate are not Version 2 inputs under the approved maintain-only scope. A later approved model must define them explicitly rather than infer a rate silently.
 
 ## 11. Calculator Integration
 
@@ -384,8 +384,8 @@ Version 2 is complete only when:
 - The source equations use male/female sex categories and do not provide other coefficients.
 - The 18-year-old branch differs from the 19+ adult equation and requires explicit boundary tests.
 - Pregnancy and breastfeeding targets are excluded.
-- The weight-loss model remains proposed until V2-P5 completes equation, licensing, input, boundary, and reference-vector validation.
-- The weight-gain model remains unresolved pending stronger evidence and validation.
+- The V2-P4 review did not approve a weight-loss model; `LOSE` is unavailable under the approved maintain-only scope.
+- The V2-P4 review did not approve a weight-gain model; `GAIN` remains unavailable pending stronger evidence, licensing clarity, and validation.
 - The app cannot decide which goal is appropriate for a user.
 - The nutrition catalog remains a small curated demo subset.
 - Logged totals are only as complete as the selected food and its reported nutrient fields.

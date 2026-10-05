@@ -99,7 +99,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P4 — Evidence-Based Energy Target Engine
 
-**Status:** NOT STARTED  
+**Status:** DONE
 **Objective:** Finish the scientific gate and implement a pure, versioned, deterministic target engine with authoritative reference tests.  
 **Why this phase exists:** Personal targets are high-impact calculations and must be validated separately from forms, persistence, and rendering.  
 **Dependencies:** V2-P0 scientific direction; V2-P1 test/build tooling. Database schema may exist but the engine cannot depend on it.  
@@ -310,7 +310,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 2. V2-P1 — Development Platform and Staging Foundation — **DONE**
 3. V2-P2 — Authentication and Persistent Session Foundation — **DONE**
 4. V2-P3 — Database Schema, Migrations, and Row-Level Authorization — **DONE**
-5. V2-P4 — Evidence-Based Energy Target Engine
+5. V2-P4 — Evidence-Based Energy Target Engine — **DONE**
 6. V2-P5 — Profile Onboarding, Personal Data, and Target History
 7. V2-P6 — Calculator to Food Log Integration
 8. V2-P7 — Daily Calorie Tracker
