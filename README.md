@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 database schema and row-level authorization are implemented and verified locally; staging migration review and application are the current completion gate.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema, migrations, least-privilege grants, and owner-only row-level authorization locally and on staging. V2-P4 is the next planned phase.
 
 Version 2 planning and operational documents:
 
@@ -168,7 +168,7 @@ Version 1 passed functional, dataset, calculation, state, responsive, reflow, ac
 
 V2-P2 passes signup validation, confirmation, existing/new signup response parity, valid/invalid login, logout, refresh restoration, expired-session rejection, password request/update, bad-link recovery, mobile overflow, keyboard focus, protected-view boundaries, and frozen V1 regressions. Local Mailpit and real staging confirmation/reset delivery and callbacks were verified.
 
-V2-P3 is implemented and verified locally. Its migration creates private profiles, effective target history, and food-log snapshots with least-privilege grants and owner-only RLS. Staging migration review and application remain the completion gate.
+V2-P3 is implemented and verified locally and on staging. Its migration creates private profiles, effective target history, and food-log snapshots with least-privilege grants and owner-only RLS. The repository and staging migration histories match, the linked schema linter reports no errors, and no seed data was applied.
 
 Directly tested:
 

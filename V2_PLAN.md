@@ -80,7 +80,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P3 — Database Schema, Migrations, and Row-Level Authorization
 
-**Status:** BLOCKED — USER ACTION REQUIRED (local implementation and verification complete; staging link, dry run, and migration application pending)
+**Status:** DONE
 **Objective:** Create reproducible private-data tables, constraints, indexes, grants, RLS policies, and explicit allow/deny tests.  
 **Why this phase exists:** UI work must not precede database-enforced ownership and historical integrity.  
 **Dependencies:** V2-P1 local/staging Supabase tooling; V2-P2 authenticated test identities.  
@@ -309,7 +309,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 1. V2-P0 — Master Planning and Architecture — **DONE**
 2. V2-P1 — Development Platform and Staging Foundation — **DONE**
 3. V2-P2 — Authentication and Persistent Session Foundation — **DONE**
-4. V2-P3 — Database Schema, Migrations, and Row-Level Authorization — **BLOCKED — USER ACTION REQUIRED**
+4. V2-P3 — Database Schema, Migrations, and Row-Level Authorization — **DONE**
 5. V2-P4 — Evidence-Based Energy Target Engine
 6. V2-P5 — Profile Onboarding, Personal Data, and Target History
 7. V2-P6 — Calculator to Food Log Integration

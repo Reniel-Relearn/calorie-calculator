@@ -2,8 +2,8 @@
 
 **Current Version:** V2
 **Current Phase:** V2-P3 — Database Schema, Migrations, and Row-Level Authorization
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-P4 — Evidence-Based Energy Target Engine (not authorized until V2-P3 is verified on staging and marked DONE)
+**Current Phase Status:** DONE
+**Next Phase:** V2-P4 — Evidence-Based Energy Target Engine (not started)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -11,29 +11,17 @@
 - V2-P0 — Master Planning and Architecture — completed 2026-09-28
 - V2-P1 — Development Platform and Staging Foundation — completed 2026-09-30
 - V2-P2 — Authentication and Persistent Session Foundation — completed 2026-10-02
+- V2-P3 — Database Schema, Migrations, and Row-Level Authorization — completed 2026-10-05
 
 ## Current Blockers
 
-- The V2-P3 migration and database tests pass locally, but the project-local Supabase CLI is not linked to the staging Supabase project.
-- The staging dry run has not been reviewed, and the migration has not been authorized or applied to staging.
-- Staging migration history therefore cannot yet be compared with the repository migration history.
-
-No V2-P4 work has started.
+None for V2-P3. No V2-P4 work has started.
 
 ## Required Human Actions
 
-Complete these steps in the VS Code terminal from the repository root:
+Review the completed V2-P3 changes. Commit and push them only if desired. After review, say **“Proceed with the next V2 phase.”** to authorize V2-P4.
 
-1. Run `npx supabase login`. The CLI opens a browser to generate a personal access token and stores it locally. Do not paste the token into chat or add it to any project file.
-2. In the Supabase dashboard, open the `calorie-calculator` staging project. Copy its project ID from the dashboard URL: `https://supabase.com/dashboard/project/<project-id>`.
-3. Run `npx supabase link --project-ref <project-id>`, replacing the placeholder with that project ID. Enter the staging database password only in the terminal if prompted. Do not send or commit the password.
-4. Tell Codex: **“The staging Supabase project is linked. Proceed with the V2-P3 dry run.”**
-
-Codex will then run the read-only migration-history and `db push --dry-run` checks, report the exact pending migration, and ask for the required approval before applying it. Do not run `supabase db reset --linked`; that command is destructive to the staging database.
-
-Successful completion will show that only `20261003090000_create_v2_private_data.sql` is pending, the migration applies without error, the remote migration history matches the repository, and staging exposes the expected private tables and policies without exposing any user data.
-
-## V2-P3 Local Implementation Summary
+## V2-P3 Implementation Summary
 
 - Added one reproducible migration for `profiles`, `calorie_targets`, and `food_logs`.
 - Profile records use canonical centimeters/kilograms, normalized activity and goal values, recognized timezone names, and auth-user cascade ownership.
@@ -59,10 +47,16 @@ Successful completion will show that only `20261003090000_create_v2_private_data
 - `npm run check` passed all 30 Node tests and the Vite production build.
 - `npm run test:auth:local` passed the real local signup, confirmation, login, session, logout, recovery, password-update, and protected-calculator regression flow after the migration.
 - The official `supabase test db` wrapper could not download its uncached `pg_prove` runner because Docker DNS could not resolve any container registry. The same checked-in pgTAP SQL passed through `psql` in the running Supabase database container; this tooling download issue is not a database-test failure.
+- The reviewed `supabase db push --dry-run` listed only `20261003090000_create_v2_private_data.sql`, with no seeds or role changes.
+- The approved migration applied successfully to the linked staging project.
+- `supabase migration list --linked` reports matching local and remote version `20261003090000`.
+- A second linked `supabase db push --dry-run` reports that the remote database is up to date with no pending migrations, seeds, or role changes.
+- `supabase db lint --linked` reports no errors in the `extensions`, `private`, or `public` schemas.
+- Linked table inspection confirms `profiles`, `calorie_targets`, and `food_logs` exist on staging with zero estimated rows; no seed or user data was introduced.
 
-## Reviewed Staging Migration Plan
+## Staging Migration Verification
 
-The pending migration is designed to:
+The applied migration:
 
 1. enable `btree_gist` for effective-range exclusion;
 2. create the private helper schema and three user-owned public tables;
@@ -72,8 +66,8 @@ The pending migration is designed to:
 6. enable RLS and add separate owner policies;
 7. leave managed auth identities and existing staging users intact.
 
-No seed data or destructive table operation is included.
+No seed data, role change, or destructive table operation was applied. The repository and staging migration histories match exactly.
 
 ## Next Intended Action
 
-Link the CLI to the dedicated staging Supabase project, then let Codex perform and report the remote dry run. V2-P3 remains blocked until the reviewed migration is explicitly approved, applied, and verified on staging.
+Stop for human review. V2-P4 is the next planned phase and remains unstarted until explicitly authorized.
