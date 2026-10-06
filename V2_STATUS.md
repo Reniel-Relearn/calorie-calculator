@@ -2,7 +2,7 @@
 
 **Current Version:** V2
 **Current Phase:** V2-P6 — Calculator to Food Log Integration
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
+**Current Phase Status:** DONE
 **Next Phase:** V2-P7 — Daily Calorie Tracker (planned; not authorized)
 **Overall V2 Status:** IN PROGRESS
 
@@ -14,30 +14,15 @@
 - V2-P3 — Database Schema, Migrations, and Row-Level Authorization — completed 2026-10-05
 - V2-P4 — Evidence-Based Energy Target Engine — completed 2026-10-05
 - V2-P5 — Profile Onboarding, Personal Data, and Target History — completed 2026-10-06
+- V2-P6 — Calculator to Food Log Integration — completed 2026-10-07
 
 ## Current Blocker
 
-V2-P6 is implemented and verified locally. The reviewed migration is applied to staging, migration history is in parity, and the linked schema lint passes. The new frontend has not yet been deployed or exercised against staging. The phase cannot be marked done until the implementation is committed, pushed, deployed, and verified with synthetic staging food logs.
-
-The staging database now includes:
-
-- `20261007090000_create_food_log_rpc.sql`
-
-The post-apply linked dry run reports no pending migration, seed, or role changes.
+None for V2-P6.
 
 ## Required Human Action
 
-1. Commit the reviewed V2-P6 files with the recommended message `Connect V1 results to explicit V2 food logging`.
-2. Push the commit so Vercel deploys the matching frontend.
-3. Wait for the deployment to report Ready.
-4. Sign in to the staging site with a synthetic confirmed account and verify these successful calculator results:
-   - `150g grilled chicken breast`
-   - `1 cup cooked white rice`
-   - `250 ml whole milk`
-5. For each result, select **Add to Today's Log** once and confirm that the success message appears and the action becomes disabled.
-6. Report **“V2-P6 staging food logging passed.”** if all three checks succeed. Report the exact failed input and visible message if any check fails.
-
-Do not share a database password, access token, API secret, or test-account password in chat. No Supabase dashboard setting needs to be changed for this migration.
+Review and commit this completion-status update when ready. After review, say **“Proceed with the next V2 phase.”** to authorize V2-P7.
 
 ## V2-P6 Implementation Summary
 
@@ -72,7 +57,10 @@ Do not share a database password, access token, API secret, or test-account pass
 - Local and remote migration histories contain matching `20261003090000`, `20261006090000`, and `20261007090000` entries.
 - The post-apply linked dry run reports that the remote database is up to date with no pending migration, seed, or role changes.
 - The linked `public` and `private` schema lint reports no errors.
+- The deployed staging flow passed human verification on 2026-10-07 for representative grams, food-specific cups, and milliliters.
+- Each staging save displayed **Added to today's log** and disabled the action after the confirmed write.
+- A visible daily log is intentionally absent from V2-P6; V2-P7 owns the daily tracker, saved-food list, and aggregate display.
 
 ## Next Intended Action
 
-Stop for deployment and the required signed-in staging checks. Do not mark V2-P6 done or begin V2-P7 until the staging food-log flow passes.
+Stop for human review. V2-P7 is the next planned phase and remains unstarted until the user says **“Proceed with the next V2 phase.”**

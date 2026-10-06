@@ -137,7 +137,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P6 — Calculator to Food Log Integration
 
-**Status:** BLOCKED — USER ACTION REQUIRED
+**Status:** DONE
 **Objective:** Add an explicit, secure persistence path from a V1 `SUCCESS` result to a user-owned historical food-log snapshot.  
 **Why this phase exists:** A calculation is not consumption; this phase creates the deliberate boundary without duplicating calculator logic.  
 **Dependencies:** V2-P3 food-log schema/RLS; V2-P5 authenticated complete profile/timezone; frozen V1 result contract.  
@@ -312,7 +312,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 4. V2-P3 — Database Schema, Migrations, and Row-Level Authorization — **DONE**
 5. V2-P4 — Evidence-Based Energy Target Engine — **DONE**
 6. V2-P5 — Profile Onboarding, Personal Data, and Target History — **DONE**
-7. V2-P6 — Calculator to Food Log Integration — **BLOCKED — USER ACTION REQUIRED**
+7. V2-P6 — Calculator to Food Log Integration — **DONE**
 8. V2-P7 — Daily Calorie Tracker
 9. V2-P8 — Weekly Dashboard and History
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion
