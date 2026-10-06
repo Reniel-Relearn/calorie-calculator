@@ -197,6 +197,14 @@ async function createPage() {
         nativeVirtualKeyCode: 13,
       });
     },
+    setViewport: async (width, height) => {
+      await send("Emulation.setDeviceMetricsOverride", {
+        width,
+        height,
+        deviceScaleFactor: 1,
+        mobile: width < 768,
+      });
+    },
     waitFor,
   };
 }
@@ -316,7 +324,26 @@ async function run() {
     const confirmationMail = await waitForMail(EMAIL, /confirm/i);
     await page.navigate(getFirstHttpLink(confirmationMail.detail));
     await waitForVisible(page, "#protected-app", 15_000);
+    await waitForVisible(page, "#profile-onboarding", 15_000);
     assert.equal(await page.evaluate("document.querySelector('#auth-main').hidden"), true);
+    assert.equal(await page.evaluate("document.querySelector('#app').hidden"), true);
+    assert.equal(
+      await page.evaluate("document.querySelectorAll('main:not([hidden])').length"),
+      1,
+    );
+    assert.equal(
+      await page.evaluate(`(() => {
+        const ids = [...document.querySelectorAll('[id]')].map((element) => element.id);
+        return ids.length === new Set(ids).size;
+      })()`),
+      true,
+    );
+    assert.equal(
+      await page.evaluate(`[
+        ...document.querySelectorAll('#profile-onboarding label[for]')
+      ].every((label) => document.getElementById(label.htmlFor))`),
+      true,
+    );
     assert.equal(
       await page.evaluate("document.documentElement.scrollWidth === document.documentElement.clientWidth"),
       true,
@@ -327,6 +354,65 @@ async function run() {
         .every((button) => button.getBoundingClientRect().height >= 44)`),
       true,
     );
+    for (const [width, height] of [
+      [320, 568],
+      [390, 844],
+      [768, 1024],
+      [1280, 800],
+    ]) {
+      await page.setViewport(width, height);
+      assert.equal(
+        await page.evaluate("document.documentElement.scrollWidth === document.documentElement.clientWidth"),
+        true,
+        `Onboarding overflowed at ${width}x${height}`,
+      );
+      assert.equal(
+        await page.evaluate(`[
+          ...document.querySelectorAll('button, input, select')
+        ].filter((control) => !control.closest('[hidden]') && control.type !== 'hidden')
+          .every((control) => {
+            const target = ['radio', 'checkbox'].includes(control.type)
+              ? control.closest('label')
+              : control;
+            const rect = target.getBoundingClientRect();
+            return rect.height >= 44 && rect.width >= 44;
+          })`),
+        true,
+        `Onboarding touch targets were too small at ${width}x${height}`,
+      );
+    }
+    await page.setViewport(390, 844);
+
+    await click(page, "#profile-submit");
+    await page.waitFor(
+      "document.activeElement.id === 'profile-display-name' && !document.querySelector('#profile-form-error').hidden",
+      "Onboarding validation did not focus and announce the first invalid field.",
+    );
+    await setForm(page, {
+      "#profile-display-name": "Local Test User",
+      "#profile-date-of-birth": "1990-01-01",
+      "#profile-height-cm": "165",
+      "#profile-weight-kg": "63",
+      "#profile-timezone": "Asia/Manila",
+    });
+    await click(page, "#profile-equation-sex-female");
+    await click(page, "#profile-activity-low-active");
+    await click(page, "#profile-life-stage-confirmation");
+    await click(page, "#profile-submit");
+    await waitForVisible(page, "#profile-home", 15_000);
+    await waitForVisible(page, "#app");
+    assert.equal(
+      await page.evaluate("document.querySelectorAll('main:not([hidden])').length"),
+      1,
+    );
+    assert.equal(
+      await page.evaluate("document.querySelector('#profile-home-greeting').textContent"),
+      "Welcome, Local Test User",
+    );
+    assert.equal(
+      await page.evaluate("Number(document.querySelector('#profile-home-target').textContent.replaceAll(',', '')) > 0"),
+      true,
+    );
 
     await setForm(page, { "#food-query": "150g grilled chicken breast" });
     await click(page, "#analyze-food-button");
@@ -335,6 +421,7 @@ async function run() {
 
     await page.navigate(APP_URL);
     await waitForVisible(page, "#protected-app", 15_000);
+    await waitForVisible(page, "#profile-home", 15_000);
 
     await click(page, "#logout-button");
     await waitForVisible(page, "#auth-signed-out");
@@ -365,6 +452,7 @@ async function run() {
     });
     await click(page, "#login-submit");
     await waitForVisible(page, "#protected-app");
+    await waitForVisible(page, "#profile-home");
 
     await page.evaluate(`(() => {
       for (const key of Object.keys(localStorage)) {
@@ -394,6 +482,7 @@ async function run() {
     });
     await click(page, "#login-submit");
     await waitForVisible(page, "#protected-app");
+    await waitForVisible(page, "#profile-home");
     await click(page, "#logout-button");
     await waitForVisible(page, "#auth-signed-out");
 
@@ -412,6 +501,7 @@ async function run() {
     });
     await click(page, "#update-password-submit");
     await waitForVisible(page, "#protected-app");
+    await waitForVisible(page, "#profile-home");
 
     await click(page, "#logout-button");
     await waitForVisible(page, "#auth-signed-out");
@@ -422,12 +512,13 @@ async function run() {
     });
     await click(page, "#login-submit");
     await waitForVisible(page, "#protected-app");
+    await waitForVisible(page, "#profile-home");
 
     await page.navigate(`${APP_URL}?auth=recovery&error_code=otp_expired`);
     await waitForVisible(page, "#auth-error");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
 
-    console.log("Local auth integration passed: signup, confirmation, protected calculator, session restore, invalid/valid login, expired session, logout, Mailpit reset, password update, and bad-link handling.");
+    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
   } finally {
     await page.close();
   }

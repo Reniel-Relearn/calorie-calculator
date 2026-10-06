@@ -51,7 +51,17 @@ export function createAuthController({
     if (!privateApp) privateApp = initializePrivateApp();
     else if (!isSameUser) privateApp.initialize();
 
-    ui.showAuthenticated(session.user, options);
+    ui.showAuthenticated(session.user, { ...options, focus: false });
+    if (typeof privateApp.activate === "function") {
+      Promise.resolve(
+        privateApp.activate(session.user, {
+          ...options,
+          focus: options.focus !== false,
+        }),
+      ).catch(() => {
+        ui.announce("Your private profile could not be loaded.");
+      });
+    }
   }
 
   function showExpiredSession(error) {
@@ -212,7 +222,7 @@ export function createAuthController({
 
     recoveryMode = false;
     enterAuthenticated(result.session, {
-      announcement: "You are signed in. Food calculator ready.",
+      announcement: "You are signed in. Loading your profile.",
     });
   }
 

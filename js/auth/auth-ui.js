@@ -99,9 +99,9 @@ export function createAuthUI(handlers) {
     elements.skipApp.hidden = false;
 
     if (options.focus !== false) {
-      focusHeading(requiredElement("onboarding-required"));
+      focusHeading(requiredElement("profile-loading"));
     }
-    announce(options.announcement ?? "You are signed in. Food calculator ready.");
+    announce(options.announcement ?? "You are signed in. Loading your profile.");
   }
 
   function clearPrivateView() {

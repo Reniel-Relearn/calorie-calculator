@@ -56,7 +56,8 @@ select set_config(
 select is((select count(*)::integer from public.calorie_targets), 1, 'User A sees only their own target history');
 select is((select maintenance_kcal from public.calorie_targets), 2200.00::numeric, 'User A reads their own target');
 
-select lives_ok(
+select is(
+  (select pg_temp.sqlstate_for(
   $$insert into public.calorie_targets (
       user_id, goal_type, maintenance_kcal, target_kcal, methodology,
       methodology_version, activity_category, input_snapshot, effective_from, effective_to
@@ -64,8 +65,9 @@ select lives_ok(
       '20000000-0000-0000-0000-000000000001', 'maintain', 2100, 2100,
       'Earlier test method', 'test-0', 'low_active', '{"source":"test"}',
       '2025-01-01 00:00:00+00', '2026-01-01 00:00:00+00'
-    )$$,
-  'User A can insert their own non-overlapping target history'
+    )$$)),
+  '42501',
+  'User A cannot bypass atomic target creation with a direct insert'
 );
 
 select is(
@@ -81,25 +83,26 @@ select is(
   'User A cannot insert target history for User B'
 );
 
-select lives_ok(
-  $$update public.calorie_targets
+select is(
+  (select pg_temp.sqlstate_for($$update public.calorie_targets
     set effective_to = '2027-01-01 00:00:00+00'
     where user_id = '20000000-0000-0000-0000-000000000001'
-      and effective_to is null$$,
-  'User A can close their current target'
+      and effective_to is null$$)),
+  '42501',
+  'User A cannot close a target outside a target-history RPC'
 );
 select is(
   (select effective_to from public.calorie_targets where effective_from = '2026-01-01 00:00:00+00'),
-  '2027-01-01 00:00:00+00'::timestamptz,
-  'target closure is persisted'
+  null::timestamptz,
+  'denied target closure changes nothing'
 );
 
 select is(
-  pg_temp.row_count_for($$update public.calorie_targets
+  (select pg_temp.sqlstate_for($$update public.calorie_targets
     set effective_to = '2027-01-01 00:00:00+00'
-    where user_id = '20000000-0000-0000-0000-000000000002'$$),
-  0,
-  'cross-user target update affects no row'
+    where user_id = '20000000-0000-0000-0000-000000000002'$$)),
+  '42501',
+  'direct cross-user target update is denied'
 );
 
 select is(

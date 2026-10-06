@@ -50,18 +50,18 @@ select ok(not has_table_privilege('anon', 'public.food_logs', 'select'), 'anon c
 
 select ok(has_table_privilege('authenticated', 'public.profiles', 'select'), 'authenticated can select profiles');
 select ok(not has_table_privilege('authenticated', 'public.profiles', 'insert'), 'profiles has no broad insert grant');
-select ok(has_column_privilege('authenticated', 'public.profiles', 'user_id', 'insert'), 'authenticated can insert profile ownership');
+select ok(not has_column_privilege('authenticated', 'public.profiles', 'user_id', 'insert'), 'authenticated cannot bypass atomic profile creation');
 select ok(not has_column_privilege('authenticated', 'public.profiles', 'created_at', 'insert'), 'authenticated cannot set profile creation time');
 select ok(not has_table_privilege('authenticated', 'public.profiles', 'update'), 'profiles has no broad update grant');
-select ok(has_column_privilege('authenticated', 'public.profiles', 'display_name', 'update'), 'authenticated can update profile fields');
+select ok(not has_column_privilege('authenticated', 'public.profiles', 'display_name', 'update'), 'authenticated cannot bypass target-aware profile updates');
 select ok(not has_column_privilege('authenticated', 'public.profiles', 'user_id', 'update'), 'authenticated cannot update profile ownership');
 select ok(not has_table_privilege('authenticated', 'public.profiles', 'delete'), 'authenticated cannot delete profiles directly');
 
 select ok(has_table_privilege('authenticated', 'public.calorie_targets', 'select'), 'authenticated can select targets');
 select ok(not has_table_privilege('authenticated', 'public.calorie_targets', 'insert'), 'targets has no broad insert grant');
-select ok(has_column_privilege('authenticated', 'public.calorie_targets', 'user_id', 'insert'), 'authenticated can insert target ownership');
+select ok(not has_column_privilege('authenticated', 'public.calorie_targets', 'user_id', 'insert'), 'authenticated cannot bypass atomic target creation');
 select ok(not has_column_privilege('authenticated', 'public.calorie_targets', 'created_at', 'insert'), 'authenticated cannot set target creation time');
-select ok(has_column_privilege('authenticated', 'public.calorie_targets', 'effective_to', 'update'), 'authenticated can close target ranges');
+select ok(not has_column_privilege('authenticated', 'public.calorie_targets', 'effective_to', 'update'), 'authenticated cannot close target ranges outside a target-history RPC');
 select ok(not has_column_privilege('authenticated', 'public.calorie_targets', 'maintenance_kcal', 'update'), 'authenticated cannot rewrite target values');
 select ok(not has_table_privilege('authenticated', 'public.calorie_targets', 'delete'), 'authenticated cannot delete target history');
 

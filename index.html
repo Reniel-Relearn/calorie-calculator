@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/auth.css">
+    <link rel="stylesheet" href="./css/profile.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <script type="module" src="./js/main.js"></script>
   </head>
@@ -151,15 +152,211 @@
     </main>
 
     <div id="protected-app" hidden>
-      <section class="onboarding-notice page-container" id="onboarding-required" aria-labelledby="onboarding-required-heading">
-        <div>
-          <p class="eyebrow">Account setup</p>
-          <h2 id="onboarding-required-heading" tabindex="-1">Your account is ready.</h2>
-          <p>Personal profile setup is coming next. You can use the food calculator now.</p>
+      <p class="visually-hidden" id="profile-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+
+      <main class="profile-shell page-container" id="profile-loading" tabindex="-1" aria-labelledby="profile-loading-heading">
+        <section class="profile-card profile-card--centered">
+          <span class="spinner" aria-hidden="true"></span>
+          <h1 class="profile-heading" id="profile-loading-heading" tabindex="-1">Loading your profile...</h1>
+          <p>Checking your private profile and current target.</p>
+        </section>
+      </main>
+
+      <main class="profile-shell profile-shell--wide page-container" id="profile-onboarding" tabindex="-1" aria-labelledby="profile-onboarding-heading" hidden>
+        <header class="profile-intro">
+          <p class="eyebrow">Private profile setup</p>
+          <h1 class="profile-heading" id="profile-onboarding-heading" tabindex="-1">Set up your maintenance estimate.</h1>
+          <p>These required details select the National Academies energy equation and establish your local day. Your profile and first target are saved together.</p>
+        </header>
+
+        <form class="profile-form" id="profile-onboarding-form" novalidate>
+          <p class="profile-required-note">All fields are required.</p>
+          <p class="form-error profile-form__error" id="profile-form-error" role="alert" tabindex="-1" hidden></p>
+          <p class="form-error profile-form__error" id="profile-error-message" role="alert" tabindex="-1" hidden></p>
+
+          <section class="profile-card" aria-labelledby="profile-basics-heading">
+            <div class="profile-section-heading">
+              <span class="profile-step" aria-hidden="true">1</span>
+              <div>
+                <h2 id="profile-basics-heading">About you</h2>
+                <p>Used for eligibility, equation selection, and your greeting.</p>
+              </div>
+            </div>
+
+            <div class="profile-field-grid">
+              <div class="form-field form-field--full">
+                <label for="profile-display-name">Display name</label>
+                <input id="profile-display-name" name="displayName" type="text" autocomplete="name" maxlength="80" required aria-describedby="profile-display-name-help profile-form-error">
+                <p class="field-help" id="profile-display-name-help">Shown only inside your signed-in experience.</p>
+              </div>
+
+              <div class="form-field form-field--full">
+                <label for="profile-date-of-birth">Date of birth</label>
+                <input id="profile-date-of-birth" name="dateOfBirth" type="date" autocomplete="bday" required aria-describedby="profile-date-of-birth-help profile-form-error">
+                <p class="field-help" id="profile-date-of-birth-help">Targets are available from age 18. Your birth date keeps the age calculation current.</p>
+              </div>
+            </div>
+
+            <fieldset class="profile-choice-group">
+              <legend>Sex category used by the source equation</legend>
+              <p class="field-help" id="profile-equation-sex-help">The National Academies equations publish female and male coefficient sets. This selects a source equation; gender identity is not collected.</p>
+              <div class="profile-choice-grid" aria-describedby="profile-equation-sex-help profile-form-error">
+                <label class="profile-choice" for="profile-equation-sex-female">
+                  <input id="profile-equation-sex-female" name="sexForEnergyEquation" type="radio" value="female" required>
+                  <span><strong>Female equation</strong><small>Use the published female coefficients</small></span>
+                </label>
+                <label class="profile-choice" for="profile-equation-sex-male">
+                  <input id="profile-equation-sex-male" name="sexForEnergyEquation" type="radio" value="male" required>
+                  <span><strong>Male equation</strong><small>Use the published male coefficients</small></span>
+                </label>
+              </div>
+            </fieldset>
+          </section>
+
+          <section class="profile-card" aria-labelledby="profile-measurements-heading">
+            <div class="profile-section-heading">
+              <span class="profile-step" aria-hidden="true">2</span>
+              <div>
+                <h2 id="profile-measurements-heading">Measurements</h2>
+                <p>Stored in the canonical units used by the calculation.</p>
+              </div>
+            </div>
+            <div class="profile-field-grid profile-field-grid--two">
+              <div class="form-field">
+                <label for="profile-height-cm">Height (cm)</label>
+                <input id="profile-height-cm" name="heightCm" type="number" inputmode="decimal" min="0.01" max="9999.99" step="0.01" autocomplete="off" required aria-describedby="profile-measurements-help profile-form-error">
+              </div>
+              <div class="form-field">
+                <label for="profile-weight-kg">Weight (kg)</label>
+                <input id="profile-weight-kg" name="weightKg" type="number" inputmode="decimal" min="0.01" max="9999.99" step="0.01" autocomplete="off" required aria-describedby="profile-measurements-help profile-form-error">
+              </div>
+            </div>
+            <p class="field-help" id="profile-measurements-help">Use centimeters and kilograms. Imperial storage is not enabled in Version 2.</p>
+          </section>
+
+          <section class="profile-card" aria-labelledby="profile-activity-heading">
+            <div class="profile-section-heading">
+              <span class="profile-step" aria-hidden="true">3</span>
+              <div>
+                <h2 id="profile-activity-heading">Usual physical activity</h2>
+                <p>Choose the closest overall description. Activity level is approximate.</p>
+              </div>
+            </div>
+            <fieldset class="profile-choice-group profile-choice-group--flush">
+              <legend class="visually-hidden">Physical activity category</legend>
+              <div class="profile-choice-list" aria-describedby="profile-activity-note profile-form-error">
+                <label class="profile-choice" for="profile-activity-inactive">
+                  <input id="profile-activity-inactive" name="activityCategory" type="radio" value="inactive" required>
+                  <span><strong>Inactive</strong><small>Daily living with minimal additional physical activity</small></span>
+                </label>
+                <label class="profile-choice" for="profile-activity-low-active">
+                  <input id="profile-activity-low-active" name="activityCategory" type="radio" value="low_active" required>
+                  <span><strong>Low active</strong><small>More walking and some occupational or recreational activity</small></span>
+                </label>
+                <label class="profile-choice" for="profile-activity-active">
+                  <input id="profile-activity-active" name="activityCategory" type="radio" value="active" required>
+                  <span><strong>Active</strong><small>Still more walking and occupational or recreational activity</small></span>
+                </label>
+                <label class="profile-choice" for="profile-activity-very-active">
+                  <input id="profile-activity-very-active" name="activityCategory" type="radio" value="very_active" required>
+                  <span><strong>Very active</strong><small>Daily living plus vigorous occupational or recreational exertion</small></span>
+                </label>
+              </div>
+              <p class="field-help" id="profile-activity-note">The source notes that category selection can be imprecise and materially affect the estimate.</p>
+            </fieldset>
+          </section>
+
+          <section class="profile-card" aria-labelledby="profile-goal-heading">
+            <div class="profile-section-heading">
+              <span class="profile-step" aria-hidden="true">4</span>
+              <div>
+                <h2 id="profile-goal-heading">Calorie goal</h2>
+                <p>Version 2 currently provides an estimated maintenance target.</p>
+              </div>
+            </div>
+            <fieldset class="profile-choice-group profile-choice-group--flush">
+              <legend class="visually-hidden">Calorie goal</legend>
+              <label class="profile-choice" for="profile-goal-maintain">
+                <input id="profile-goal-maintain" name="goalType" type="radio" value="maintain" checked required>
+                <span><strong>Maintain</strong><small>Estimate energy needed to maintain current weight and activity</small></span>
+              </label>
+              <ul class="profile-unavailable-list" aria-label="Unavailable goals">
+                <li><strong>Lose</strong><span>Unavailable in Version 2</span></li>
+                <li><strong>Gain</strong><span>Unavailable in Version 2</span></li>
+              </ul>
+            </fieldset>
+          </section>
+
+          <section class="profile-card" aria-labelledby="profile-time-heading">
+            <div class="profile-section-heading">
+              <span class="profile-step" aria-hidden="true">5</span>
+              <div>
+                <h2 id="profile-time-heading">Local day and eligibility</h2>
+                <p>Your timezone defines “today” for future tracking.</p>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="profile-timezone">IANA timezone</label>
+              <input id="profile-timezone" name="timezoneName" type="text" list="profile-timezone-options" autocomplete="off" maxlength="64" required aria-describedby="profile-timezone-help profile-form-error">
+              <datalist id="profile-timezone-options">
+                <option value="Asia/Manila"></option>
+                <option value="UTC"></option>
+                <option value="America/Los_Angeles"></option>
+                <option value="America/New_York"></option>
+                <option value="Europe/London"></option>
+                <option value="Asia/Singapore"></option>
+                <option value="Australia/Sydney"></option>
+              </datalist>
+              <p class="field-help" id="profile-timezone-help">We suggest your browser timezone. You can correct it using a name such as Asia/Manila.</p>
+            </div>
+
+            <label class="profile-confirmation" for="profile-life-stage-confirmation">
+              <input id="profile-life-stage-confirmation" name="lifeStageEligibilityConfirmed" type="checkbox" required aria-describedby="profile-life-stage-help profile-form-error">
+              <span>I confirm this estimate is not for pregnancy or breastfeeding.</span>
+            </label>
+            <p class="field-help" id="profile-life-stage-help">Version 2 does not support those life-stage equations. This confirmation is used now and is not stored.</p>
+          </section>
+
+          <aside class="profile-privacy-note" aria-labelledby="profile-privacy-heading">
+            <h2 id="profile-privacy-heading">What is saved</h2>
+            <p>Your private profile, canonical measurements, selected activity and goal, timezone, and a versioned calculation snapshot. Email stays with account authentication. Health conditions, gender identity, and pregnancy or breastfeeding status are not stored.</p>
+          </aside>
+
+          <button class="button button--primary profile-submit" id="profile-submit" type="submit">Save Profile and Calculate</button>
+          <p class="profile-disclaimer">This is a population-based estimate, not a medical prescription. Individual energy needs can be higher or lower.</p>
+        </form>
+      </main>
+
+      <main class="profile-shell page-container" id="profile-load-error" tabindex="-1" aria-labelledby="profile-load-error-heading" hidden>
+        <section class="profile-card profile-card--centered profile-card--error">
+          <span class="state-symbol" aria-hidden="true">!</span>
+          <h1 class="profile-heading" id="profile-load-error-heading" tabindex="-1">Profile unavailable</h1>
+          <p>We couldn't load your private profile. Check your connection and try again.</p>
+          <button class="button button--primary" id="profile-retry" type="button">Try Again</button>
+        </section>
+      </main>
+
+      <section class="profile-home page-container" id="profile-home" aria-labelledby="profile-home-greeting" hidden>
+        <div class="profile-home__intro">
+          <p class="eyebrow">Your private nutrition space</p>
+          <h1 class="profile-home__greeting" id="profile-home-greeting" tabindex="-1">Welcome</h1>
         </div>
+        <article class="target-summary" aria-labelledby="target-summary-heading">
+          <div>
+            <p class="target-summary__label" id="target-summary-heading">Estimated maintenance calories</p>
+            <p class="target-summary__value"><strong id="profile-home-target">—</strong> <span>kcal/day</span></p>
+          </div>
+          <dl class="target-summary__details">
+            <div><dt>Activity</dt><dd id="profile-home-activity">—</dd></div>
+            <div><dt>Method</dt><dd id="profile-home-method">—</dd></div>
+            <div><dt>Target history</dt><dd id="profile-home-effective">—</dd></div>
+          </dl>
+          <p class="target-summary__note">This estimate has meaningful individual uncertainty. Monitor weight trends over time and seek qualified guidance for personal health questions.</p>
+        </article>
       </section>
 
-    <main class="app-shell page-container" id="app" tabindex="-1">
+    <main class="app-shell page-container" id="app" tabindex="-1" hidden>
       <p class="visually-hidden" id="state-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <section class="app-state app-state--idle" id="state-idle" data-state="IDLE" aria-labelledby="idle-heading">

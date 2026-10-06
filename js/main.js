@@ -2,7 +2,7 @@ import { createAuthController } from "./auth/auth-controller.js";
 import { readAuthCallback, clearAuthCallbackUrl } from "./auth/auth-routes.js";
 import { createAuthService } from "./auth/auth-service.js";
 import { createAuthUI } from "./auth/auth-ui.js";
-import { initializeApp } from "./app.js";
+import { createPrivateApplication } from "./private-app.js";
 import { getSupabaseBrowserClient } from "./services/supabase-client.js";
 
 export async function initializeApplication() {
@@ -18,15 +18,17 @@ export async function initializeApplication() {
 
   try {
     const callback = readAuthCallback(window.location);
-    const service = createAuthService(
-      getSupabaseBrowserClient(),
-      window.location.origin,
-    );
+    const client = getSupabaseBrowserClient();
+    const service = createAuthService(client, window.location.origin);
+    let privateApplication = null;
 
     controller = createAuthController({
       service,
       ui,
-      initializePrivateApp: initializeApp,
+      initializePrivateApp: () => {
+        privateApplication ??= createPrivateApplication(client);
+        return privateApplication;
+      },
     });
 
     await controller.initialize(callback);
