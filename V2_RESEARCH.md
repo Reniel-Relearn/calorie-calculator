@@ -480,6 +480,32 @@ All sources were accessed on 2026-10-05. The NIDDK research and simulator pages 
 
 Implement deterministic National Academies maintenance EER with structured success, invalid, ineligible, and unavailable outcomes. Preserve full calculation precision and round only in a separate presentation helper. Keep the nonpersistent life-stage confirmation out of the returned input snapshot. Return maintenance with `targetKcal = null` and `GOAL_METHOD_UNAVAILABLE` for `LOSE` and `GAIN`; do not implement a fixed deficit, fixed surplus, or partial Hall approximation. The user approved this maintain-only Version 2 scope on 2026-10-05.
 
+## R-022 — V2-P5 onboarding persistence and timezone recheck
+
+**Status:** Implemented locally and deployed to staging; signed-in human staging verification remains pending.
+
+**Official sources**
+
+- Supabase, [Database Functions](https://supabase.com/docs/guides/database/functions) and [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security).
+- PostgreSQL, [`pg_timezone_names`](https://www.postgresql.org/docs/current/view-pg-timezone-names.html).
+- MDN, [`Intl.DateTimeFormat.prototype.resolvedOptions()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/resolvedOptions).
+- National Academies, [Dietary Reference Intakes for Energy, Chapter 5](https://www.nationalacademies.org/read/26818/chapter/7).
+- W3C Web Accessibility Initiative, [Forms Tutorial](https://www.w3.org/WAI/tutorials/forms/) and [Validating Input](https://www.w3.org/WAI/tutorials/forms/validation/).
+
+All sources were accessed on 2026-10-06.
+
+**Finding**
+
+- A PostgreSQL function can perform the profile upsert and first target creation inside one database transaction. A `security definer` function must constrain its search path, derive ownership from the authenticated identity, and expose execution only to the intended role.
+- RLS remains necessary for reads and other table operations. The onboarding write path can further reduce browser privileges by revoking direct mutations and exposing only the validated RPC.
+- Browsers can suggest an IANA timezone, while PostgreSQL's `pg_timezone_names` provides authoritative server-side validation before persistence.
+- The National Academies activity categories are source terminology. The interface should explain them without implying precision beyond the selected PAL category.
+- Accessible forms need explicit labels and groups, useful validation text, programmatic error association, and focus movement to the first invalid field.
+
+**Implementation consequence**
+
+Use one authenticated, idempotent `complete_profile_onboarding` RPC with an empty function search path. It validates canonical profile and target payloads, obtains the user from `auth.uid()`, writes the profile and first effective target atomically, and returns both rows. Keep eligibility confirmation out of persistence, validate the browser-suggested timezone again in PostgreSQL, and retain operation-specific RLS for private reads. The deployed staging migration and linked schema checks passed; one real signed-in staging onboarding pass remains required.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -488,5 +514,6 @@ Implement deterministic National Academies maintenance EER with structured succe
 | V2-P2 | Supabase Auth SDK flow, email confirmation, redirect allow list, password policy, SMTP requirements |
 | V2-P3 | Current grants/RLS recommendations, migration commands, pgTAP helpers |
 | V2-P4 | All EER coefficients and test vectors; Hall model equations, licensing, domains, goal inputs, loss/gain acceptance |
+| V2-P5 | Atomic Supabase/PostgreSQL RPC pattern, authenticated ownership, IANA timezone validation, PAL wording, accessible sensitive-field UX |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

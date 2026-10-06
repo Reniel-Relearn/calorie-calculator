@@ -6,7 +6,7 @@ Version 1 is complete and frozen for the validated demo scope.
 
 The frozen release provides the mobile-first food-to-nutrition workflow using 11 curated local demo records. Required measurement support is grams for solid foods, food-specific sourced cups for compatible solids, and milliliters for liquids. Pieces and serving descriptors remain optional and food-specific.
 
-Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, and maintain-only energy target engine are complete. `LOSE` and `GAIN` remain recognized but unavailable because no weight-change method passed the scientific and licensing gate. Later phases add onboarding, explicit food logging, daily and weekly tracking, and production deployment.
+Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, and maintain-only energy target engine are complete. Profile onboarding and atomic first-target persistence are implemented and deployed to staging, with one signed-in human staging pass still required. `LOSE` and `GAIN` remain recognized but unavailable because no weight-change method passed the scientific and licensing gate. Later phases add explicit food logging, daily and weekly tracking, and production deployment.
 
 ## Version 2 Planning Documents
 

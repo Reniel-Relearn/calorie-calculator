@@ -118,7 +118,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P5 — Profile Onboarding, Personal Data, and Target History
 
-**Status:** NOT STARTED  
+**Status:** BLOCKED — USER ACTION REQUIRED
 **Objective:** Implement mobile-first onboarding and settings-grade profile persistence, then atomically create the first effective calorie target.  
 **Why this phase exists:** Authenticated identity becomes useful only after minimized profile inputs produce a transparent, auditable target.  
 **Dependencies:** V2-P2 auth, V2-P3 protected schema, V2-P4 accepted engine and goal set.  

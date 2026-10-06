@@ -83,7 +83,8 @@ async function ensureTestBrowser() {
           await rm(profileDirectory, { recursive: true, force: true });
           break;
         } catch (error) {
-          if (error.code !== "EBUSY" || attempt === 19) throw error;
+          const retryableRemovalCodes = new Set(["EBUSY", "ENOTEMPTY", "EPERM"]);
+          if (!retryableRemovalCodes.has(error.code) || attempt === 19) throw error;
           await delay(250);
         }
       }
