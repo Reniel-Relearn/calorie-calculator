@@ -482,7 +482,7 @@ Implement deterministic National Academies maintenance EER with structured succe
 
 ## R-022 — V2-P5 onboarding persistence and timezone recheck
 
-**Status:** Implemented locally and deployed to staging; signed-in human staging verification remains pending.
+**Status:** Implemented and verified locally and on staging on 2026-10-06.
 
 **Official sources**
 
@@ -504,7 +504,7 @@ All sources were accessed on 2026-10-06.
 
 **Implementation consequence**
 
-Use one authenticated, idempotent `complete_profile_onboarding` RPC with an empty function search path. It validates canonical profile and target payloads, obtains the user from `auth.uid()`, writes the profile and first effective target atomically, and returns both rows. Keep eligibility confirmation out of persistence, validate the browser-suggested timezone again in PostgreSQL, and retain operation-specific RLS for private reads. The deployed staging migration and linked schema checks passed; one real signed-in staging onboarding pass remains required.
+Use one authenticated, idempotent `complete_profile_onboarding` RPC with an empty function search path. It validates canonical profile and target payloads, obtains the user from `auth.uid()`, writes the profile and first effective target atomically, and returns both rows. Keep eligibility confirmation out of persistence, validate the browser-suggested timezone again in PostgreSQL, and retain operation-specific RLS for private reads. The deployed staging migration, linked schema checks, and signed-in staging onboarding flow passed.
 
 ## Research Gates by Phase
 

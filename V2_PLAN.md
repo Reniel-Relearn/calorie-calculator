@@ -118,7 +118,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P5 — Profile Onboarding, Personal Data, and Target History
 
-**Status:** BLOCKED — USER ACTION REQUIRED
+**Status:** DONE
 **Objective:** Implement mobile-first onboarding and settings-grade profile persistence, then atomically create the first effective calorie target.  
 **Why this phase exists:** Authenticated identity becomes useful only after minimized profile inputs produce a transparent, auditable target.  
 **Dependencies:** V2-P2 auth, V2-P3 protected schema, V2-P4 accepted engine and goal set.  
@@ -311,7 +311,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 3. V2-P2 — Authentication and Persistent Session Foundation — **DONE**
 4. V2-P3 — Database Schema, Migrations, and Row-Level Authorization — **DONE**
 5. V2-P4 — Evidence-Based Energy Target Engine — **DONE**
-6. V2-P5 — Profile Onboarding, Personal Data, and Target History
+6. V2-P5 — Profile Onboarding, Personal Data, and Target History — **DONE**
 7. V2-P6 — Calculator to Food Log Integration
 8. V2-P7 — Daily Calorie Tracker
 9. V2-P8 — Weekly Dashboard and History

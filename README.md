@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 profile onboarding and atomic target persistence are implemented, deployed, and awaiting one signed-in human staging pass.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed and verified profile onboarding and atomic target persistence locally and on staging. V2-P6 is the next planned phase.
 
 Version 2 planning and operational documents:
 
@@ -178,7 +178,7 @@ V2-P3 is implemented and verified locally and on staging. Its migration creates 
 
 V2-P4 maintenance calculations pass fixed references for all 16 supported age/sex/activity branches plus the National Academies worked example. Exact age 18/19 routing, canonical finite inputs, life-stage exclusions, unsupported categories, nonmutation, determinism, source uncertainty, and separate display rounding are covered. Under the approved maintain-only Version 2 scope, `LOSE` and `GAIN` return unavailable without applying a fixed deficit or surplus.
 
-V2-P5 passes 55 Node tests, the production build, 115 local pgTAP assertions, and the local authenticated browser flow. These checks cover RPC atomicity, idempotence, snapshots, grants, owner isolation, rollback, onboarding, and session restoration. The reviewed migration is applied to staging, local and remote migration histories match, the linked schema linter reports no errors, and the deployed origin serves the onboarding interface. One signed-in human staging onboarding pass remains required before the phase can be marked done.
+V2-P5 passes 55 Node tests, the production build, 115 local pgTAP assertions, and the local authenticated browser flow. These checks cover RPC atomicity, idempotence, snapshots, grants, owner isolation, rollback, onboarding, and session restoration. The reviewed migration is applied to staging, local and remote migration histories match, the linked schema linter reports no errors, and the signed-in staging onboarding, refresh, and login-restoration flow passed human verification.
 
 Directly tested:
 
