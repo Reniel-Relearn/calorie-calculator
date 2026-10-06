@@ -18,6 +18,8 @@ export const NUTRIENT_FIELDS = Object.freeze([
   "sodiumMg",
 ]);
 
+export const NUTRITION_DATASET_VERSION = "v1-demo-2026-09-25";
+
 export const foods = Object.freeze([
   {
     id: "grilled-chicken-breast",

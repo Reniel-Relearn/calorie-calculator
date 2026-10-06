@@ -5,6 +5,7 @@ import { calculateNutrition } from "./nutrition-calculator.js";
 import { convertServing } from "./serving-converter.js";
 import { APP_STATES } from "./state.js";
 import { createUI } from "./ui.js";
+import { createFoodLogController } from "./logs/food-log-controller.js";
 
 const MEASUREMENT_ERROR_CODES = Object.freeze([
   "UNSUPPORTED_UNIT",
@@ -193,7 +194,11 @@ function validateDiscreteServing(servingInput) {
   return null;
 }
 
-export function createApplicationController(ui, catalog = foods) {
+export function createApplicationController(
+  ui,
+  catalog = foods,
+  { foodLogController = null } = {},
+) {
   const session = {
     rawInput: "",
     parsedInput: null,
@@ -219,6 +224,7 @@ export function createApplicationController(ui, catalog = foods) {
     session.servingInput = null;
     session.conversion = null;
     session.nutritionCalculation = null;
+    foodLogController?.clearResult();
   }
 
   function showInvalid(message, options = {}) {
@@ -276,15 +282,17 @@ export function createApplicationController(ui, catalog = foods) {
     session.conversion = conversion;
     session.nutritionCalculation = nutritionCalculation;
 
+    const result = {
+      food: session.selectedFood,
+      servingInput: session.servingInput,
+      conversion,
+      nutritionCalculation,
+    };
     ui.renderSuccess(
-      {
-        food: session.selectedFood,
-        servingInput: session.servingInput,
-        conversion,
-        nutritionCalculation,
-      },
+      result,
       { focus },
     );
+    foodLogController?.setResult(result);
     return true;
   }
 
@@ -434,15 +442,17 @@ export function createApplicationController(ui, catalog = foods) {
     session.servingInput = nextServingInput;
     session.conversion = conversion;
     session.nutritionCalculation = nutritionCalculation;
+    const result = {
+      food: session.selectedFood,
+      servingInput: session.servingInput,
+      conversion,
+      nutritionCalculation,
+    };
     ui.renderSuccess(
-      {
-        food: session.selectedFood,
-        servingInput: session.servingInput,
-        conversion,
-        nutritionCalculation,
-      },
+      result,
       { focus: false },
     );
+    foodLogController?.setResult(result);
   }
 
   function adjustServing(direction) {
@@ -495,6 +505,8 @@ export function createApplicationController(ui, catalog = foods) {
   }
 
   return {
+    activateFoodLogging: (profile) => foodLogController?.activate(profile),
+    addCurrentResultToLog: () => foodLogController?.save(),
     adjustServing,
     analyze,
     analyzeAdvanced,
@@ -502,6 +514,7 @@ export function createApplicationController(ui, catalog = foods) {
     changeAmount,
     editSearch,
     initialize: () => {
+      foodLogController?.reset();
       ui.setAnalysisBusy(false);
       ui.reset({ clearSearch: true });
       ui.showState(APP_STATES.IDLE, {
@@ -509,6 +522,7 @@ export function createApplicationController(ui, catalog = foods) {
         announceState: false,
       });
     },
+    deactivateFoodLogging: () => foodLogController?.reset(),
     provideAmount,
     recoverInvalid,
     selectFood,
@@ -516,9 +530,11 @@ export function createApplicationController(ui, catalog = foods) {
   };
 }
 
-export function initializeApp() {
+export function initializeApp({ foodLogService = null, onFoodLogSaved } = {}) {
   let controller;
+  let foodLogController = null;
   const ui = createUI({
+    onAddToLog: () => controller.addCurrentResultToLog(),
     onAdjustServing: (direction) => controller.adjustServing(direction),
     onAdvancedAnalyze: (fields) => controller.analyzeAdvanced(fields),
     onAnalyze: (rawInput) => controller.analyze(rawInput),
@@ -531,7 +547,14 @@ export function initializeApp() {
     onSetServingAmount: (amount) => controller.setServingAmount(amount),
   });
 
-  controller = createApplicationController(ui);
+  if (foodLogService) {
+    foodLogController = createFoodLogController({
+      service: foodLogService,
+      view: ui,
+      onSaved: onFoodLogSaved,
+    });
+  }
+  controller = createApplicationController(ui, foods, { foodLogController });
   controller.initialize();
   return controller;
 }

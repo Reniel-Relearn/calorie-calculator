@@ -36,6 +36,8 @@ export function createProfileController({
   calculateTarget = calculateEnergyTarget,
   now = () => new Date(),
   suggestTimeZone = getBrowserTimeZone,
+  onProfileReady = () => {},
+  onProfileUnavailable = () => {},
 }) {
   let activeUser = null;
   let activationToken = 0;
@@ -44,6 +46,7 @@ export function createProfileController({
   async function activate(user, options = {}) {
     const token = ++activationToken;
     activeUser = user;
+    onProfileUnavailable();
     view.showLoading({ focus: options.focus !== false });
 
     let result;
@@ -67,6 +70,7 @@ export function createProfileController({
       return;
     }
 
+    onProfileReady(result.profile, result.target);
     view.showHome(result.profile, result.target, {
       announcement: options.announcement,
       focus: options.focus !== false,
@@ -109,6 +113,7 @@ export function createProfileController({
         return;
       }
 
+      onProfileReady(result.profile, result.target);
       view.showHome(result.profile, result.target, {
         announcement: result.idempotent
           ? "Your profile was already saved."
@@ -124,6 +129,7 @@ export function createProfileController({
     activationToken += 1;
     activeUser = null;
     saving = false;
+    onProfileUnavailable();
     view.reset();
   }
 

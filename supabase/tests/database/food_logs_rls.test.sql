@@ -64,7 +64,8 @@ select set_config(
 select is((select count(*)::integer from public.food_logs), 1, 'User A sees only their own food logs');
 select is((select food_id from public.food_logs), 'banana', 'User A reads their own food log');
 
-select lives_ok(
+select is(
+  (select pg_temp.sqlstate_for(
   $$insert into public.food_logs (
       user_id, consumed_at, timezone_at_entry, local_date,
       food_id, food_name_snapshot, entered_quantity, entered_unit,
@@ -75,8 +76,9 @@ select lives_ok(
       '2026-10-04 04:00:00+00', 'Asia/Manila', '2026-10-04',
       'whole-milk', 'Whole Milk', 250, 'milliliters', 250, 'ml', 152.5,
       'v1-demo', 'Test source', '{"reference":{"amount":100,"unit":"ml"}}'
-    )$$,
-  'User A can insert their own food log'
+    )$$)),
+  '42501',
+  'User A cannot bypass the owner-derived food-log RPC with a direct insert'
 );
 
 select is(

@@ -506,6 +506,31 @@ All sources were accessed on 2026-10-06.
 
 Use one authenticated, idempotent `complete_profile_onboarding` RPC with an empty function search path. It validates canonical profile and target payloads, obtains the user from `auth.uid()`, writes the profile and first effective target atomically, and returns both rows. Keep eligibility confirmation out of persistence, validate the browser-suggested timezone again in PostgreSQL, and retain operation-specific RLS for private reads. The deployed staging migration, linked schema checks, and signed-in staging onboarding flow passed.
 
+## R-023 — V2-P6 food-log persistence and retry recheck
+
+**Status:** Implemented and verified locally; staging migration and flow verification remain pending.
+
+**Official sources**
+
+- Supabase JavaScript, [`insert()`](https://supabase.com/docs/reference/javascript/insert) and [`select()` after mutations](https://supabase.com/docs/reference/javascript/using-modifiers-select).
+- Supabase, [Database Functions](https://supabase.com/docs/guides/database/functions) and [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security).
+- MDN, [`Intl.DateTimeFormat.prototype.formatToParts()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts).
+- PostgreSQL, [`pg_timezone_names`](https://www.postgresql.org/docs/current/view-pg-timezone-names.html).
+
+All sources were accessed on 2026-10-07.
+
+**Finding**
+
+- Supabase mutations do not return modified rows by default; callers normally chain `.select()` when they need returned rows. A database function can instead validate, mutate, and return one structured result within the database boundary.
+- Supabase recommends an empty search path and fully qualified objects for `security definer` functions. Function execution must be revoked from broad roles and granted deliberately.
+- `auth.uid()` returns the authenticated caller ID and returns null for an unauthenticated request. The food-log creation API therefore does not need or accept a user ID.
+- Client-side pending state prevents concurrent clicks, but a stable request ID is still required when a response is lost after the transaction commits. Repeating the same ID and payload can safely return the existing row.
+- `Intl.DateTimeFormat` can derive calendar parts in a named timezone without changing the stored instant. PostgreSQL remains authoritative by validating the IANA timezone and the resulting local date.
+
+**Implementation consequence**
+
+Map a successful frozen V1 result to versioned scalar and JSON snapshots, generate one UUID when the save action begins, and retain that complete command for network retries. Persist through `create_food_log`, which derives ownership, rejects conflicting reuse, and returns an idempotent success for an identical retry. Keep unavailable nutrients as null, publish only a minimal saved-log event, and do not introduce automatic logging or an offline queue.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -515,5 +540,6 @@ Use one authenticated, idempotent `complete_profile_onboarding` RPC with an empt
 | V2-P3 | Current grants/RLS recommendations, migration commands, pgTAP helpers |
 | V2-P4 | All EER coefficients and test vectors; Hall model equations, licensing, domains, goal inputs, loss/gain acceptance |
 | V2-P5 | Atomic Supabase/PostgreSQL RPC pattern, authenticated ownership, IANA timezone validation, PAL wording, accessible sensitive-field UX |
+| V2-P6 | Mutation return behavior, idempotent retry boundary, owner-derived RPC, timezone-to-local-date derivation, sanitized snapshot shape |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

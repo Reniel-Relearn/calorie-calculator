@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed and verified profile onboarding and atomic target persistence locally and on staging. V2-P6 is the next planned phase.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 explicit food logging is implemented and verified locally, and its reviewed migration is applied to staging; frontend deployment and staging flow verification remain pending.
 
 Version 2 planning and operational documents:
 
@@ -34,7 +34,7 @@ Version 2 planning and operational documents:
 - Seven explicit states: IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID
 - Mobile-first layouts with tablet and desktop enhancements
 
-Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, a protected application shell, private profile/target/log tables, a pure maintenance energy engine, mobile-first profile onboarding, and atomic profile/first-target persistence. Food logging and dashboard tracking remain later phases.
+Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, a protected application shell, private profile/target/log tables, a pure maintenance energy engine, mobile-first profile onboarding, atomic profile/first-target persistence, and an explicit retry-safe action that saves a successful calculator result. Daily and weekly dashboard tracking remain later phases.
 
 ## Measurement Model
 
@@ -157,6 +157,7 @@ Remote email confirmation must remain enabled and the remote minimum password le
 - `js/targets/energy-target.js` — pure target eligibility, validation, methodology, and outcome orchestration
 - `js/targets/target-format.js` — presentation-only whole-kcal rounding
 - `js/profile/` — onboarding validation, persistence service, controller, and accessible view binding
+- `js/logs/` — pure result-to-log mapping, idempotent persistence service, and save controller
 - `js/private-app.js` — incomplete-profile routing and authenticated home/calculator coordination
 - `css/auth.css` — mobile-first account and protected-shell presentation
 - `css/profile.css` — mobile-first onboarding and target-summary presentation
@@ -180,6 +181,8 @@ V2-P4 maintenance calculations pass fixed references for all 16 supported age/se
 
 V2-P5 passes 55 Node tests, the production build, 115 local pgTAP assertions, and the local authenticated browser flow. These checks cover RPC atomicity, idempotence, snapshots, grants, owner isolation, rollback, onboarding, and session restoration. The reviewed migration is applied to staging, local and remote migration histories match, the linked schema linter reports no errors, and the signed-in staging onboarding, refresh, and login-restoration flow passed human verification.
 
+V2-P6 passes 69 Node tests, the production build, 131 local pgTAP assertions, and the local authenticated browser flow. Explicit logging preserves the frozen V1 result, source, dataset, serving conversion, timezone-safe date, and nullable nutrition values. The owner-derived RPC and stable request ID prevent spoofed ownership and duplicate retry rows. Its reviewed migration is applied to staging, local and remote migration histories match, and the linked schema linter reports no errors. Frontend deployment and signed-in staging flow verification remain required.
+
 Directly tested:
 
 - Google Chrome 154 — full QA and release matrix
@@ -200,7 +203,7 @@ These environments are unverified rather than passed or failed. The project does
 - Optional piece and descriptor metadata varies by food.
 - Generic `2 fried eggs` is unsupported because the record requires the sourced `large` descriptor for piece-based conversion.
 - No production nutrition API is connected.
-- A full profile settings editor, food logging, daily/weekly history, barcode scanning, image recognition, restaurant search, and AI nutrition generation are not included yet.
+- A daily/weekly log view, full profile settings editor, log editing/deletion UI, barcode scanning, image recognition, restaurant search, and AI nutrition generation are not included yet.
 - `LOSE` and `GAIN` have no approved Version 2 target method and return an explicit unavailable outcome under the approved maintain-only scope.
 - Production SMTP is deferred to the production release phase.
 
@@ -213,6 +216,7 @@ These environments are unverified rather than passed or failed. The project does
 - `DECISIONS.md` — architecture and product decision records
 - `TESTING.md` — maintained acceptance criteria and freeze status
 - `PROMPTS.md` — implementation history
+- `V2_DATA_CONTRACTS.md` — implemented Version 2 persistence and snapshot contracts
 - `assets/reference/approved-responsive-notes.md` — approved responsive interpretation
 
 Future work is documented in `ROADMAP.md` and begins with Version 2 only after explicit approval.

@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(42);
+select plan(45);
 
 select has_table('public', 'profiles', 'profiles table exists');
 select has_table('public', 'calorie_targets', 'calorie_targets table exists');
@@ -67,7 +67,7 @@ select ok(not has_table_privilege('authenticated', 'public.calorie_targets', 'de
 
 select ok(has_table_privilege('authenticated', 'public.food_logs', 'select'), 'authenticated can select food logs');
 select ok(not has_table_privilege('authenticated', 'public.food_logs', 'insert'), 'food_logs has no broad insert grant');
-select ok(has_column_privilege('authenticated', 'public.food_logs', 'user_id', 'insert'), 'authenticated can insert food-log ownership');
+select ok(not has_column_privilege('authenticated', 'public.food_logs', 'user_id', 'insert'), 'authenticated cannot insert food-log ownership directly');
 select ok(not has_column_privilege('authenticated', 'public.food_logs', 'created_at', 'insert'), 'authenticated cannot set food-log creation time');
 select ok(not has_table_privilege('authenticated', 'public.food_logs', 'update'), 'food_logs has no broad update grant');
 select ok(has_column_privilege('authenticated', 'public.food_logs', 'entered_quantity', 'update'), 'authenticated can update serving values');
@@ -75,6 +75,19 @@ select ok(not has_column_privilege('authenticated', 'public.food_logs', 'user_id
 select ok(has_table_privilege('authenticated', 'public.food_logs', 'delete'), 'authenticated can delete food logs');
 
 select has_index('public', 'calorie_targets', 'calorie_targets_one_current_idx', 'one-current-target unique index exists');
+
+select ok(
+  to_regprocedure('public.create_food_log(uuid,timestamp with time zone,text,date,text,text,numeric,text,text,numeric,text,numeric,numeric,numeric,numeric,numeric,numeric,numeric,text,text,jsonb)') is not null,
+  'create_food_log RPC exists with the reviewed signature'
+);
+select ok(
+  has_function_privilege('authenticated', 'public.create_food_log(uuid,timestamp with time zone,text,date,text,text,numeric,text,text,numeric,text,numeric,numeric,numeric,numeric,numeric,numeric,numeric,text,text,jsonb)', 'execute'),
+  'authenticated can execute create_food_log'
+);
+select ok(
+  not has_function_privilege('anon', 'public.create_food_log(uuid,timestamp with time zone,text,date,text,text,numeric,text,text,numeric,text,numeric,numeric,numeric,numeric,numeric,numeric,numeric,text,text,jsonb)', 'execute'),
+  'anon cannot execute create_food_log'
+);
 
 select * from finish();
 rollback;

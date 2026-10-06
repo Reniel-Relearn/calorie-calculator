@@ -75,6 +75,7 @@
       "summary summary"
       "macros macros"
       "serving nutrition"
+      "log log"
       "actions actions";
     align-items: start;
   }
@@ -97,6 +98,21 @@
 
   .result-card--nutrition {
     grid-area: nutrition;
+  }
+
+  .result-card--log {
+    grid-area: log;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .result-card--log .button {
+    width: auto;
+    min-width: 13rem;
+  }
+
+  .food-log-status {
+    grid-column: 1 / -1;
   }
 
   .result__actions {

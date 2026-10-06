@@ -419,6 +419,39 @@ async function run() {
     await click(page, "#analyze-food-button");
     await waitForVisible(page, "#state-success");
     assert.equal(await page.evaluate("document.querySelector('#result-calories').value"), "227");
+    for (const [width, height] of [
+      [320, 568],
+      [390, 844],
+      [768, 1024],
+      [1280, 800],
+    ]) {
+      await page.setViewport(width, height);
+      assert.equal(
+        await page.evaluate("document.documentElement.scrollWidth === document.documentElement.clientWidth"),
+        true,
+        `The nutrition result overflowed at ${width}x${height}`,
+      );
+      assert.equal(
+        await page.evaluate("document.querySelector('#add-to-log').getBoundingClientRect().height >= 44"),
+        true,
+        `The food-log action was too small at ${width}x${height}`,
+      );
+    }
+    await page.setViewport(390, 844);
+    assert.equal(
+      await page.evaluate("document.querySelector('#add-to-log').disabled"),
+      false,
+    );
+    await click(page, "#add-to-log");
+    await page.waitFor(
+      "document.querySelector('#food-log-status').textContent === \"Added to today's log.\"",
+      "The explicit food-log action did not confirm its saved result.",
+      15_000,
+    );
+    assert.equal(
+      await page.evaluate("document.querySelector('#add-to-log').disabled"),
+      true,
+    );
 
     await page.navigate(APP_URL);
     await waitForVisible(page, "#protected-app", 15_000);
@@ -519,7 +552,7 @@ async function run() {
     await waitForVisible(page, "#auth-error");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
 
-    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
+    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, explicit food logging, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
   } finally {
     await page.close();
   }

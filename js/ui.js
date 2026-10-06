@@ -208,6 +208,8 @@ export function createUI(handlers) {
     resultSugar: getRequiredElement("result-sugar"),
     resultSodium: getRequiredElement("result-sodium"),
     resultMatchDescription: getRequiredElement("result-match-description"),
+    addToLog: getRequiredElement("add-to-log"),
+    foodLogStatus: getRequiredElement("food-log-status"),
     servingAdjustment: getRequiredElement("serving-adjustment"),
     servingAdjustmentContext: getRequiredElement("serving-adjustment-context"),
     servingAdjustmentUnit: getRequiredElement("serving-adjustment-unit"),
@@ -448,6 +450,41 @@ export function createUI(handlers) {
     elements.servingAdjustmentError.hidden = true;
     elements.servingAdjustmentError.textContent = "";
     elements.servingAdjustment.removeAttribute("aria-invalid");
+    resetFoodLogStatus();
+  }
+
+  function resetFoodLogStatus() {
+    elements.addToLog.disabled = false;
+    elements.addToLog.textContent = "Add to Today's Log";
+    elements.addToLog.setAttribute("aria-busy", "false");
+    elements.foodLogStatus.hidden = true;
+    elements.foodLogStatus.textContent = "";
+    elements.foodLogStatus.removeAttribute("data-status");
+  }
+
+  function setFoodLogBusy(isBusy, { saved = false } = {}) {
+    elements.addToLog.disabled = isBusy || saved;
+    elements.addToLog.setAttribute("aria-busy", String(isBusy));
+    if (isBusy) {
+      elements.addToLog.textContent = "Adding…";
+      elements.foodLogStatus.hidden = true;
+    }
+  }
+
+  function showFoodLogError(message) {
+    elements.addToLog.disabled = false;
+    elements.addToLog.textContent = "Try Adding Again";
+    elements.foodLogStatus.dataset.status = "error";
+    elements.foodLogStatus.textContent = message;
+    elements.foodLogStatus.hidden = false;
+  }
+
+  function showFoodLogSuccess(message) {
+    elements.addToLog.disabled = true;
+    elements.addToLog.textContent = "Added to Today's Log";
+    elements.foodLogStatus.dataset.status = "success";
+    elements.foodLogStatus.textContent = message;
+    elements.foodLogStatus.hidden = false;
   }
 
   function reset({ clearSearch = true } = {}) {
@@ -540,6 +577,7 @@ export function createUI(handlers) {
   });
   elements.analyzeAnother.addEventListener("click", handlers.onAnalyzeAnother);
   elements.changeAmount.addEventListener("click", handlers.onChangeAmount);
+  elements.addToLog.addEventListener("click", handlers.onAddToLog);
 
   return {
     clearAmountError,
@@ -550,11 +588,15 @@ export function createUI(handlers) {
     renderNeedsAmount,
     renderSuccess,
     reset,
+    resetFoodLogStatus,
+    setFoodLogBusy,
     setAnalysisBusy,
     showAmountError,
     showAdvancedError,
     showIdleError,
     showInvalid,
+    showFoodLogError,
+    showFoodLogSuccess,
     showNotFound: () => showState(APP_STATES.NOT_FOUND),
     showServingError,
     showState,
