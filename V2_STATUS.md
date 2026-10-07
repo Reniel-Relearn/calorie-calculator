@@ -23,7 +23,17 @@ None for V2-P7.
 
 ## Required Human Action
 
-Review and commit the V2-P7 completion-status update when ready. After review, say **“Proceed with the next V2 phase.”** to authorize V2-P8.
+Review and commit the design-program planning update when ready. After review, say **“Proceed with the next V2 phase.”** to authorize V2-P8.
+
+## Scheduled Blocker Before V2-P10
+
+**Status:** BLOCKED — USER ACTION REQUIRED
+
+**Blocker:** Requires user's plan and mockups for design.
+
+This scheduled blocker does not prevent V2-P8 or V2-P9. After V2-P9 is complete, work must stop at V2-D0 until the user supplies a written design plan, approved mockups for the principal mobile journeys and states, responsive direction for larger screens, and explicit approval of the reviewed baseline.
+
+After V2-D0 clears, V2-D1 through V2-D6 cover interface audit and traceability, visual foundations, mobile app shell and navigation, primary journeys, history/settings/data-control journeys, and integrated staging verification. V2-P10 cannot begin until all seven design phases are complete and the staged revision has explicit user approval.
 
 ## V2-P7 Implementation Summary
 
@@ -61,4 +71,4 @@ Review and commit the V2-P7 completion-status update when ready. After review, s
 
 ## Next Intended Action
 
-Stop for human review of the completed V2-P7 phase. V2-P8 remains unstarted until the user authorizes the next phase.
+Stop for human review of this planning update. V2-P8 remains the next unfinished implementation phase and must be separately authorized. The design blocker becomes the active stop after V2-P9.

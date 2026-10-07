@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking is complete and verified locally and on staging. V2-P8 weekly dashboard and history is the next planned phase and has not started.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking is complete and verified locally and on staging. V2-P8 weekly dashboard and history is the next planned phase and has not started. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
 
 Version 2 planning and operational documents:
 

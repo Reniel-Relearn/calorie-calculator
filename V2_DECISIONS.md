@@ -179,3 +179,13 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 **Decision:** Build daily summaries on demand from owner-filtered food logs for one stable `local_date`. Resolve the current day's target at the current instant and a completed day's target as the last target that became effective by the end of that date in the profile timezone. Represent each nutrient total as complete, partial, or unavailable rather than coercing missing source values to zero.
 **Reason:** Food-log history already contains queryable snapshots, and effective target history already preserves changes. Client-side on-demand aggregation keeps the daily view consistent with V2-ADR-014 and V2-ADR-016 without a summary table or server-time day boundary.
 **Consequences:** Calories total all logged calorie snapshots. A nutrient with values on every entry has a complete total; mixed known and null values show a disclosed known partial total; all-null values remain unavailable; explicit numeric zeros remain zero. The interface uses neutral remaining/above language and a labeled native meter only when a target exists.
+
+## V2-ADR-026 — Post-Feature Interface Revision Gate
+
+**Status:** ACCEPTED — APPROVED 2026-10-07
+
+**Decision:** Complete V2-P8 and V2-P9 before revising the full interface, then require the V2-D0 through V2-D6 design program before V2-P10. V2-D0 is a hard external-input gate: **Blocker: Requires user's plan and mockups for design.** No design revision implementation may begin until the supplied plan, mobile mockups, non-happy states, and responsive direction are reviewed and explicitly approved.
+
+**Reason:** V2-P8 and V2-P9 create the remaining weekly, settings, editing, deletion, and account-control screens. Revising earlier would target an incomplete information architecture and cause avoidable rework. Revising after security, accessibility, release, or freeze phases would invalidate late-stage verification.
+
+**Consequences:** Existing phase identifiers remain stable. Seven inserted design phases cover approval, audit, foundations, navigation, primary flows, management flows, and integrated staging verification. V2-P10 depends on their completion. The revision preserves validated behavior and scope and does not authorize a UI framework, native wrapper, PWA work, or future feature.

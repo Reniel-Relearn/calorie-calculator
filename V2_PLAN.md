@@ -211,12 +211,235 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ---
 
+## Scheduled Design Revision Program — Mandatory Before V2-P10
+
+**Program status:** BLOCKED — USER ACTION REQUIRED
+
+**Blocker:** Requires user's plan and mockups for design.
+
+**Sequence rule:** V2-P8 and V2-P9 may proceed in their documented order. After V2-P9 is complete, stop at V2-D0. Do not begin visual revision work or V2-P10 until V2-D0 is cleared and V2-D1 through V2-D6 are complete.
+
+**Purpose:** Revise the complete implemented V2 experience as one coherent mobile-first application after its principal screens and workflows exist, while leaving enough time for security, accessibility, browser, staging, and production verification against the settled interface.
+
+**Stable boundaries:** Preserve the frozen V1 calculation behavior, approved V2 product scope, nutrition provenance, target methodology, private-data rules, and vanilla JavaScript/custom CSS architecture. The design program does not authorize new product features, a framework migration, native mobile packaging, PWA installation, gamification, or a visual imitation of a specific operating system.
+
+### V2-D0 — User Design Plan and Mockup Approval Gate
+
+**Status:** BLOCKED — USER ACTION REQUIRED
+
+**Objective:** Establish the user-approved visual and interaction source of truth before any design revision code is written.
+
+**Why this phase exists:** “Make it feel like a mobile app” is too subjective to implement safely without an explicit direction, representative screens, responsive intent, and agreement about which existing behavior must remain.
+
+**Dependencies:** V2-P9 complete on staging; current signed-in flows and states available for review.
+
+**Required user inputs:** A written design plan covering goals, desired visual character, information hierarchy, navigation model, branding/assets, motion preferences, and required constraints; approved mobile mockups for authentication, onboarding, Today/home with calculator, successful result and save state, weekly history, settings, log editing/deletion, account deletion confirmation, and representative loading/empty/error states; and either larger-screen mockups or clear responsive notes for tablet and desktop.
+
+**Exact review scope:** Inventory the supplied artifacts; map every mockup to an implemented route, state, or component; identify missing states, inaccessible interactions, behavior conflicts, and proposed scope additions; document the responsive interpretation and any approved departure from the existing V1 visual reference; return unresolved decisions to the user before implementation.
+
+**Explicit non-goals:** No HTML, CSS, JavaScript, database, or provider change; no inferred design direction where the supplied artifacts are silent; no approval of nonfunctional controls or future-version features shown incidentally in a mockup.
+
+**Required tests:** Documentation completeness and traceability review; route/state coverage check; mobile-first, accessibility, scope, and technical-feasibility review; confirmation that mockups do not contradict security, privacy, scientific, nutrition, or data-history requirements.
+
+**Acceptance criteria:** The design plan and mockups are present; every current V2 journey has an approved direction or documented reuse rule; responsive intent is defined; conflicts and missing states are resolved; the user explicitly approves the reviewed design baseline.
+
+**Documentation updates:** Record artifact locations, approval date, interpretation notes, resolved conflicts, exclusions, and the authorization for V2-D1.
+
+**External/user actions:** Supply the plan and mockups, answer identified design questions, and explicitly approve the resulting baseline. Do not share credentials, personal data, or production secrets in design artifacts.
+
+**Stop conditions:** The plan or mockups are missing, incomplete, internally contradictory, inaccessible by design, outside V2 scope, or not explicitly approved.
+
+**Recommended commit message:** `Approve V2 interface revision baseline`
+
+---
+
+### V2-D1 — Interface Audit and Design Traceability
+
+**Status:** NOT STARTED — BLOCKED BY V2-D0
+
+**Objective:** Turn the approved design baseline into an implementation-ready inventory and gap map without changing runtime code.
+
+**Why this phase exists:** The application already contains mature V1 and V2 states; each must be preserved, revised, or deliberately reused rather than lost during visual work.
+
+**Dependencies:** V2-D0 approved.
+
+**Files likely involved:** Design documentation, route/state inventories, component map, V2 status and decision notes.
+
+**Exact implementation scope:** Audit every auth, onboarding, calculator, result, daily, weekly, settings, editing, deletion, loading, empty, invalid, expired-session, and network state; map existing markup/CSS/view modules to approved mockups; identify shared patterns, one-off debt, focus behavior, content hierarchy, responsive rules, and required asset work; produce ordered implementation slices and regression risks.
+
+**Explicit non-goals:** No visual implementation, feature change, content invention, database change, or replacement of functional modules solely for styling convenience.
+
+**Required tests:** Coverage matrix review against V2 journeys, V1 states, master-spec Definition of Done, existing responsive matrix, and approved design artifacts.
+
+**Acceptance criteria:** Every implemented user-facing state has a documented disposition; shared patterns and module ownership are clear; no approved screen or required error/empty state is omitted; the next five design phases have concrete file and test scopes.
+
+**Documentation updates:** Add the audit matrix, implementation slices, known risks, and verified artifact links.
+
+**External/user actions:** Review any material interpretation that was not explicit in the approved mockups.
+
+**Stop conditions:** A required journey lacks an approved direction or the audit reveals a product-scope conflict that needs user resolution.
+
+**Recommended commit message:** `Map V2 interface revision work`
+
+---
+
+### V2-D2 — Visual Foundations and Shared Components
+
+**Status:** NOT STARTED — BLOCKED BY V2-D0
+
+**Objective:** Implement the approved visual foundations and reusable presentation primitives before revising full screens.
+
+**Why this phase exists:** Shared colors, typography, spacing, surfaces, controls, focus treatment, feedback, and motion rules prevent inconsistent page-by-page styling.
+
+**Dependencies:** V2-D1 complete.
+
+**Files likely involved:** Existing CSS modules, narrowly scoped shared presentation helpers, approved local assets, component documentation, and visual regression tests.
+
+**Exact implementation scope:** Define approved design tokens with CSS custom properties; revise typography, spacing, color, elevation, radius, borders, icons/assets, buttons, form controls, cards, status messages, loading/empty states, focus indicators, and reduced-motion behavior; preserve semantic native controls where they provide better accessibility.
+
+**Explicit non-goals:** No route redesign, page completion claim, business-logic change, UI framework, unapproved external asset/library, or ornamental animation that delays tasks.
+
+**Required tests:** Contrast, focus visibility, 44 CSS-pixel touch area where practical, text scaling, reduced motion, forced long-content wrapping, asset loading, and frozen V1 behavior.
+
+**Acceptance criteria:** Shared primitives match the approved baseline, work without hover, remain readable and operable on a small phone, and can support every mapped screen without duplicated one-off rules.
+
+**Documentation updates:** Record tokens, reusable patterns, asset provenance, and approved exceptions.
+
+**External/user actions:** Review a small staging component/sample screen at phone width before broad rollout.
+
+**Stop conditions:** Foundations conflict with approved mockups, accessibility requirements, performance constraints, or current semantic behavior.
+
+**Recommended commit message:** `Build V2 visual foundations`
+
+---
+
+### V2-D3 — Mobile App Shell and Navigation Revision
+
+**Status:** NOT STARTED — BLOCKED BY V2-D0
+
+**Objective:** Implement the approved mobile-first application shell and predictable navigation among existing V2 destinations.
+
+**Why this phase exists:** The app should feel coherent before individual screens are polished, and navigation must reflect the final implemented information architecture.
+
+**Dependencies:** V2-D2 complete.
+
+**Files likely involved:** `index.html`, `js/navigation/*`, `js/private-app.js`, view modules, shared CSS, and navigation tests.
+
+**Exact implementation scope:** Apply the approved header, primary navigation, active destination, page titles, account/logout placement, content container, safe-area behavior where relevant, focus movement, browser history behavior if present, and responsive navigation transformation. Keep all current destinations reachable with comfortable touch targets.
+
+**Explicit non-goals:** No new destination, native wrapper, PWA install flow, gesture-only navigation, hidden essential action, or change to auth/data authorization.
+
+**Required tests:** Signed-out/incomplete/complete-profile boundaries; keyboard and touch navigation; active-state semantics; refresh and session restoration; small-phone overflow; tablet/desktop reflow; direct-entry behavior; back navigation; V1 regression.
+
+**Acceptance criteria:** Existing destinations are easy to find on a phone, navigation state is accurate, focus is predictable, private content remains protected, and larger screens progressively enhance the same information architecture.
+
+**Documentation updates:** Record the approved navigation model and responsive behavior.
+
+**External/user actions:** Review staging navigation on a real or phone-sized mobile viewport.
+
+**Stop conditions:** A primary task becomes harder to reach, private content flashes, navigation depends on hover/gesture alone, or the approved hierarchy cannot fit accessibly.
+
+**Recommended commit message:** `Revise V2 mobile app navigation`
+
+---
+
+### V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
+
+**Status:** NOT STARTED — BLOCKED BY V2-D0
+
+**Objective:** Apply the approved interface to the primary acquisition and daily-use journeys.
+
+**Why this phase exists:** Sign-in, onboarding, calculation, logging, and Today form the shortest useful path and should read as one product.
+
+**Dependencies:** V2-D3 complete.
+
+**Files likely involved:** Auth, profile/onboarding, calculator, logging, daily dashboard view modules and their CSS/tests.
+
+**Exact implementation scope:** Revise the approved auth and recovery screens, onboarding steps, Today summary, calculator input/states, nutrition result, Add to Today's Log feedback, saved-food list, and their loading/empty/error states; retain all validated labels, disclosures, null handling, state boundaries, and explicit-save behavior.
+
+**Explicit non-goals:** No auth-provider change, onboarding field change, calculator algorithm change, automatic logging, nutrition-source change, target-method change, or new dashboard metric.
+
+**Required tests:** Complete signup-to-log journey; calculator state matrix; focus and announcements; retry/error paths; serving controls; immediate daily refresh; phone first-view usefulness; responsive reflow; frozen calculation/data invariants.
+
+**Acceptance criteria:** The primary journey conforms to the approved mockups and plan, remains understandable without instruction, preserves every functional outcome, and works by touch and keyboard across required widths.
+
+**Documentation updates:** Record screen/state conformance and any approved responsive interpretation.
+
+**External/user actions:** Review the complete primary journey on staging at phone size.
+
+**Stop conditions:** Functional behavior regresses, the calculator is obscured by decoration, a required state lacks a design, or the result/log distinction becomes unclear.
+
+**Recommended commit message:** `Revise V2 primary mobile flows`
+
+---
+
+### V2-D5 — Weekly, Settings, and Data-Control Revision
+
+**Status:** NOT STARTED — BLOCKED BY V2-D0
+
+**Objective:** Apply the approved interface to history, settings, correction, deletion, and account-control journeys.
+
+**Why this phase exists:** Secondary screens contain dense data and consequential actions that need the same visual system without weakening clarity or safety.
+
+**Dependencies:** V2-D4 complete.
+
+**Files likely involved:** Weekly dashboard, profile/settings, log edit/delete, confirmation, account deletion view modules and their CSS/tests.
+
+**Exact implementation scope:** Revise weekly summary and its semantic equivalent, settings forms, target-change explanation, log editing, log deletion, account deletion, confirmations, and all loading/empty/error states; preserve historical interpretation, destructive-action clarity, and owner-only behavior.
+
+**Explicit non-goals:** No new analytics, target model, history rewrite, data export, account feature, chart dependency, or reduction in confirmation/security requirements.
+
+**Required tests:** Dense and partial weekly data; semantic/chart equivalence; settings validation; target-history preservation; edit/delete refresh; cancel/confirm/failure paths; destructive-action focus; phone/tablet/desktop layouts; long and missing content.
+
+**Acceptance criteria:** History remains understandable without color or chart access, settings are comfortable on phones, destructive actions are unmistakable and reversible where specified, and approved designs preserve every privacy and data-history rule.
+
+**Documentation updates:** Record conformance, dense-data responsive rules, and destructive-flow decisions.
+
+**External/user actions:** Review weekly information density and consequential actions on staging.
+
+**Stop conditions:** Visual changes obscure historical meaning, weaken confirmation, imply unsupported advice, or make dense content unusable on a phone.
+
+**Recommended commit message:** `Revise V2 history and settings flows`
+
+---
+
+### V2-D6 — Integrated Design Verification and Approval
+
+**Status:** NOT STARTED — BLOCKED BY V2-D0
+
+**Objective:** Verify the complete revision against the approved design baseline and obtain staging approval before security hardening begins.
+
+**Why this phase exists:** Later security and release QA should test the settled interface rather than a partially revised one.
+
+**Dependencies:** V2-D5 complete and deployed to staging.
+
+**Files likely involved:** Narrow defect fixes in presentation/view files, design conformance evidence, and V2 documentation.
+
+**Exact implementation scope:** Compare every mapped state with its approved mockup and responsive notes; verify consistency, content hierarchy, navigation, assets, states, touch behavior, keyboard/focus behavior, reflow, reduced motion, and visual regressions; fix only design-scope defects; record intentional deviations with user approval.
+
+**Explicit non-goals:** No new feature, scope expansion, security audit replacement, full cross-browser certification, production deployment, or unapproved visual reinterpretation.
+
+**Required tests:** Complete design traceability matrix; 320/360/390/430 phone widths; tablet and desktop checks; 200% and 400% zoom/reflow; keyboard walkthrough; contrast and non-color checks; loading/empty/error/destructive states; staging phone review; V1 and V2 functional regression suite.
+
+**Acceptance criteria:** Every approved artifact has a verified implementation or approved documented exception; no page-level horizontal overflow; no critical design/accessibility defect; core behavior and security boundaries remain unchanged; the user explicitly approves the staged revision.
+
+**Documentation updates:** Record final conformance, deviations, screenshots or artifact references, test evidence, approval, and authorization for V2-P10.
+
+**External/user actions:** Perform the final staging visual review and explicitly approve proceeding to V2-P10.
+
+**Stop conditions:** Approval is absent, a required state is missing, a critical usability/accessibility regression remains, or implementation materially differs from approved artifacts without resolution.
+
+**Recommended commit message:** `Complete V2 interface revision verification`
+
+---
+
 ## V2-P10 — Security, Privacy, Data Integrity, and RLS QA
 
 **Status:** NOT STARTED  
 **Objective:** Perform focused adversarial hardening of all implemented V2 trust boundaries before release QA.  
 **Why this phase exists:** Core controls are built earlier; this phase verifies the integrated system and closes gaps before production.  
-**Dependencies:** V2-P2 through V2-P9 complete on staging.  
+**Dependencies:** V2-P2 through V2-P9 and V2-D0 through V2-D6 complete on staging.
+
 **Files likely involved:** migrations/policies/tests, auth/data services, Edge Function, Vercel/security headers config, dependency manifests, `.gitignore`, docs.  
 **Exact implementation scope:** Review threat model and data flows; test grants/RLS through database and client paths; verify ownership cannot be set/reassigned by clients; validate all database constraints and snapshot schemas; review session expiry/logout/reset/deletion; restrict redirects/CORS/function callers; add appropriate static security headers/CSP compatible with the app; scan repository and built assets for credentials; audit dependency versions and known vulnerabilities; verify logs/errors omit tokens and personal payloads; verify staging contains only synthetic data; document retention/deletion behavior and incident limitations.  
 **Explicit non-goals:** No new product feature, third-party analytics, compliance certification, penetration-test claim, or production launch.  
@@ -316,8 +539,15 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 8. V2-P7 — Daily Calorie Tracker — **DONE**
 9. V2-P8 — Weekly Dashboard and History
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion
-11. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
-12. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
-13. V2-P12 — Staging Release Verification and Production Deployment
-14. V2-P13 — Final Version 2 Audit
-15. V2-P14 — Version 2 Freeze
+11. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
+12. V2-D1 — Interface Audit and Design Traceability
+13. V2-D2 — Visual Foundations and Shared Components
+14. V2-D3 — Mobile App Shell and Navigation Revision
+15. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
+16. V2-D5 — Weekly, Settings, and Data-Control Revision
+17. V2-D6 — Integrated Design Verification and Approval
+18. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
+19. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
+20. V2-P12 — Staging Release Verification and Production Deployment
+21. V2-P13 — Final Version 2 Audit
+22. V2-P14 — Version 2 Freeze

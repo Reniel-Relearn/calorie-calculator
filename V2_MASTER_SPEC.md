@@ -245,6 +245,28 @@ The authenticated home information order is:
 
 Mobile navigation must keep these destinations reachable with comfortable touch targets and visible focus. The screen must not become a dense desktop dashboard scaled down to a phone.
 
+### Mandatory Version 2 design revision gate
+
+V2-P8 and V2-P9 complete the remaining weekly, settings, editing, deletion, and account-control surfaces using the maintained mobile-first baseline. After V2-P9, the project must complete the V2-D0 through V2-D6 design revision program before beginning V2-P10 security hardening.
+
+The design program is currently blocked on this required external input:
+
+**Blocker: Requires user's plan and mockups for design.**
+
+The user-supplied baseline must include a written design plan, approved mobile mockups for the principal authenticated and signed-out journeys, representative non-happy states, and responsive direction for larger screens. No design revision code may be implemented by guessing missing visual direction. Mockups do not authorize controls, destinations, data, or features outside the approved Version 2 scope.
+
+The executable sequence is defined in `V2_PLAN.md`:
+
+1. V2-D0 — approve the user plan and mockups;
+2. V2-D1 — audit existing states and create design traceability;
+3. V2-D2 — implement visual foundations and shared components;
+4. V2-D3 — revise the mobile app shell and navigation;
+5. V2-D4 — revise authentication, onboarding, calculator, logging, and Today;
+6. V2-D5 — revise weekly, settings, editing, deletion, and account controls;
+7. V2-D6 — verify the integrated design on staging and obtain user approval.
+
+The program must preserve the frozen calculator, established V2 behavior, accessibility semantics, security boundaries, privacy rules, scientific language, demo-data disclosure, and vanilla JavaScript/custom CSS architecture. It does not authorize a framework migration, native application wrapper, PWA installation work, gamification, or future-version functionality.
+
 ## 16. Settings and Profile Behavior
 
 Users can update display name, date of birth, equation sex, height, weight, activity category, goal, and timezone. A change that affects the target creates a new effective `calorie_targets` record and closes the prior one; it does not overwrite target history.
@@ -371,11 +393,13 @@ Version 2 is complete only when:
 18. Migrations reproduce the schema, constraints, indexes, grants, policies, and deletion behavior.
 19. RLS allow and deny tests prove cross-user and unauthenticated isolation for every private table.
 20. Secrets are absent from frontend bundles, the repository, test output, and user-visible errors.
-21. Primary flows work on supported phone, tablet, and desktop sizes and by keyboard.
-22. Auth, profile, target, logging, dashboard, error, empty, responsive, accessibility, and cross-browser acceptance checks pass.
-23. Staging uses non-production infrastructure and passes release verification.
-24. Production uses separate environment values, exact auth redirects, HTTPS, and the approved release artifact.
-25. The final V2 audit finds no unresolved release blocker and the documentation is frozen consistently.
+21. The V2-D0 design gate has an approved user plan, mockups, responsive interpretation, and complete route/state coverage.
+22. The implemented interface passes V2-D1 through V2-D6 traceability and staging approval before security hardening begins.
+23. Primary flows work on supported phone, tablet, and desktop sizes and by keyboard.
+24. Auth, profile, target, logging, dashboard, error, empty, responsive, accessibility, and cross-browser acceptance checks pass.
+25. Staging uses non-production infrastructure and passes release verification.
+26. Production uses separate environment values, exact auth redirects, HTTPS, and the approved release artifact.
+27. The final V2 audit finds no unresolved release blocker and the documentation is frozen consistently.
 
 ## 24. Known Scientific and Product Limitations
 

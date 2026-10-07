@@ -180,6 +180,7 @@ Committed Version 2 areas:
 - edit/delete controls and account deletion
 - database migrations, constraints, and per-user authorization
 - early staging plus late production deployment
+- a user-directed mobile interface revision after the complete feature surface exists and before security/release QA
 - mobile-first responsive and accessibility QA
 
 The existing 11-food curated catalog remains the Version 2 nutrition source and continues to be labeled **Demo nutrition dataset**. Production-scale nutrition search is deferred.
@@ -191,6 +192,8 @@ The authoritative scope and implementation sequence are maintained in:
 - `V2_STATUS.md`
 - `V2_DECISIONS.md`
 - `V2_RESEARCH.md`
+
+The planned interface revision occurs after V2-P9 and before V2-P10. It is divided into V2-D0 through V2-D6 so design inputs, audit, shared foundations, navigation, primary flows, management flows, and staging verification remain reviewable. The mandatory gate is: **Blocker: Requires user's plan and mockups for design.** V2-P8 and V2-P9 may proceed before this gate; V2-P10 may not.
 
 ---
 

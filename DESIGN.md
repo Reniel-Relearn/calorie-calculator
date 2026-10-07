@@ -537,6 +537,28 @@ Additional documented states such as:
 
 must still be implemented even if they are not shown in the approved reference image.
 
+## Version 2 Design Revision Gate
+
+The existing visual references remain the approved source for the frozen Version 1 experience and the maintained baseline used while Version 2 features are being completed.
+
+After V2-P9 and before V2-P10, Version 2 must complete the dedicated V2-D0 through V2-D6 interface revision program in `V2_PLAN.md`.
+
+**Blocker: Requires user's plan and mockups for design.**
+
+The required design input must define the intended mobile experience, information hierarchy, navigation, visual character, representative loading/empty/error states, and responsive direction. Approved mockups must cover the principal signed-out and authenticated journeys. Codex must not infer a full redesign from the phrase “mobile app” or silently invent missing screens.
+
+The Version 2 revision must:
+
+- use mobile as the primary design source;
+- preserve current product behavior, content accuracy, accessibility, privacy, and security boundaries;
+- maintain clear demo-dataset and energy-estimate disclosures;
+- keep every required state reachable and understandable;
+- progressively enhance the same information architecture for tablet and desktop;
+- avoid adding controls for unimplemented or future-version features;
+- retain vanilla JavaScript and custom CSS unless a separate architectural change is explicitly approved.
+
+V2-D6 requires traceability to the approved artifacts, responsive and accessibility checks, functional regression coverage, staging review, and explicit user approval before V2-P10 may begin.
+
 ## Final Design Principle
 
 The user should feel:
