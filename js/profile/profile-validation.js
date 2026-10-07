@@ -171,7 +171,10 @@ export function validateProfileInput(values, options = {}) {
     errors.timezoneName = "Enter a recognized IANA timezone, such as Asia/Manila.";
   }
 
-  if (values?.lifeStageEligibilityConfirmed !== true) {
+  if (
+    options.requireEligibilityConfirmation !== false &&
+    values?.lifeStageEligibilityConfirmed !== true
+  ) {
     errors.lifeStageEligibilityConfirmed =
       "Confirm that this estimate is not for pregnancy or breastfeeding.";
   }
@@ -222,7 +225,8 @@ export function validateProfileInput(values, options = {}) {
       weightKg,
       activityCategory,
       goalType,
-      lifeStageEligibilityConfirmed: true,
+      lifeStageEligibilityConfirmed:
+        values?.lifeStageEligibilityConfirmed === true,
     },
   };
 }

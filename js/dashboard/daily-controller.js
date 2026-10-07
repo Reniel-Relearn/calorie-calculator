@@ -94,6 +94,16 @@ export function createDailyController({ service, view, now = () => new Date() })
       }
       return undefined;
     },
+    handleFoodLogChanged(detail) {
+      if (
+        profile &&
+        (detail?.localDate === selectedDate ||
+          detail?.previousLocalDate === selectedDate)
+      ) {
+        return load({ announce: false });
+      }
+      return undefined;
+    },
     next: () => {
       const today = currentToday();
       const nextDate = addDaysToIsoDate(selectedDate, 1);

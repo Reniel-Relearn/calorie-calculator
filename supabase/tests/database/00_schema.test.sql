@@ -70,7 +70,7 @@ select ok(not has_table_privilege('authenticated', 'public.food_logs', 'insert')
 select ok(not has_column_privilege('authenticated', 'public.food_logs', 'user_id', 'insert'), 'authenticated cannot insert food-log ownership directly');
 select ok(not has_column_privilege('authenticated', 'public.food_logs', 'created_at', 'insert'), 'authenticated cannot set food-log creation time');
 select ok(not has_table_privilege('authenticated', 'public.food_logs', 'update'), 'food_logs has no broad update grant');
-select ok(has_column_privilege('authenticated', 'public.food_logs', 'entered_quantity', 'update'), 'authenticated can update serving values');
+select ok(not has_column_privilege('authenticated', 'public.food_logs', 'entered_quantity', 'update'), 'authenticated cannot bypass captured-snapshot food-log updates');
 select ok(not has_column_privilege('authenticated', 'public.food_logs', 'user_id', 'update'), 'authenticated cannot update food-log ownership');
 select ok(has_table_privilege('authenticated', 'public.food_logs', 'delete'), 'authenticated can delete food logs');
 

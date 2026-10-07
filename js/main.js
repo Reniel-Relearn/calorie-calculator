@@ -26,7 +26,9 @@ export async function initializeApplication() {
       service,
       ui,
       initializePrivateApp: () => {
-        privateApplication ??= createPrivateApplication(client);
+        privateApplication ??= createPrivateApplication(client, {
+          onAccountDeleted: () => controller?.accountDeleted(),
+        });
         return privateApplication;
       },
     });

@@ -9,11 +9,21 @@ import { createDailyView } from "./dashboard/daily-view.js";
 import { createWeeklyController } from "./dashboard/weekly-controller.js";
 import { createWeeklyService } from "./dashboard/weekly-service.js";
 import { createWeeklyView } from "./dashboard/weekly-view.js";
+import { createLogManagementController } from "./logs/log-management-controller.js";
+import { createLogManagementView } from "./logs/log-management-view.js";
+import { createSettingsController } from "./settings/settings-controller.js";
+import { createSettingsService } from "./settings/settings-service.js";
+import { createSettingsView } from "./settings/settings-view.js";
 
-export function createPrivateApplication(client) {
+export function createPrivateApplication(client, options = {}) {
   let dailyController = null;
+  let logManagementController = null;
+  let profileController = null;
+  let settingsController = null;
   let weeklyController = null;
   const dailyView = createDailyView({
+    onDeleteLog: (log) => logManagementController?.requestDelete(log),
+    onEditLog: (log) => logManagementController?.edit(log),
     onNext: () => dailyController?.next(),
     onPrevious: () => dailyController?.previous(),
     onRetry: () => dailyController?.retry(),
@@ -33,6 +43,38 @@ export function createPrivateApplication(client) {
   weeklyController = createWeeklyController({
     service: createWeeklyService(client),
     view: weeklyView,
+  });
+  const logManagementView = createLogManagementView({
+    onCancelDelete: () => logManagementController?.cancelDelete(),
+    onCancelEdit: () => logManagementController?.cancelEdit(),
+    onConfirmDelete: () => logManagementController?.confirmDelete(),
+    onSubmitEdit: (values) => logManagementController?.submitEdit(values),
+  });
+  logManagementController = createLogManagementController({
+    service: createFoodLogService(client),
+    view: logManagementView,
+    onChanged: (detail) => {
+      dailyController.handleFoodLogChanged(detail);
+      weeklyController.handleFoodLogChanged(detail);
+    },
+  });
+  const settingsView = createSettingsView({
+    onClose: () => settingsController?.close(),
+    onDeleteAccount: (values) => settingsController?.deleteAccount(values),
+    onOpen: () => settingsController?.open(),
+    onSubmit: (values) => settingsController?.submit(values),
+  });
+  settingsController = createSettingsController({
+    service: createSettingsService(client),
+    view: settingsView,
+    onAccountDeleted: options.onAccountDeleted,
+    onProfileSaved: (_profile, _target, result) =>
+      profileController?.refresh({
+        announcement: result.targetChanged
+          ? "Settings saved. A new maintenance target is now effective."
+          : "Display name updated.",
+        focus: false,
+      }),
   });
 
   if (typeof document !== "undefined") {
@@ -55,7 +97,6 @@ export function createPrivateApplication(client) {
       );
     },
   });
-  let profileController = null;
   const profileView = createProfileView({
     onRetry: () => profileController?.retry(),
     onSubmit: (values) => profileController?.submit(values),
@@ -63,15 +104,18 @@ export function createPrivateApplication(client) {
   profileController = createProfileController({
     service: createProfileService(client),
     view: profileView,
-    onProfileReady: (profile) => {
+    onProfileReady: (profile, target) => {
       calculator.activateFoodLogging(profile);
       dailyController.activate(profile);
       weeklyController.activate(profile);
+      settingsController.activate(profile, target);
     },
     onProfileUnavailable: () => {
       calculator.deactivateFoodLogging();
       dailyController.reset();
       weeklyController.reset();
+      logManagementController.reset();
+      settingsController.reset();
     },
   });
 
@@ -79,6 +123,8 @@ export function createPrivateApplication(client) {
     activate: (user, options) => profileController.activate(user, options),
     initialize() {
       profileController.reset();
+      logManagementController.reset();
+      settingsController.reset();
       calculator.initialize();
     },
   });

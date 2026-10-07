@@ -580,6 +580,30 @@ All sources were accessed on 2026-10-07.
 
 Query the authenticated owner's logs and target history for one Monday-through-Sunday interval, then build exactly seven rows in a pure summary module. Use elapsed dates as the current-week intake denominator and all seven dates for completed weeks. Use only target-bearing eligible dates for the target denominator and expose coverage text. Render the canonical result as a reflowing ordered list; defer any optional chart to the approved design revision instead of adding a second information source or dependency now.
 
+## R-026 — V2-P9 settings, correction, and account-deletion recheck
+
+**Status:** Implemented and verified locally on 2026-10-07; staging verification pending.
+
+**Official sources**
+
+- Supabase JavaScript, [`signInWithPassword()`](https://supabase.com/docs/reference/javascript/auth-signinwithpassword), [`getUser()`](https://supabase.com/docs/reference/javascript/auth-getuser), and [`deleteUser()`](https://supabase.com/docs/reference/javascript/auth-admin-deleteuser).
+- Supabase, [Securing Edge Functions](https://supabase.com/docs/guides/functions/auth), [Auth context in Edge Functions](https://supabase.com/docs/guides/functions/auth-headers), [Environment variables and secrets](https://supabase.com/docs/guides/functions/secrets), and [Managing user data](https://supabase.com/docs/guides/auth/managing-user-data).
+- Supabase, [Database Functions](https://supabase.com/docs/guides/database/functions) and [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security).
+
+All sources were accessed on 2026-10-07.
+
+**Finding**
+
+- A target-history replacement belongs in one PostgreSQL function so the profile update, closure of the current target, and creation of its successor either all commit or all roll back. The function must derive ownership from `auth.uid()` and retain a locked, empty search path.
+- Existing food-log provenance should remain immutable. A serving correction can be reproduced from the saved reference and conversion metadata, while direct table updates would allow a browser to substitute unrelated food or dataset values.
+- An Edge Function can validate the bearer token against Supabase Auth with `getUser()`. A separate `signInWithPassword()` request verifies the current password without trusting a client assertion.
+- Admin user deletion is a server-only operation. A project service-role or secret credential must remain in the managed function environment because it bypasses Row Level Security. Hard deletion of the managed auth user triggers the reviewed `ON DELETE CASCADE` relationships for application data.
+- Deleting a user does not itself revoke every already-issued JWT immediately. The application therefore validates the caller before deletion, performs the hard delete, clears local session state after success, and relies on subsequent server-side identity checks and token expiry. Full integrated session hardening remains part of V2-P10.
+
+**Implementation consequence**
+
+Use `update_profile_settings` for atomic canonical profile and target-history changes, and use `update_food_log` for owner-scoped captured-snapshot recalculation. Keep log deletion under owner RLS. Deploy `delete-account` with gateway JWT verification, server-side `getUser()`, current-password sign-in, and an admin hard delete. Do not store or expose a privileged key in frontend code or Vercel `VITE_*` variables. Require a disposable staging-account test before marking V2-P9 complete.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |

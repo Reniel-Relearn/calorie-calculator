@@ -2,7 +2,7 @@ function failure(code, error = null) {
   return { ok: false, code, error };
 }
 
-function normalizeProfile(row) {
+export function normalizeProfile(row) {
   if (!row) return null;
   return {
     userId: row.user_id,
@@ -18,7 +18,7 @@ function normalizeProfile(row) {
   };
 }
 
-function normalizeTarget(row) {
+export function normalizeTarget(row) {
   if (!row) return null;
   return {
     id: row.id,

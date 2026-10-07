@@ -195,7 +195,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion
 
-**Status:** NOT STARTED  
+**Status:** BLOCKED — USER ACTION REQUIRED
 **Objective:** Give users full control over editable personal data, goals, logged mistakes, timezone, and account removal while preserving history.  
 **Why this phase exists:** Persistent data must be correctable and user-controlled.  
 **Dependencies:** V2-P5 profile/targets, V2-P6 snapshots, V2-P7/P8 refresh behavior, accepted V2-P4 goal set.  

@@ -6,7 +6,7 @@ import { join } from "node:path";
 
 const APP_URL = process.env.AUTH_TEST_APP_URL ?? "http://127.0.0.1:5173/";
 const CDP_URL = process.env.AUTH_TEST_CDP_URL ?? "http://127.0.0.1:9223";
-const MAILPIT_URL = process.env.AUTH_TEST_MAILPIT_URL ?? "http://127.0.0.1:54324";
+const MAILPIT_URL = process.env.AUTH_TEST_MAILPIT_URL ?? "http://127.0.0.1:55324";
 const PASSWORD = "Local-test-password-123";
 const UPDATED_PASSWORD = "Updated-local-password-456";
 const EMAIL = `auth-test-${Date.now()}@example.test`;
@@ -477,10 +477,56 @@ async function run() {
     }
     await page.setViewport(390, 844);
 
-    await setForm(page, { "#food-query": "150g grilled chicken breast" });
+    await click(page, "#settings-open");
+    await waitForVisible(page, "#settings-panel");
+    for (const [width, height] of [
+      [320, 568],
+      [390, 844],
+      [768, 1024],
+      [1280, 800],
+    ]) {
+      await page.setViewport(width, height);
+      assert.equal(
+        await page.evaluate("document.documentElement.scrollWidth === document.documentElement.clientWidth"),
+        true,
+        `Settings overflowed at ${width}x${height}`,
+      );
+      assert.equal(
+        await page.evaluate(`[...document.querySelectorAll('#settings-panel button, #settings-panel input')]
+          .filter((control) => !control.closest('[hidden]'))
+          .every((control) => {
+            const target = ['radio', 'checkbox'].includes(control.type)
+              ? control.closest('label')
+              : control;
+            const rect = target.getBoundingClientRect();
+            return rect.height >= 44 && rect.width >= 44;
+          })`),
+        true,
+        `Settings touch targets were too small at ${width}x${height}`,
+      );
+    }
+    await page.setViewport(390, 844);
+    await setForm(page, { "#settings-display-name": "Updated Local User" });
+    await click(page, "#settings-profile-submit");
+    await page.waitFor(
+      "document.querySelector('#settings-panel').hidden && document.querySelector('#profile-home-greeting').textContent === 'Welcome, Updated Local User'",
+      "Display-name-only settings update did not refresh the profile.",
+      15_000,
+    );
+    await click(page, "#settings-open");
+    await setForm(page, { "#settings-weight-kg": "64" });
+    await click(page, "#settings-life-stage-confirmation");
+    await click(page, "#settings-profile-submit");
+    await page.waitFor(
+      "document.querySelector('#settings-panel').hidden && document.querySelector('#profile-home-greeting').textContent === 'Welcome, Updated Local User'",
+      "Target-affecting settings update did not complete.",
+      15_000,
+    );
+
+    await setForm(page, { "#food-query": "1 cup cooked white rice" });
     await click(page, "#analyze-food-button");
     await waitForVisible(page, "#state-success");
-    assert.equal(await page.evaluate("document.querySelector('#result-calories').value"), "227");
+    assert.equal(await page.evaluate("document.querySelector('#result-calories').value"), "204");
     for (const [width, height] of [
       [320, 568],
       [390, 844],
@@ -521,11 +567,11 @@ async function run() {
     );
     assert.equal(
       await page.evaluate("document.querySelector('#daily-calories').textContent"),
-      "227 kcal",
+      "204 kcal",
     );
     assert.equal(
       await page.evaluate("document.querySelector('#daily-log-list h3').textContent"),
-      "Grilled Chicken Breast",
+      "Cooked White Rice",
     );
     assert.equal(
       await page.evaluate(`(() => {
@@ -535,7 +581,7 @@ async function run() {
       true,
     );
     await page.waitFor(
-      "document.querySelector('#weekly-day-list .weekly-day--today dd').textContent === '227 kcal'",
+      "document.querySelector('#weekly-day-list .weekly-day--today dd').textContent === '204 kcal'",
       "The weekly tracker did not refresh after the confirmed food log.",
       15_000,
     );
@@ -544,15 +590,54 @@ async function run() {
       7,
     );
     const todayDate = await page.evaluate("document.querySelector('#daily-date').value");
+    const previousDateValue = new Date(`${todayDate}T12:00:00Z`);
+    previousDateValue.setUTCDate(previousDateValue.getUTCDate() - 1);
+    const previousDate = previousDateValue.toISOString().slice(0, 10);
+
+    await click(page, '#daily-log-list button[aria-label="Edit Cooked White Rice"]');
+    await page.waitFor(
+      "document.querySelector('#log-edit-dialog').open",
+      "The edit-entry dialog did not open.",
+    );
+    await setForm(page, {
+      "#log-edit-quantity": "2",
+      "#log-edit-date": previousDate,
+      "#log-edit-time": "12:00",
+    });
+    await click(page, "#log-edit-submit");
+    await page.waitFor(
+      "!document.querySelector('#log-edit-dialog').open && !document.querySelector('#daily-empty').hidden && document.querySelector('#daily-calories').textContent === '0 kcal'",
+      "Editing an entry to another date did not refresh the original day.",
+      15_000,
+    );
+
     await click(page, "#daily-previous");
     await page.waitFor(
-      `document.querySelector('#daily-date').value !== ${JSON.stringify(todayDate)} && !document.querySelector('#daily-content').hidden`,
-      "Previous-day navigation did not load another local date.",
+      `document.querySelector('#daily-date').value === ${JSON.stringify(previousDate)} && document.querySelectorAll('#daily-log-list > li').length === 1 && document.querySelector('#daily-calories').textContent === '408 kcal'`,
+      "Edited cup serving did not move to the previous day with recalculated nutrition.",
+      15_000,
+    );
+    await click(page, '#daily-log-list button[aria-label="Delete Cooked White Rice"]');
+    await page.waitFor(
+      "document.querySelector('#log-delete-dialog').open",
+      "The delete-entry confirmation did not open.",
+    );
+    await click(page, "#log-delete-cancel");
+    assert.equal(
+      await page.evaluate("document.querySelectorAll('#daily-log-list > li').length"),
+      1,
+    );
+    await click(page, '#daily-log-list button[aria-label="Delete Cooked White Rice"]');
+    await click(page, "#log-delete-confirm");
+    await page.waitFor(
+      "!document.querySelector('#log-delete-dialog').open && !document.querySelector('#daily-empty').hidden && document.querySelector('#daily-calories').textContent === '0 kcal'",
+      "Confirmed food-log deletion did not refresh the selected day.",
+      15_000,
     );
     await click(page, "#daily-today");
     await page.waitFor(
-      `document.querySelector('#daily-date').value === ${JSON.stringify(todayDate)} && document.querySelectorAll('#daily-log-list > li').length === 1`,
-      "Today navigation did not restore the current daily log.",
+      `document.querySelector('#daily-date').value === ${JSON.stringify(todayDate)} && !document.querySelector('#daily-empty').hidden`,
+      "Today navigation did not restore the current empty day.",
     );
     const currentWeekLabel = await page.evaluate(
       "document.querySelector('#weekly-range-label').textContent",
@@ -663,11 +748,44 @@ async function run() {
     await waitForVisible(page, "#protected-app");
     await waitForVisible(page, "#profile-home");
 
+    await click(page, "#settings-open");
+    await setForm(page, {
+      "#settings-current-password": "incorrect-password",
+      "#settings-delete-confirmation": "DELETE",
+    });
+    await click(page, "#settings-delete-submit");
+    await waitForVisible(page, "#settings-delete-error", 15_000);
+    assert.equal(
+      await page.evaluate("document.querySelector('#protected-app').hidden"),
+      false,
+    );
+    await setForm(page, {
+      "#settings-current-password": UPDATED_PASSWORD,
+      "#settings-delete-confirmation": "DELETE",
+    });
+    await click(page, "#settings-delete-submit");
+    await waitForVisible(page, "#auth-signed-out", 20_000);
+    assert.equal(
+      await page.evaluate("document.querySelector('#protected-app').hidden"),
+      true,
+    );
+    await click(page, '[data-auth-view="login"]');
+    await setForm(page, {
+      "#login-email": EMAIL,
+      "#login-password": UPDATED_PASSWORD,
+    });
+    await click(page, "#login-submit");
+    await page.waitFor(
+      "document.querySelector('#login-error').textContent === 'The email or password is incorrect.'",
+      "A hard-deleted account could still log in.",
+      15_000,
+    );
+
     await page.navigate(`${APP_URL}?auth=recovery&error_code=otp_expired`);
     await waitForVisible(page, "#auth-error");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
 
-    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, explicit food logging, daily and weekly tracker refresh/navigation, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
+    console.log("Local integration passed: signup, confirmation, onboarding, profile/target settings, captured-snapshot log edit/delete, daily and weekly refresh, protected account deletion, session restoration, password recovery, and bad-link handling.");
   } finally {
     await page.close();
   }

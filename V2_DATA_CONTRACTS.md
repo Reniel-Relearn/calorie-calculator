@@ -131,3 +131,34 @@ V2-P8 queries one owner's logs for one inclusive seven-date range and calculates
 - No chart is included in V2-P8 because the seven textual day records already communicate the required values without adding mobile density or duplicate interaction. A later chart remains optional only if it adds comprehension and retains full semantic equivalence.
 - A matching confirmed save event reloads the selected week without a full page refresh.
 - No-history, partial-target, unavailable-target, session-expired, retryable network, current-week, and completed-week states remain distinct.
+
+## Settings and Data-Control Contract — Version 1.0.0
+
+V2-P9 adds authenticated corrections without rewriting provenance or effective history.
+
+### Profile and target settings
+
+- Editable canonical profile fields are display name, date of birth, equation sex, height in centimeters, weight in kilograms, activity category, maintain goal, and IANA timezone.
+- A display-name-only change updates the profile and keeps the current target row open.
+- A change to date of birth, equation sex, height, weight, activity, goal, or timezone requires a newly calculated target payload.
+- `update_profile_settings` locks the current profile and target, validates the caller and canonical payload, updates the profile, closes the current target, and creates exactly one successor in one transaction.
+- A failed validation or insert rolls back the entire operation. Historical target rows are never overwritten.
+- A timezone change affects future day boundaries and new logs. Existing `timezone_at_entry` and `local_date` values remain unchanged.
+
+### Food-log correction
+
+- An edit accepts a positive serving quantity plus an explicit local date and time.
+- The editable log's saved calculation snapshot is the only nutrition and serving-conversion source. Current `foods.js` data is not consulted.
+- The saved entered unit, descriptor, normalized unit, food identity, dataset identity, reference nutrition, conversion type, and conversion metadata remain immutable.
+- The pure editor recalculates normalized amount and nutrients while preserving null nutrients as null and explicit zero as zero.
+- `update_food_log` derives ownership from `auth.uid()`, validates the new scalars against the updated snapshot, and returns both the updated log and its prior local date.
+- Confirmed edits and deletes refresh the selected daily and weekly ranges affected by the mutation. Canceling deletion performs no write.
+- Direct authenticated updates to food-log calculation columns are revoked; delete remains owner-scoped through RLS.
+
+### Account deletion
+
+- The browser sends the current password and exact `DELETE` confirmation only to the protected `delete-account` Edge Function.
+- The function validates the bearer token with Supabase Auth, rechecks the current password, and performs a hard auth-user deletion with a server-only privileged client.
+- The privileged credential is supplied by the managed Edge Function environment and is never exposed to frontend code or a `VITE_*` variable.
+- Deleting `auth.users` cascades the profile, calorie-target history, and food logs through reviewed foreign keys.
+- On confirmed success, the browser clears its local session and private application state. Ordinary validation/authentication failures leave the account and data intact and return safe user-facing errors.

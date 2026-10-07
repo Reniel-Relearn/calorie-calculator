@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking and V2-P8 weekly dashboard and history are complete and verified locally and on staging. V2-P9 profile settings, log correction, and account deletion is the next planned phase. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking and V2-P8 weekly dashboard and history are complete and verified locally and on staging. V2-P9 profile settings, target history updates, captured-snapshot log correction, and protected account deletion are implemented and locally verified; the phase is waiting for its reviewed staging migration, Edge Function deployment, and disposable-account verification. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
 
 Version 2 planning and operational documents:
 
@@ -34,7 +34,7 @@ Version 2 planning and operational documents:
 - Seven explicit states: IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID
 - Mobile-first layouts with tablet and desktop enhancements
 
-Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, a protected application shell, private profile/target/log tables, a pure maintenance energy engine, mobile-first profile onboarding, atomic profile/first-target persistence, an explicit retry-safe action that saves a successful calculator result, daily tracking, and a locally verified Monday-through-Sunday weekly dashboard.
+Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, a protected application shell, private profile/target/log tables, a pure maintenance energy engine, mobile-first profile onboarding and settings, atomic target history, explicit retry-safe food logging, captured-snapshot log correction and deletion, daily and weekly tracking, and protected hard account deletion.
 
 ## Measurement Model
 
@@ -120,7 +120,7 @@ npm run test:db
 
 The database tests cover schema shape, constraints, grants, RLS ownership, anonymous denial, target-history invariants, missing nutrients, and auth-user cascades. Stop the local stack with `npm run supabase:stop`.
 
-Local confirmation and password-reset emails are captured by Mailpit at `http://127.0.0.1:54324/`; they are not delivered to the internet. With the Supabase stack and Vite server running, execute the browser integration flow with:
+Local confirmation and password-reset emails are captured by Mailpit at `http://127.0.0.1:55324/`; they are not delivered to the internet. With the Supabase stack and Vite server running, execute the browser integration flow with:
 
 ```powershell
 npm run test:auth:local
@@ -138,6 +138,15 @@ For V2-P2, the staging Supabase Auth URL configuration must use that origin as t
 - `https://calorie-calculator-gamma-ten.vercel.app/?auth=recovery`
 
 Remote email confirmation must remain enabled and the remote minimum password length must be at least eight characters. Production SMTP remains deferred; staging uses Supabase's limited test sender. Repeated staging email requests may temporarily return a rate-limit error, so wait for the provider quota to reset before requesting another message. Current phase status is maintained in `V2_STATUS.md`.
+
+V2-P9 adds one reviewed database migration and the `delete-account` Edge Function. After reviewing the diff, apply and deploy them to the linked staging project with:
+
+```powershell
+npx.cmd supabase db push --linked
+npx.cmd supabase functions deploy delete-account
+```
+
+Supabase supplies the function's project URL and privileged server credential in its managed runtime. Never copy that credential into the repository, `.env.local`, Vercel, browser code, or any `VITE_*` variable. Use only a disposable synthetic staging account for the required deletion test.
 
 ## Architecture
 
@@ -157,15 +166,18 @@ Remote email confirmation must remain enabled and the remote minimum password le
 - `js/targets/energy-target.js` — pure target eligibility, validation, methodology, and outcome orchestration
 - `js/targets/target-format.js` — presentation-only whole-kcal rounding
 - `js/profile/` — onboarding validation, persistence service, controller, and accessible view binding
-- `js/logs/` — pure result-to-log mapping, idempotent persistence service, and save controller
+- `js/settings/` — profile/target settings, validation, protected deletion service, controller, and view binding
+- `js/logs/` — pure result-to-log mapping, idempotent persistence, captured-snapshot editing, deletion, controllers, and view binding
 - `js/dashboard/` — shared paginated data access, null-aware daily and weekly aggregation, target resolution, controllers, and accessible rendering
 - `js/private-app.js` — incomplete-profile routing and authenticated home/calculator coordination
 - `css/auth.css` — mobile-first account and protected-shell presentation
 - `css/profile.css` — mobile-first onboarding and target-summary presentation
 - `css/dashboard.css` — mobile-first daily and weekly trackers, totals, date/week navigation, states, and saved-food lists
+- `css/settings.css` — mobile-first settings and consequential-action presentation
 - `css/` — mobile-first components and progressive responsive enhancements
 - `supabase/config.toml` — reproducible local Supabase service configuration
 - `supabase/migrations/` — versioned private-data schema, constraints, grants, and RLS policies
+- `supabase/functions/delete-account/` — authenticated current-password verification and server-only hard deletion
 - `supabase/tests/database/` — pgTAP schema, constraint, ownership, and cascade checks
 - `tests/` — auth unit/integration checks plus environment and frozen V1 regressions
 

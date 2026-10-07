@@ -64,7 +64,7 @@ export function formatLoggedServing(log) {
   return `${entered} · ${rounded(log.normalizedAmount, 2)} ${log.normalizedUnit}`;
 }
 
-function createLogItem(log) {
+function createLogItem(log, handlers) {
   const item = document.createElement("li");
   item.className = "daily-log-item";
 
@@ -80,7 +80,24 @@ function createLogItem(log) {
   calories.className = "daily-log-item__calories";
   calories.textContent = `${rounded(log.caloriesKcal)} kcal`;
   calories.setAttribute("aria-label", `${rounded(log.caloriesKcal)} kilocalories`);
-  item.append(details, calories);
+
+  const actions = document.createElement("div");
+  actions.className = "daily-log-item__actions";
+  const edit = document.createElement("button");
+  edit.className = "button button--text";
+  edit.type = "button";
+  edit.textContent = "Edit";
+  edit.setAttribute("aria-label", `Edit ${log.foodNameSnapshot}`);
+  edit.addEventListener("click", () => handlers.onEditLog(log));
+  const remove = document.createElement("button");
+  remove.className = "button button--text daily-log-item__delete";
+  remove.type = "button";
+  remove.textContent = "Delete";
+  remove.setAttribute("aria-label", `Delete ${log.foodNameSnapshot}`);
+  remove.addEventListener("click", () => handlers.onDeleteLog(log));
+  actions.append(edit, remove);
+
+  item.append(details, calories, actions);
   return item;
 }
 
@@ -240,7 +257,9 @@ export function createDailyView(handlers) {
       renderTarget(summary);
       renderNutrients(summary.totals.nutrients);
 
-      elements.list.replaceChildren(...summary.logs.map(createLogItem));
+      elements.list.replaceChildren(
+        ...summary.logs.map((log) => createLogItem(log, handlers)),
+      );
       elements.empty.hidden = summary.logs.length !== 0;
       elements.list.hidden = summary.logs.length === 0;
       elements.listHeading.textContent = `Logged foods (${summary.logs.length})`;

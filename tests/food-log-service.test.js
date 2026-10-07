@@ -96,3 +96,71 @@ test("maps expired sessions and other failures to safe outcomes", async () => {
   assert.equal((await expired.create(COMMAND)).code, "SESSION_REQUIRED");
   assert.equal((await failed.create(COMMAND)).code, "LOG_SAVE_FAILED");
 });
+
+test("updates through the captured-snapshot RPC without sending owner identity", async () => {
+  let call;
+  const service = createFoodLogService({
+    async rpc(name, parameters) {
+      call = { name, parameters };
+      return {
+        data: {
+          log: rowFor({
+            ...COMMAND,
+            enteredQuantity: 200,
+            normalizedAmount: 200,
+          }),
+          previousLocalDate: "2026-10-06",
+        },
+        error: null,
+      };
+    },
+  });
+  const command = {
+    ...COMMAND,
+    id: COMMAND.requestId,
+    enteredQuantity: 200,
+    normalizedAmount: 200,
+  };
+  const result = await service.update(command);
+  assert.equal(result.ok, true);
+  assert.equal(result.previousLocalDate, "2026-10-06");
+  assert.equal(call.name, "update_food_log");
+  assert.equal(call.parameters.p_log_id, COMMAND.requestId);
+  assert.equal(Object.hasOwn(call.parameters, "p_user_id"), false);
+});
+
+test("deletes only the RLS-visible log and returns its stable date", async () => {
+  const calls = [];
+  const result = await createFoodLogService({
+    from(table) {
+      calls.push(["from", table]);
+      const builder = {
+        delete() {
+          calls.push(["delete"]);
+          return builder;
+        },
+        eq(column, value) {
+          calls.push(["eq", column, value]);
+          return builder;
+        },
+        select(columns) {
+          calls.push(["select", columns]);
+          return builder;
+        },
+        maybeSingle() {
+          return Promise.resolve({
+            data: { id: COMMAND.requestId, local_date: COMMAND.localDate },
+            error: null,
+          });
+        },
+      };
+      return builder;
+    },
+  }).delete(COMMAND.requestId);
+  assert.deepEqual(result, {
+    ok: true,
+    id: COMMAND.requestId,
+    localDate: COMMAND.localDate,
+  });
+  assert.deepEqual(calls[2], ["eq", "id", COMMAND.requestId]);
+});

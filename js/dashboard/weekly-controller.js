@@ -107,6 +107,21 @@ export function createWeeklyController({ service, view, now = () => new Date() }
       }
       return undefined;
     },
+    handleFoodLogChanged(detail) {
+      const dates = getWeekDates(selectedWeekStart);
+      const belongs = (localDate) =>
+        typeof localDate === "string" &&
+        dates &&
+        localDate >= dates[0] &&
+        localDate <= dates[6];
+      if (
+        profile &&
+        (belongs(detail?.localDate) || belongs(detail?.previousLocalDate))
+      ) {
+        return load({ announce: false });
+      }
+      return undefined;
+    },
     next: () => {
       const currentStart = currentWeekStart();
       const nextStart = addDaysToIsoDate(selectedWeekStart, 7);

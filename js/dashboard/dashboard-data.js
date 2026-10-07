@@ -17,6 +17,9 @@ export const DASHBOARD_LOG_COLUMNS = [
   "fiber_g",
   "sugar_g",
   "sodium_mg",
+  "nutrition_dataset_version",
+  "source_reference",
+  "calculation_snapshot",
 ].join(",");
 
 export const DASHBOARD_TARGET_COLUMNS = [
@@ -56,6 +59,9 @@ export function normalizeDashboardLog(row) {
     fiberG: numberOrNull(row.fiber_g),
     sugarG: numberOrNull(row.sugar_g),
     sodiumMg: numberOrNull(row.sodium_mg),
+    nutritionDatasetVersion: row.nutrition_dataset_version,
+    sourceReference: row.source_reference,
+    calculationSnapshot: row.calculation_snapshot,
   };
 }
 

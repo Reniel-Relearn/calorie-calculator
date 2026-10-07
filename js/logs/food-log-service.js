@@ -80,5 +80,78 @@ export function createFoodLogService(client) {
         log: normalizeLog(result.data.log),
       };
     },
+
+    async update(command) {
+      let result;
+      try {
+        result = await client.rpc("update_food_log", {
+          p_calculation_snapshot: command.calculationSnapshot,
+          p_calories_kcal: command.caloriesKcal,
+          p_carbohydrates_g: command.carbohydratesG,
+          p_consumed_at: command.consumedAt,
+          p_entered_descriptor: command.enteredDescriptor,
+          p_entered_quantity: command.enteredQuantity,
+          p_entered_unit: command.enteredUnit,
+          p_fat_g: command.fatG,
+          p_fiber_g: command.fiberG,
+          p_local_date: command.localDate,
+          p_log_id: command.id,
+          p_normalized_amount: command.normalizedAmount,
+          p_normalized_unit: command.normalizedUnit,
+          p_protein_g: command.proteinG,
+          p_sodium_mg: command.sodiumMg,
+          p_sugar_g: command.sugarG,
+          p_timezone_at_entry: command.timezoneAtEntry,
+        });
+      } catch (error) {
+        return failure("LOG_UPDATE_FAILED", error);
+      }
+
+      if (result.error) {
+        return failure(
+          isAuthenticationError(result.error)
+            ? "SESSION_REQUIRED"
+            : "LOG_UPDATE_FAILED",
+          result.error,
+        );
+      }
+      if (!result.data?.log) return failure("LOG_UPDATE_FAILED");
+
+      return {
+        ok: true,
+        log: normalizeLog(result.data.log),
+        previousLocalDate: result.data.previousLocalDate,
+      };
+    },
+
+    async delete(logId) {
+      let result;
+      try {
+        result = await client
+          .from("food_logs")
+          .delete()
+          .eq("id", logId)
+          .select("id,local_date")
+          .maybeSingle();
+      } catch (error) {
+        return failure("LOG_DELETE_FAILED", error);
+      }
+
+      if (result.error) {
+        return failure(
+          isAuthenticationError(result.error)
+            ? "SESSION_REQUIRED"
+            : "LOG_DELETE_FAILED",
+          result.error,
+        );
+      }
+      if (!result.data) return failure("LOG_NOT_FOUND");
+
+      return {
+        ok: true,
+        id: result.data.id,
+        localDate: result.data.local_date,
+      };
+    },
   });
 }

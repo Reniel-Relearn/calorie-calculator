@@ -97,18 +97,20 @@ select is(
   'User A cannot insert a food log for User B'
 );
 
-select lives_ok(
-  $$update public.food_logs set entered_quantity = 125, normalized_amount = 125
-    where id = '31000000-0000-0000-0000-000000000001'$$,
-  'User A can update their own food log'
+select is(
+  (select pg_temp.sqlstate_for($$update public.food_logs
+    set entered_quantity = 125, normalized_amount = 125
+    where id = '31000000-0000-0000-0000-000000000001'$$)),
+  '42501',
+  'User A cannot bypass the captured-snapshot edit RPC'
 );
-select is((select normalized_amount from public.food_logs where id = '31000000-0000-0000-0000-000000000001'), 125.000000::numeric, 'own update is persisted');
+select is((select normalized_amount from public.food_logs where id = '31000000-0000-0000-0000-000000000001'), 100.000000::numeric, 'denied direct update changes nothing');
 
 select is(
-  pg_temp.row_count_for($$update public.food_logs set food_name_snapshot = 'Tampered'
-    where id = '32000000-0000-0000-0000-000000000001'$$),
-  0,
-  'cross-user food-log update affects no row'
+  (select pg_temp.sqlstate_for($$update public.food_logs set food_name_snapshot = 'Tampered'
+    where id = '32000000-0000-0000-0000-000000000001'$$)),
+  '42501',
+  'cross-user direct food-log update is denied'
 );
 
 select is(

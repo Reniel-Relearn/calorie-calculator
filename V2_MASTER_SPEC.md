@@ -279,6 +279,8 @@ Timezone changes apply to future entries and future “today” boundaries. Exis
 
 Account deletion is included. It requires a deliberate confirmation and a server-side privileged operation. Deleting the auth user cascades to the profile, target history, and food logs. The frontend must never receive the privileged deletion credential.
 
+V2-P9 implements these controls through authenticated transactional RPCs and a protected Edge Function. Display-name-only updates do not rotate target history. Target-affecting profile changes create one successor target atomically. Food-log edits recalculate only from their captured historical snapshot and keep the saved food, dataset, reference, conversion route, unit, and descriptor immutable. Hard deletion requires the exact confirmation plus current-password verification before the server deletes the managed auth user. Staging deployment and a disposable-account cascade test are required before the phase is complete.
+
 ## 17. Data Architecture
 
 ### Selected platform

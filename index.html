@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./css/auth.css">
     <link rel="stylesheet" href="./css/profile.css">
     <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="./css/settings.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <script type="module" src="./js/main.js"></script>
   </head>
@@ -340,8 +341,11 @@
 
       <section class="profile-home page-container" id="profile-home" aria-labelledby="profile-home-greeting" hidden>
         <div class="profile-home__intro">
-          <p class="eyebrow">Your private nutrition space</p>
-          <h1 class="profile-home__greeting" id="profile-home-greeting" tabindex="-1">Welcome</h1>
+          <div>
+            <p class="eyebrow">Your private nutrition space</p>
+            <h1 class="profile-home__greeting" id="profile-home-greeting" tabindex="-1">Welcome</h1>
+          </div>
+          <button class="button button--secondary" id="settings-open" type="button" aria-controls="settings-panel" aria-expanded="false">Profile &amp; Settings</button>
         </div>
         <article class="target-summary" aria-labelledby="target-summary-heading">
           <div>
@@ -355,6 +359,99 @@
           </dl>
           <p class="target-summary__note">This estimate has meaningful individual uncertainty. Monitor weight trends over time and seek qualified guidance for personal health questions.</p>
         </article>
+
+        <section class="settings-panel" id="settings-panel" aria-labelledby="settings-heading" hidden>
+          <header class="settings-panel__header">
+            <div>
+              <p class="eyebrow">Private account controls</p>
+              <h2 id="settings-heading" tabindex="-1">Profile &amp; Settings</h2>
+            </div>
+            <button class="button button--text" id="settings-close" type="button">Close</button>
+          </header>
+
+          <form class="settings-form" id="settings-profile-form" novalidate>
+            <p class="form-error" id="settings-profile-error" role="alert" tabindex="-1" hidden></p>
+
+            <div class="form-field form-field--full">
+              <label for="settings-display-name">Display name</label>
+              <input id="settings-display-name" name="displayName" type="text" autocomplete="name" maxlength="80" required aria-describedby="settings-profile-error">
+              <p class="field-help">Changing only your display name does not create a new calorie target.</p>
+            </div>
+
+            <div class="settings-form__grid">
+              <div class="form-field">
+                <label for="settings-date-of-birth">Date of birth</label>
+                <input id="settings-date-of-birth" name="dateOfBirth" type="date" autocomplete="bday" required aria-describedby="settings-profile-error">
+              </div>
+              <div class="form-field">
+                <label for="settings-timezone">IANA timezone</label>
+                <input id="settings-timezone" name="timezoneName" type="text" list="profile-timezone-options" autocomplete="off" maxlength="64" required aria-describedby="settings-timezone-help settings-profile-error">
+                <p class="field-help" id="settings-timezone-help">Changes define future “today” boundaries and new entries. Existing logged dates stay unchanged.</p>
+              </div>
+              <div class="form-field">
+                <label for="settings-height-cm">Height (cm)</label>
+                <input id="settings-height-cm" name="heightCm" type="number" inputmode="decimal" min="0.01" max="9999.99" step="0.01" required aria-describedby="settings-profile-error">
+              </div>
+              <div class="form-field">
+                <label for="settings-weight-kg">Weight (kg)</label>
+                <input id="settings-weight-kg" name="weightKg" type="number" inputmode="decimal" min="0.01" max="9999.99" step="0.01" required aria-describedby="settings-profile-error">
+              </div>
+            </div>
+
+            <fieldset class="settings-choice-group">
+              <legend>Sex category used by the source equation</legend>
+              <label class="profile-choice" for="settings-equation-sex-female">
+                <input id="settings-equation-sex-female" name="sexForEnergyEquation" type="radio" value="female" required>
+                <span><strong>Female equation</strong></span>
+              </label>
+              <label class="profile-choice" for="settings-equation-sex-male">
+                <input id="settings-equation-sex-male" name="sexForEnergyEquation" type="radio" value="male" required>
+                <span><strong>Male equation</strong></span>
+              </label>
+            </fieldset>
+
+            <fieldset class="settings-choice-group">
+              <legend>Usual physical activity</legend>
+              <div class="settings-form__grid">
+                <label class="profile-choice" for="settings-activity-inactive"><input id="settings-activity-inactive" name="activityCategory" type="radio" value="inactive" required><span><strong>Inactive</strong></span></label>
+                <label class="profile-choice" for="settings-activity-low-active"><input id="settings-activity-low-active" name="activityCategory" type="radio" value="low_active" required><span><strong>Low active</strong></span></label>
+                <label class="profile-choice" for="settings-activity-active"><input id="settings-activity-active" name="activityCategory" type="radio" value="active" required><span><strong>Active</strong></span></label>
+                <label class="profile-choice" for="settings-activity-very-active"><input id="settings-activity-very-active" name="activityCategory" type="radio" value="very_active" required><span><strong>Very active</strong></span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="settings-choice-group">
+              <legend>Calorie goal</legend>
+              <label class="profile-choice" for="settings-goal-maintain"><input id="settings-goal-maintain" name="goalType" type="radio" value="maintain" required><span><strong>Maintain</strong><small>Lose and Gain remain unavailable in Version 2.</small></span></label>
+            </fieldset>
+
+            <label class="profile-confirmation" for="settings-life-stage-confirmation">
+              <input id="settings-life-stage-confirmation" name="lifeStageEligibilityConfirmed" type="checkbox" aria-describedby="settings-life-stage-help settings-profile-error">
+              <span>I confirm this updated estimate is not for pregnancy or breastfeeding.</span>
+            </label>
+            <p class="field-help" id="settings-life-stage-help">Required when a change creates a new target. This confirmation is not stored.</p>
+
+            <button class="button button--primary" id="settings-profile-submit" type="submit">Save Settings</button>
+            <p class="settings-form__note">Changes to birth date, equation category, measurements, activity, goal, or timezone create a new effective target. Earlier target history remains unchanged.</p>
+          </form>
+
+          <section class="settings-danger" aria-labelledby="settings-delete-heading">
+            <h3 id="settings-delete-heading">Delete account</h3>
+            <p>This permanently deletes your account, profile, target history, and food logs. This action cannot be undone.</p>
+            <form id="settings-delete-form" novalidate>
+              <p class="form-error" id="settings-delete-error" role="alert" tabindex="-1" hidden></p>
+              <div class="form-field">
+                <label for="settings-current-password">Current password</label>
+                <input id="settings-current-password" name="currentPassword" type="password" autocomplete="current-password" required aria-describedby="settings-delete-error">
+              </div>
+              <div class="form-field">
+                <label for="settings-delete-confirmation">Type DELETE to confirm</label>
+                <input id="settings-delete-confirmation" name="confirmation" type="text" autocomplete="off" required aria-describedby="settings-delete-error">
+              </div>
+              <button class="button settings-danger__button" id="settings-delete-submit" type="submit">Permanently Delete Account</button>
+            </form>
+          </section>
+        </section>
 
         <section class="daily-tracker" id="daily-tracker" aria-labelledby="daily-heading" hidden>
           <p class="visually-hidden" id="daily-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
@@ -489,6 +586,48 @@
             </section>
           </div>
         </section>
+
+        <p class="visually-hidden" id="log-management-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+
+        <dialog class="management-dialog" id="log-edit-dialog" aria-labelledby="log-edit-heading">
+          <form class="management-dialog__content" id="log-edit-form" novalidate>
+            <h2 id="log-edit-heading">Edit food entry</h2>
+            <p><strong id="log-edit-name">Food entry</strong></p>
+            <p class="field-help" id="log-edit-serving"></p>
+            <p class="form-error" id="log-edit-error" role="alert" tabindex="-1" hidden></p>
+            <div class="form-field">
+              <label for="log-edit-quantity">Serving amount</label>
+              <input id="log-edit-quantity" name="quantity" type="number" inputmode="decimal" min="0.000001" step="any" required aria-describedby="log-edit-serving log-edit-error">
+            </div>
+            <div class="management-dialog__grid">
+              <div class="form-field">
+                <label for="log-edit-date">Date</label>
+                <input id="log-edit-date" name="localDate" type="date" required aria-describedby="log-edit-error">
+              </div>
+              <div class="form-field">
+                <label for="log-edit-time">Time</label>
+                <input id="log-edit-time" name="localTime" type="time" required aria-describedby="log-edit-error">
+              </div>
+            </div>
+            <p class="field-help">Date and time use the timezone saved with this entry. Nutrition is recalculated from its captured reference rather than the current food catalog.</p>
+            <div class="management-dialog__actions">
+              <button class="button button--secondary" id="log-edit-cancel" type="button">Cancel</button>
+              <button class="button button--primary" id="log-edit-submit" type="submit">Save Changes</button>
+            </div>
+          </form>
+        </dialog>
+
+        <dialog class="management-dialog" id="log-delete-dialog" aria-labelledby="log-delete-heading">
+          <div class="management-dialog__content">
+            <h2 id="log-delete-heading">Delete food entry?</h2>
+            <p><strong id="log-delete-name">Food entry</strong> will be permanently removed from your log and totals.</p>
+            <p class="form-error" id="log-delete-error" role="alert" tabindex="-1" hidden></p>
+            <div class="management-dialog__actions">
+              <button class="button button--secondary" id="log-delete-cancel" type="button">Cancel</button>
+              <button class="button settings-danger__button" id="log-delete-confirm" type="button">Delete Entry</button>
+            </div>
+          </div>
+        </dialog>
       </section>
 
     <main class="app-shell page-container" id="app" tabindex="-1" hidden>

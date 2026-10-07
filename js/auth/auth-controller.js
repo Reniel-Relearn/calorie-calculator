@@ -349,6 +349,13 @@ export function createAuthController({
   }
 
   return Object.freeze({
+    accountDeleted() {
+      clearPrivateState();
+      ui.resetForms();
+      ui.showState(AUTH_STATES.SIGNED_OUT, {
+        announcement: "Your account and private data were permanently deleted.",
+      });
+    },
     destroy() {
       unsubscribe?.();
     },
