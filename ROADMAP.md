@@ -193,7 +193,7 @@ The authoritative scope and implementation sequence are maintained in:
 - `V2_DECISIONS.md`
 - `V2_RESEARCH.md`
 
-The planned interface revision occurs after V2-P9 and before V2-P10. It is divided into V2-D0 through V2-D6 so design inputs, audit, shared foundations, navigation, primary flows, management flows, and staging verification remain reviewable. The mandatory gate is: **Blocker: Requires user's plan and mockups for design.** V2-P8 and V2-P9 may proceed before this gate; V2-P10 may not.
+V2-P9 is complete on staging. The interface revision is now the active program before V2-P10. It is divided into V2-D0 through V2-D6 so design inputs, audit, shared foundations, navigation, primary flows, management flows, and staging verification remain reviewable. The mandatory active gate is: **Blocker: Requires user's plan and mockups for design.** V2-P10 may not begin until the design program is complete and approved on staging.
 
 ---
 

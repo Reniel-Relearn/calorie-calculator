@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking and V2-P8 weekly dashboard and history are complete and verified locally and on staging. V2-P9 profile settings, target history updates, captured-snapshot log correction, and protected account deletion are implemented and locally verified; the phase is waiting for its reviewed staging migration, Edge Function deployment, and disposable-account verification. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, and protected account deletion. The mandatory V2-D0 through V2-D6 interface revision is now the active program before V2-P10; its first gate requires the user's design plan and approved mockups.
 
 Version 2 planning and operational documents:
 
@@ -139,7 +139,7 @@ For V2-P2, the staging Supabase Auth URL configuration must use that origin as t
 
 Remote email confirmation must remain enabled and the remote minimum password length must be at least eight characters. Production SMTP remains deferred; staging uses Supabase's limited test sender. Repeated staging email requests may temporarily return a rate-limit error, so wait for the provider quota to reset before requesting another message. Current phase status is maintained in `V2_STATUS.md`.
 
-V2-P9 adds one reviewed database migration and the `delete-account` Edge Function. After reviewing the diff, apply and deploy them to the linked staging project with:
+V2-P9 adds one database migration and the `delete-account` Edge Function. Reproduce their deployment to a linked environment with:
 
 ```powershell
 npx.cmd supabase db push --linked

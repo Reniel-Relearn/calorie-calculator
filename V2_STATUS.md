@@ -1,9 +1,9 @@
 # CalorieCheck Version 2 — Operational Status
 
 **Current Version:** V2
-**Current Phase:** V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion
+**Current Phase:** V2-D0 — User Design Plan and Mockup Approval Gate
 **Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-D0 — User Design Plan and Mockup Approval Gate (blocked until V2-P9 passes staging)
+**Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -17,89 +17,74 @@
 - V2-P6 — Calculator to Food Log Integration — completed 2026-10-07
 - V2-P7 — Daily Calorie Tracker — completed 2026-10-07
 - V2-P8 — Weekly Dashboard and History — completed 2026-10-07
+- V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — completed 2026-10-07
 
-## Current Blocker
+## V2-P9 Completion Evidence
 
-V2-P9 is implemented and verified locally. Completion requires applying the reviewed migration to the linked staging project, deploying the protected `delete-account` Edge Function, and passing the complete staging flow with synthetic data and a disposable account.
-
-The linked staging dry run succeeded and reported exactly one pending migration:
-
-- `20261007120000_add_v2_settings_and_log_mutations.sql`
-
-No staging mutation or function deployment was performed during the dry run.
-
-## Required Human Action
-
-After reviewing the implementation diff:
-
-1. Apply the reviewed migration from the repository root:
-
-   ```powershell
-   npx.cmd supabase db push --linked
-   ```
-
-2. Deploy the protected account-deletion function:
-
-   ```powershell
-   npx.cmd supabase functions deploy delete-account
-   ```
-
-3. Do not add or copy a privileged key manually. Supabase automatically supplies its project URL, anon/public key, and service-role credential to deployed Edge Functions. Never reveal or place a service-role/secret value in this repository, Vercel, browser code, `.env.local`, or any `VITE_*` variable.
-
-4. Deploy the reviewed frontend commit to staging.
-
-5. Use synthetic values only and verify with an ordinary staging test account:
-   - open Settings and save a display-name-only change; confirm the greeting updates;
-   - change one target input, accept the eligibility confirmation, and confirm the new maintenance target appears;
-   - change timezone and confirm the explanation says existing logged dates remain stable;
-   - add a food with a captured conversion, edit its amount and date/time, and confirm daily and weekly totals refresh on both affected dates;
-   - open Delete on a log, cancel once, then confirm deletion and verify totals refresh;
-   - verify the account deletion form rejects an incorrect current password without removing data.
-
-6. Create a separate disposable staging account with synthetic onboarding and at least one food log. In Settings, enter its current password and the exact confirmation `DELETE`, then permanently delete it. Confirm the app signs out and the deleted credentials can no longer log in. Do not run this test on an account you intend to keep.
-
-When all checks pass, reply exactly:
-
-**V2-P9 staging settings, log correction, and account deletion passed.**
-
-## V2-P9 Implementation Summary
-
-- Added a mobile-first settings panel for display name, date of birth, equation sex, height, weight, activity category, maintain goal, timezone, eligibility confirmation, and hard account deletion.
-- Added the authenticated `update_profile_settings` transaction. Display-name-only changes preserve the current target; target-affecting changes atomically update the profile, close the old target, and create one successor.
-- Kept `LOSE` and `GAIN` unavailable under the approved maintain-only Version 2 scope.
-- Preserved existing food-log dates when the profile timezone changes; the new timezone applies to future entries and current-day boundaries.
-- Added pure captured-snapshot food-log recalculation plus accessible edit and delete dialogs.
-- Kept saved food identity, dataset, reference nutrition, conversion route, unit, and descriptor immutable during edits. Current `foods.js` data is not used to rewrite old logs.
-- Added the owner-derived `update_food_log` RPC and revoked direct authenticated updates to food-log calculation fields.
-- Kept confirmed log deletion under owner-scoped RLS and refreshed daily and weekly dashboards after edit/delete mutations.
-- Added the JWT-protected `delete-account` Edge Function. It validates the caller, verifies the current password, uses a server-only privileged client for hard auth-user deletion, and relies on reviewed cascades for profile, target, and log removal.
-- Added no privileged credential to frontend code, environment examples, Vercel configuration, or the browser bundle.
-- Added no V2-D0 design revision or V2-P10 security-hardening scope.
-
-## V2-P9 Local Verification
-
-- `npm.cmd run check` passed 110 Node tests and the Vite production build on 2026-10-07.
+- Profile settings, atomic target-history replacement, captured-snapshot food-log correction, confirmed log deletion, dashboard refresh, and protected hard account deletion passed local verification.
+- `npm.cmd run check` passed 110 Node tests and the Vite production build.
 - `npm.cmd run test:db` passed all 156 pgTAP assertions across nine files.
 - Local `public` and `private` schema lint reported no errors.
 - A clean local database reset applied all migrations, including V2-P9.
-- `npm.cmd run test:auth:local` passed signup, confirmation, onboarding, name-only settings, atomic target-affecting settings, captured-snapshot cup edit across a date boundary, delete cancel/confirm, daily and weekly refresh, incorrect-password rejection, protected hard account deletion, signed-out cleanup, failed login for the deleted account, session restoration, password recovery, responsive checks, and frozen calculator behavior.
-- Responsive integration checks cover 320, 390, 768, and 1280 pixel widths with no page-level horizontal overflow and required touch-target sizing.
-- `npx.cmd supabase db push --linked --dry-run` succeeded and identified only `20261007120000_add_v2_settings_and_log_mutations.sql` as pending.
+- The complete local browser integration passed settings, cross-date log correction, delete cancel/confirm, current-password rejection, cascading hard account deletion, failed login for the deleted user, responsive checks, and frozen calculator behavior.
+- The linked staging migration and `delete-account` Edge Function were deployed.
+- The user confirmed on 2026-10-07: **“V2-P9 staging settings, log correction, and account deletion passed.”**
+
+## Current Blocker
+
+**Blocker: Requires user's plan and mockups for design.**
+
+V2-D0 cannot be approved from implementation assumptions alone. The complete interface now includes authentication, onboarding, calculator states, Today, weekly history, settings, log correction/deletion, and account deletion. A user-approved visual and interaction baseline is required before revising these connected journeys.
+
+## Required Human Action
+
+Provide the following design inputs:
+
+1. A written design plan covering:
+   - desired visual character and brand direction;
+   - information hierarchy and navigation model;
+   - colors, typography, imagery, icons, and available brand assets;
+   - motion preferences;
+   - accessibility or interaction constraints beyond the existing requirements;
+   - any existing interface elements that must remain visually recognizable.
+
+2. Approved mobile mockups for:
+   - signup, login, email confirmation, password reset, and auth errors;
+   - onboarding and target explanation;
+   - Today/home with calorie progress, calculator, and logged foods;
+   - calculator ambiguity, missing amount, invalid/not-found, success, and saved states;
+   - weekly history;
+   - profile settings and target-affecting confirmation;
+   - food-log editing and deletion confirmation;
+   - irreversible account deletion;
+   - representative loading, empty, network-error, and expired-session states.
+
+3. Either approved tablet/desktop mockups or written responsive notes explaining how the mobile design should expand on larger screens.
+
+The artifacts may be images, Figma exports/links, annotated sketches, or another reviewable format. They must be detailed enough to identify layout, navigation, hierarchy, component behavior, and responsive intent. Mockups do not authorize new product features outside the approved Version 2 scope.
+
+After supplying these materials, ask:
+
+**Review my V2 design plan and mockups for V2-D0.**
+
+V2-D0 is a review and approval gate. No design implementation begins during that review. If the materials are complete and compatible with the product, V2-D0 will be marked done and V2-D1 will perform the interface inventory and traceability audit.
+
+## Design Program Sequence
+
+1. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
+2. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
+3. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
+4. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
+5. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
+6. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
+7. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
+
+V2-P10 cannot begin until V2-D0 through V2-D6 are complete and the revised interface passes staging review.
 
 ## Local Development Port Note
 
-Windows reserved the previous default Supabase local port range. The repository's local-only Supabase ports now use API `55321`, database `55432`, Studio `55323`, and Mailpit `55324`. `.env.example`, integration defaults, and README instructions match those ports. Staging URLs and provider configuration are unchanged.
-
-## Scheduled Blocker Before V2-P10
-
-**Status:** BLOCKED — USER ACTION REQUIRED
-
-**Blocker:** Requires user's plan and mockups for design.
-
-After V2-P9 passes staging, work must stop at V2-D0 until the user supplies a written design plan, approved mockups for the principal mobile journeys and states, responsive direction for larger screens, and explicit approval of the reviewed baseline.
-
-After V2-D0 clears, V2-D1 through V2-D6 cover interface audit and traceability, visual foundations, mobile app shell and navigation, primary journeys, history/settings/data-control journeys, and integrated staging verification. V2-P10 cannot begin until all seven design phases are complete and the staged revision has explicit user approval.
+Windows reserved the former default Supabase local port range. The repository's local-only Supabase ports use API `55321`, database `55432`, Studio `55323`, and Mailpit `55324`. Staging URLs and provider configuration are unchanged.
 
 ## Next Intended Action
 
-Stop for human review. Apply and verify V2-P9 on staging using the steps above. Do not begin V2-D0 or V2-P10 in the same phase.
+Wait for the user's design plan, mockups, and responsive direction. Review those inputs against the implemented routes, states, accessibility requirements, security boundaries, and approved V2 scope. Do not begin V2-D1 or visual implementation until V2-D0 is explicitly approved.

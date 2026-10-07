@@ -202,10 +202,10 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 
 ## V2-ADR-028 — Settings, Historical Log Correction, and Hard Deletion Boundaries
 
-**Status:** ACCEPTED — IMPLEMENTED LOCALLY 2026-10-07
+**Status:** ACCEPTED — IMPLEMENTED AND VERIFIED ON STAGING 2026-10-07
 
 **Decision:** Apply profile and target-affecting settings through one authenticated database transaction. A display-name-only change updates the profile without rotating target history; any canonical equation input or timezone change closes the current target and creates one new effective row. Edit a food log only through its saved calculation snapshot and keep its saved unit, descriptor, food identity, dataset, reference, and conversion route immutable. Delete logs through owner-scoped RLS. Delete an account only through a JWT-protected Edge Function that validates the caller, verifies the current password, and invokes hard auth-user deletion with a server-only privileged credential.
 
 **Reason:** Target and log history must remain interpretable after settings and dataset changes. The browser cannot safely hold an admin credential, and destructive account removal needs recent proof that the signed-in user knows the current password.
 
-**Consequences:** Direct authenticated updates to food-log calculation fields are revoked. The `update_profile_settings` and `update_food_log` RPCs derive the owner from `auth.uid()` and reject partial or provenance-changing mutations. Existing log dates do not move when the profile timezone changes; an explicit edit may assign a new date and refresh both affected dashboard ranges. The frontend receives only a success or safe failure from `delete-account`; auth-user deletion cascades application rows and the client clears its local session. Staging deployment and a disposable-account cascade test remain required before V2-P9 is complete.
+**Consequences:** Direct authenticated updates to food-log calculation fields are revoked. The `update_profile_settings` and `update_food_log` RPCs derive the owner from `auth.uid()` and reject partial or provenance-changing mutations. Existing log dates do not move when the profile timezone changes; an explicit edit may assign a new date and refresh both affected dashboard ranges. The frontend receives only a success or safe failure from `delete-account`; auth-user deletion cascades application rows and the client clears its local session. The staging deployment and disposable-account cascade test passed before V2-P9 was marked complete.

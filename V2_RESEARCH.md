@@ -582,7 +582,7 @@ Query the authenticated owner's logs and target history for one Monday-through-S
 
 ## R-026 — V2-P9 settings, correction, and account-deletion recheck
 
-**Status:** Implemented and verified locally on 2026-10-07; staging verification pending.
+**Status:** Implemented and verified locally and on staging on 2026-10-07.
 
 **Official sources**
 

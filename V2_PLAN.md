@@ -195,7 +195,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion
 
-**Status:** BLOCKED — USER ACTION REQUIRED
+**Status:** DONE
 **Objective:** Give users full control over editable personal data, goals, logged mistakes, timezone, and account removal while preserving history.  
 **Why this phase exists:** Persistent data must be correctable and user-controlled.  
 **Dependencies:** V2-P5 profile/targets, V2-P6 snapshots, V2-P7/P8 refresh behavior, accepted V2-P4 goal set.  
@@ -539,7 +539,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 7. V2-P6 — Calculator to Food Log Integration — **DONE**
 8. V2-P7 — Daily Calorie Tracker — **DONE**
 9. V2-P8 — Weekly Dashboard and History — **DONE**
-10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion
+10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — **DONE**
 11. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
 12. V2-D1 — Interface Audit and Design Traceability
 13. V2-D2 — Visual Foundations and Shared Components
