@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking is complete and verified locally and on staging. V2-P8 weekly dashboard and history is implemented and verified locally; its required deployed phone-size review is pending. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking and V2-P8 weekly dashboard and history are complete and verified locally and on staging. V2-P9 profile settings, log correction, and account deletion is the next planned phase. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
 
 Version 2 planning and operational documents:
 
@@ -187,7 +187,7 @@ V2-P6 passes 69 Node tests, the production build, 131 local pgTAP assertions, an
 
 V2-P7 passes 81 Node tests, the production build, 131 database authorization assertions, local schema lint, and the authenticated browser flow. The daily tracker uses profile-timezone dates, effective target history, null-aware on-demand totals, neutral comparison language, accessible meter text, serving context, date navigation, and immediate refresh after a confirmed save. The required deployed phone-size staging review passed on 2026-10-07.
 
-V2-P8 passes 94 Node tests, the production build, 131 database authorization assertions, local schema lint, and the authenticated browser flow. The weekly dashboard uses fixed Monday-through-Sunday local dates, exactly seven semantic rows, historical target resolution, disclosed current/completed-week average denominators, zero-log and upcoming states, and previous/next/current-week navigation. Its deployed phone-size information-density and language review remains pending.
+V2-P8 passes 94 Node tests, the production build, 131 database authorization assertions, local schema lint, and the authenticated browser flow. The weekly dashboard uses fixed Monday-through-Sunday local dates, exactly seven semantic rows, historical target resolution, disclosed current/completed-week average denominators, zero-log and upcoming states, and previous/next/current-week navigation. The required deployed phone-size information-density and language review passed on 2026-10-07.
 
 Directly tested:
 

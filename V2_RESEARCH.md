@@ -559,7 +559,7 @@ Query owner-filtered daily logs and effective target history, aggregate them in 
 
 ## R-025 — V2-P8 weekly boundary, query, average, and accessibility recheck
 
-**Status:** Implemented and verified locally on 2026-10-07; deployed phone-size review remains pending.
+**Status:** Implemented and verified locally and on staging on 2026-10-07.
 
 **Official sources**
 

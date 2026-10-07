@@ -2,7 +2,7 @@
 
 **Current Version:** V2
 **Current Phase:** V2-P8 — Weekly Dashboard and History
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
+**Current Phase Status:** DONE
 **Next Phase:** V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion (planned; not authorized)
 **Overall V2 Status:** IN PROGRESS
 
@@ -16,25 +16,15 @@
 - V2-P5 — Profile Onboarding, Personal Data, and Target History — completed 2026-10-06
 - V2-P6 — Calculator to Food Log Integration — completed 2026-10-07
 - V2-P7 — Daily Calorie Tracker — completed 2026-10-07
+- V2-P8 — Weekly Dashboard and History — completed 2026-10-07
 
 ## Current Blocker
 
-V2-P8 is implemented and verified locally. Completion is blocked on the required deployed phone-size review of weekly information density and language. No database migration or provider configuration is required.
+None for V2-P8.
 
 ## Required Human Action
 
-1. Review the V2-P8 changes, especially the weekly summary, service, controller, view, mobile CSS, tests, and documented average policy.
-2. Commit with the recommended message `Add accessible V2 weekly dashboard` and push to the branch connected to Vercel.
-3. Wait for the Vercel deployment to finish, then open the public staging URL on a phone or phone-size browser viewport.
-4. Sign in with a synthetic staging account that has completed onboarding.
-5. Confirm the current week contains exactly seven Monday-through-Sunday rows and identifies the current day.
-6. Save a calculator result and confirm the matching weekly row and average update without refreshing the page.
-7. Confirm completed zero-log days show zero, future dates show `Upcoming`, and future dates are excluded from current-week averages.
-8. Use Previous week and Current week. Confirm historical targets remain date-specific and missing targets are shown as unavailable rather than zero.
-9. Confirm consumed, target, and remaining/above information is understandable without relying on color, controls are touch-friendly, and the page has no horizontal overflow.
-10. Report **“V2-P8 staging weekly dashboard passed.”** if all checks pass.
-
-Use synthetic staging data only. Do not share or add keys, tokens, passwords, or other secrets. No Supabase dashboard change or migration command is needed for this review.
+Review and commit this V2-P8 completion-status update when ready. After review, say **“Proceed with the next V2 phase.”** to authorize V2-P9.
 
 ## Scheduled Blocker Before V2-P10
 
@@ -65,7 +55,8 @@ After V2-D0 clears, V2-D1 through V2-D6 cover interface audit and traceability, 
 ## V2-P8 Verification Status
 
 - Automated local verification passed on 2026-10-07.
-- The required deployed phone-size information-density and language review is pending.
+- The user confirmed **“V2-P8 staging weekly dashboard passed.”** on 2026-10-07.
+- The deployed weekly dashboard passed the required signed-in phone-size review of its seven-day information density, language, navigation, refresh behavior, target handling, touch controls, non-color meaning, and horizontal reflow.
 
 ## Weekly Tracker Contract
 
@@ -82,4 +73,4 @@ After V2-D0 clears, V2-D1 through V2-D6 cover interface audit and traceability, 
 
 ## Next Intended Action
 
-Stop for the required deployed phone-size review. Do not mark V2-P8 done or begin V2-P9 until the user reports that the staging weekly dashboard passed. The separate design blocker becomes the active stop after V2-P9.
+Stop for human review of this completion-status update. V2-P9 is the next unfinished phase and must be separately authorized. The separate design blocker becomes the active stop after V2-P9.
