@@ -533,7 +533,7 @@ Map a successful frozen V1 result to versioned scalar and JSON snapshots, genera
 
 ## R-024 — V2-P7 daily tracker query, aggregation, and accessibility recheck
 
-**Status:** Implemented and verified locally on 2026-10-07; deployed phone-size review remains pending.
+**Status:** Implemented and verified locally and on staging on 2026-10-07.
 
 **Official sources**
 

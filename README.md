@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking is implemented and verified locally, with deployed phone-size review pending.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking is complete and verified locally and on staging. V2-P8 weekly dashboard and history is the next planned phase and has not started.
 
 Version 2 planning and operational documents:
 
@@ -185,7 +185,7 @@ V2-P5 passes 55 Node tests, the production build, 115 local pgTAP assertions, an
 
 V2-P6 passes 69 Node tests, the production build, 131 local pgTAP assertions, and the local authenticated browser flow. Explicit logging preserves the frozen V1 result, source, dataset, serving conversion, timezone-safe date, and nullable nutrition values. The owner-derived RPC and stable request ID prevent spoofed ownership and duplicate retry rows. Its reviewed migration is applied to staging, local and remote migration histories match, the linked schema linter reports no errors, and representative grams, cup, and milliliter saves passed signed-in staging verification. The visible daily log belongs to V2-P7.
 
-V2-P7 passes 81 Node tests, the production build, 131 database authorization assertions, local schema lint, and the authenticated browser flow. The daily tracker uses profile-timezone dates, effective target history, null-aware on-demand totals, neutral comparison language, accessible meter text, serving context, date navigation, and immediate refresh after a confirmed save. Its deployed phone-size review remains required before the phase is complete.
+V2-P7 passes 81 Node tests, the production build, 131 database authorization assertions, local schema lint, and the authenticated browser flow. The daily tracker uses profile-timezone dates, effective target history, null-aware on-demand totals, neutral comparison language, accessible meter text, serving context, date navigation, and immediate refresh after a confirmed save. The required deployed phone-size staging review passed on 2026-10-07.
 
 Directly tested:
 

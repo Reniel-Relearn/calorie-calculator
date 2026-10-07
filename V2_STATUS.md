@@ -2,7 +2,7 @@
 
 **Current Version:** V2
 **Current Phase:** V2-P7 — Daily Calorie Tracker
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
+**Current Phase Status:** DONE
 **Next Phase:** V2-P8 — Weekly Dashboard and History (planned; not authorized)
 **Overall V2 Status:** IN PROGRESS
 
@@ -15,27 +15,15 @@
 - V2-P4 — Evidence-Based Energy Target Engine — completed 2026-10-05
 - V2-P5 — Profile Onboarding, Personal Data, and Target History — completed 2026-10-06
 - V2-P6 — Calculator to Food Log Integration — completed 2026-10-07
+- V2-P7 — Daily Calorie Tracker — completed 2026-10-07
 
 ## Current Blocker
 
-V2-P7 is implemented and verified locally. It requires no database migration. The new daily tracker has not yet been deployed or reviewed on the staging origin at a phone-sized viewport, so the phase cannot be marked done.
+None for V2-P7.
 
 ## Required Human Action
 
-1. Review the V2-P7 diff, especially `js/dashboard/`, `css/dashboard.css`, the daily tracker markup in `index.html`, and the Daily Tracker Contract in `V2_DATA_CONTRACTS.md`.
-2. Commit the reviewed files with the recommended message `Add V2 daily calorie tracker`.
-3. Push the commit so Vercel deploys the matching frontend.
-4. Wait for the staging deployment to report Ready, then open `https://calorie-calculator-gamma-ten.vercel.app/` at a phone-sized viewport or on a smartphone.
-5. Sign in with a synthetic confirmed account and verify:
-   - today's summary loads with the estimated target and an empty state or existing saved foods;
-   - saving a new calculator result immediately updates consumed calories, nutrient totals, and the food list;
-   - the food row shows its serving and calories;
-   - Previous day and Today navigation load the expected dates;
-   - the page has no horizontal overflow and all date controls are comfortable to tap;
-   - comparison wording is neutral and no unavailable nutrient is displayed as zero.
-6. Report **“V2-P7 staging daily tracker passed.”** if all checks succeed. Report the exact failed step and visible message if a check fails.
-
-Do not share an account password, access token, database password, or API secret in chat. No Supabase dashboard change or migration is required for this phase.
+Review and commit the V2-P7 completion-status update when ready. After review, say **“Proceed with the next V2 phase.”** to authorize V2-P8.
 
 ## V2-P7 Implementation Summary
 
@@ -52,6 +40,12 @@ Do not share an account password, access token, database password, or API secret
 - Keeps the tracker and its private in-memory state hidden or cleared during signed-out, incomplete-profile, and user-change flows.
 - Added no weekly chart, edit/delete controls, meal categories, streaks, badges, recommendations, or offline cache.
 
+## V2-P7 Staging Verification
+
+- The user confirmed **“V2-P7 staging daily tracker passed.”** on 2026-10-07.
+- The deployed daily tracker passed the required signed-in, phone-size staging review.
+- The staging checklist covered visible saved entries with serving and calorie context, correct totals, immediate refresh after saving, date navigation, mobile overflow and touch controls, neutral comparison wording, and null-aware nutrient display.
+
 ## Daily Tracker Contract
 
 `V2_DATA_CONTRACTS.md` now documents selected-date behavior, effective-target resolution, complete/partial/unavailable nutrient totals, empty-day semantics, refresh behavior, serving context, and accessible target comparison.
@@ -67,4 +61,4 @@ Do not share an account password, access token, database password, or API secret
 
 ## Next Intended Action
 
-Stop for deployment and the required phone-sized staging review. Do not mark V2-P7 done or begin V2-P8 until the staging daily tracker passes.
+Stop for human review of the completed V2-P7 phase. V2-P8 remains unstarted until the user authorizes the next phase.
