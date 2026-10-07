@@ -557,6 +557,29 @@ All sources were accessed on 2026-10-07.
 
 Query owner-filtered daily logs and effective target history, aggregate them in a pure null-aware module, and keep display rounding in the view. Clamp the visual meter at its target maximum while preserving the full above-target amount in visible and accessible text. Keep empty, missing-target, session, and network states separate, paginate ordered reads, and refresh only when a confirmed saved-log event matches the selected date.
 
+## R-025 — V2-P8 weekly boundary, query, average, and accessibility recheck
+
+**Status:** Implemented and verified locally on 2026-10-07; deployed phone-size review remains pending.
+
+**Official sources**
+
+- Supabase JavaScript, [`gte()` filtering](https://supabase.com/docs/reference/javascript/using-filters-gte), [`lte()` filtering](https://supabase.com/docs/reference/javascript/using-filters-lte), [`order()`](https://supabase.com/docs/reference/javascript/using-modifiers-order), and [`range()` pagination](https://supabase.com/docs/reference/javascript/using-modifiers-range).
+- Ecma International, [ECMAScript Date Objects](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date-objects).
+- W3C Web Accessibility Initiative, [Page Structure — Content Structure](https://www.w3.org/WAI/tutorials/page-structure/content/), [Understanding Reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow), and [Understanding Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color).
+
+All sources were accessed on 2026-10-07.
+
+**Finding**
+
+- Supabase supports an owner filter combined with inclusive local-date bounds, deterministic ordering, and explicit range pagination. This supports a bounded weekly query without relying on the provider's default row cap.
+- ISO calendar strings can be advanced safely with UTC date arithmetic after the profile timezone has supplied the current local date. A fixed numeric weekday calculation keeps Monday as the first day without depending on the browser locale or server timezone.
+- A current-week average must exclude future dates. Intake still includes elapsed zero-log dates so empty completed days do not disappear from the result. Target averages use only elapsed dates with an applicable numeric target and disclose incomplete coverage.
+- A semantic ordered list can carry the complete seven-day comparison without a chart. Visible text communicates consumed, target, remaining or above, missing target, zero-log, and upcoming states without requiring color perception.
+
+**Implementation consequence**
+
+Query the authenticated owner's logs and target history for one Monday-through-Sunday interval, then build exactly seven rows in a pure summary module. Use elapsed dates as the current-week intake denominator and all seven dates for completed weeks. Use only target-bearing eligible dates for the target denominator and expose coverage text. Render the canonical result as a reflowing ordered list; defer any optional chart to the approved design revision instead of adding a second information source or dependency now.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -568,5 +591,6 @@ Query owner-filtered daily logs and effective target history, aggregate them in 
 | V2-P5 | Atomic Supabase/PostgreSQL RPC pattern, authenticated ownership, IANA timezone validation, PAL wording, accessible sensitive-field UX |
 | V2-P6 | Mutation return behavior, idempotent retry boundary, owner-derived RPC, timezone-to-local-date derivation, sanitized snapshot shape |
 | V2-P7 | Selected-date filtering and pagination, null-aware aggregation, timezone-safe target selection, meter semantics, neutral comparison language |
+| V2-P8 | Inclusive date-range querying, fixed Monday/Sunday boundaries, average denominator policy, and a complete accessible weekly representation |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

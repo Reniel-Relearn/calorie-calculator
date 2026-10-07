@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking is complete and verified locally and on staging. V2-P8 weekly dashboard and history is the next planned phase and has not started. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
+**Version 2 is the active roadmap.** V2-P2 completed the email/password authentication foundation. V2-P3 completed the private database schema and authorization locally and on staging. V2-P4 completed the verified National Academies maintenance energy engine and established the approved maintain-only Version 2 goal scope. V2-P5 completed profile onboarding and atomic target persistence. V2-P6 completed explicit, retry-safe food logging and passed local and staging verification. V2-P7 daily tracking is complete and verified locally and on staging. V2-P8 weekly dashboard and history is implemented and verified locally; its required deployed phone-size review is pending. After V2-P9, the mandatory V2-D0 through V2-D6 interface revision must finish before V2-P10; its first gate requires the user's design plan and approved mockups.
 
 Version 2 planning and operational documents:
 
@@ -34,7 +34,7 @@ Version 2 planning and operational documents:
 - Seven explicit states: IDLE, ANALYZING, AMBIGUOUS, NEEDS_AMOUNT, SUCCESS, NOT_FOUND, and INVALID
 - Mobile-first layouts with tablet and desktop enhancements
 
-Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, a protected application shell, private profile/target/log tables, a pure maintenance energy engine, mobile-first profile onboarding, atomic profile/first-target persistence, and an explicit retry-safe action that saves a successful calculator result. Daily and weekly dashboard tracking remain later phases.
+Version 2 currently adds email/password signup, required email confirmation, login, logout, session restoration, password reset, a protected application shell, private profile/target/log tables, a pure maintenance energy engine, mobile-first profile onboarding, atomic profile/first-target persistence, an explicit retry-safe action that saves a successful calculator result, daily tracking, and a locally verified Monday-through-Sunday weekly dashboard.
 
 ## Measurement Model
 
@@ -158,11 +158,11 @@ Remote email confirmation must remain enabled and the remote minimum password le
 - `js/targets/target-format.js` — presentation-only whole-kcal rounding
 - `js/profile/` — onboarding validation, persistence service, controller, and accessible view binding
 - `js/logs/` — pure result-to-log mapping, idempotent persistence service, and save controller
-- `js/dashboard/` — selected-date queries, null-aware daily aggregation, target resolution, controller, and accessible rendering
+- `js/dashboard/` — shared paginated data access, null-aware daily and weekly aggregation, target resolution, controllers, and accessible rendering
 - `js/private-app.js` — incomplete-profile routing and authenticated home/calculator coordination
 - `css/auth.css` — mobile-first account and protected-shell presentation
 - `css/profile.css` — mobile-first onboarding and target-summary presentation
-- `css/dashboard.css` — mobile-first daily tracker, totals, date navigation, states, and saved-food list
+- `css/dashboard.css` — mobile-first daily and weekly trackers, totals, date/week navigation, states, and saved-food lists
 - `css/` — mobile-first components and progressive responsive enhancements
 - `supabase/config.toml` — reproducible local Supabase service configuration
 - `supabase/migrations/` — versioned private-data schema, constraints, grants, and RLS policies
@@ -187,6 +187,8 @@ V2-P6 passes 69 Node tests, the production build, 131 local pgTAP assertions, an
 
 V2-P7 passes 81 Node tests, the production build, 131 database authorization assertions, local schema lint, and the authenticated browser flow. The daily tracker uses profile-timezone dates, effective target history, null-aware on-demand totals, neutral comparison language, accessible meter text, serving context, date navigation, and immediate refresh after a confirmed save. The required deployed phone-size staging review passed on 2026-10-07.
 
+V2-P8 passes 94 Node tests, the production build, 131 database authorization assertions, local schema lint, and the authenticated browser flow. The weekly dashboard uses fixed Monday-through-Sunday local dates, exactly seven semantic rows, historical target resolution, disclosed current/completed-week average denominators, zero-log and upcoming states, and previous/next/current-week navigation. Its deployed phone-size information-density and language review remains pending.
+
 Directly tested:
 
 - Google Chrome 154 — full QA and release matrix
@@ -207,7 +209,7 @@ These environments are unverified rather than passed or failed. The project does
 - Optional piece and descriptor metadata varies by food.
 - Generic `2 fried eggs` is unsupported because the record requires the sourced `large` descriptor for piece-based conversion.
 - No production nutrition API is connected.
-- A weekly history view, full profile settings editor, log editing/deletion UI, barcode scanning, image recognition, restaurant search, and AI nutrition generation are not included yet.
+- A full profile settings editor, log editing/deletion UI, monthly or yearly analytics, barcode scanning, image recognition, restaurant search, and AI nutrition generation are not included yet.
 - `LOSE` and `GAIN` have no approved Version 2 target method and return an explicit unavailable outcome under the approved maintain-only scope.
 - Production SMTP is deferred to the production release phase.
 

@@ -432,6 +432,63 @@
             </section>
           </div>
         </section>
+
+        <section class="weekly-tracker" id="weekly-tracker" aria-labelledby="weekly-heading" hidden>
+          <p class="visually-hidden" id="weekly-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+          <header class="weekly-tracker__header">
+            <div>
+              <p class="eyebrow">Weekly history</p>
+              <h2 id="weekly-heading">Your week</h2>
+              <p id="weekly-range-label">Selected week</p>
+            </div>
+            <button class="button button--text" id="weekly-current" type="button">Current week</button>
+          </header>
+
+          <div class="weekly-navigation" aria-label="Choose tracker week">
+            <button class="button button--secondary" id="weekly-previous" type="button">&larr; Previous week</button>
+            <button class="button button--secondary" id="weekly-next" type="button">Next week &rarr;</button>
+          </div>
+
+          <div class="weekly-state" id="weekly-loading">
+            <span class="spinner" aria-hidden="true"></span>
+            <p>Loading this week...</p>
+          </div>
+
+          <div class="weekly-state weekly-state--error" id="weekly-error" hidden>
+            <p id="weekly-error-message" role="alert">We couldn't load this week.</p>
+            <button class="button button--secondary" id="weekly-retry" type="button">Try Again</button>
+          </div>
+
+          <div class="weekly-content" id="weekly-content" hidden>
+            <article class="weekly-summary" aria-labelledby="weekly-summary-heading">
+              <h3 id="weekly-summary-heading">Average calories</h3>
+              <dl class="weekly-average-values">
+                <div>
+                  <dt>Average intake</dt>
+                  <dd id="weekly-average-intake">0 kcal</dd>
+                </div>
+                <div>
+                  <dt>Average estimated target</dt>
+                  <dd id="weekly-average-target">Not available</dd>
+                </div>
+              </dl>
+              <p id="weekly-average-note">Average intake uses elapsed days, including zero-log days.</p>
+            </article>
+
+            <div class="weekly-empty" id="weekly-empty" hidden>
+              <p><strong>No food logged for this week.</strong></p>
+              <p>The seven-day history still shows elapsed zero-log days and applicable estimated targets.</p>
+            </div>
+
+            <section class="weekly-history" aria-labelledby="weekly-history-heading">
+              <div class="weekly-history__heading">
+                <h3 id="weekly-history-heading">Monday to Sunday</h3>
+                <span>Demo nutrition dataset</span>
+              </div>
+              <ol class="weekly-day-list" id="weekly-day-list"></ol>
+            </section>
+          </div>
+        </section>
       </section>
 
     <main class="app-shell page-container" id="app" tabindex="-1" hidden>

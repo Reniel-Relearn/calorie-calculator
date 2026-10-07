@@ -175,7 +175,8 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## V2-P8 — Weekly Dashboard and History
 
-**Status:** NOT STARTED  
+**Status:** BLOCKED — USER ACTION REQUIRED
+
 **Objective:** Add an accessible Monday-through-Sunday seven-day view with historical targets and on-demand totals.  
 **Why this phase exists:** Users need short-term context without turning the product into a complex fitness platform.  
 **Dependencies:** V2-P7 daily aggregation and states; effective target history.  
@@ -537,7 +538,7 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 6. V2-P5 — Profile Onboarding, Personal Data, and Target History — **DONE**
 7. V2-P6 — Calculator to Food Log Integration — **DONE**
 8. V2-P7 — Daily Calorie Tracker — **DONE**
-9. V2-P8 — Weekly Dashboard and History
+9. V2-P8 — Weekly Dashboard and History — **BLOCKED — USER ACTION REQUIRED**
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion
 11. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
 12. V2-D1 — Interface Audit and Design Traceability

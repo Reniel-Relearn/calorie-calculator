@@ -233,6 +233,10 @@ Version 2 uses a fixed Monday-through-Sunday week in the user's profile timezone
 
 Totals are calculated on demand from `food_logs` and `calorie_targets`; Version 2 does not maintain summary rows. A compact CSS/SVG visualization may supplement the data, but an equivalent semantic list or table is mandatory. Color cannot carry meaning alone.
 
+The implemented average policy excludes future dates. A completed week averages intake across all seven dates, including zero-log dates. The current week averages intake across elapsed dates from Monday through today, also including elapsed zero-log dates. Average target uses only those elapsed dates with an applicable target and discloses partial or unavailable coverage.
+
+V2-P8 uses a semantic ordered list as the complete weekly representation and does not add a chart. A chart remains optional for the later approved design revision only if it adds comprehension without replacing text, depending on color, or introducing an unjustified library.
+
 ## 15. Personalized Home and Navigation
 
 The authenticated home information order is:

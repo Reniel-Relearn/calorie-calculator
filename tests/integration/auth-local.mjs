@@ -427,6 +427,19 @@ async function run() {
       await page.evaluate("document.querySelector('#daily-next').disabled && document.querySelector('#daily-today').disabled"),
       true,
     );
+    await waitForVisible(page, "#weekly-tracker");
+    await page.waitFor(
+      "!document.querySelector('#weekly-content').hidden && document.querySelectorAll('#weekly-day-list > li').length === 7",
+      "The weekly tracker did not render seven local dates.",
+    );
+    assert.notEqual(
+      await page.evaluate("document.querySelector('#weekly-average-target').textContent"),
+      "Not available",
+    );
+    assert.equal(
+      await page.evaluate("document.querySelector('#weekly-next').disabled && document.querySelector('#weekly-current').disabled"),
+      true,
+    );
     for (const [width, height] of [
       [320, 568],
       [390, 844],
@@ -449,6 +462,17 @@ async function run() {
           })`),
         true,
         `The daily tracker touch targets were too small at ${width}x${height}`,
+      );
+      assert.equal(
+        await page.evaluate(`[
+          ...document.querySelectorAll('#weekly-tracker button')
+        ].filter((control) => !control.closest('[hidden]'))
+          .every((control) => {
+            const rect = control.getBoundingClientRect();
+            return rect.height >= 44 && rect.width >= 44;
+          })`),
+        true,
+        `The weekly tracker touch targets were too small at ${width}x${height}`,
       );
     }
     await page.setViewport(390, 844);
@@ -510,6 +534,15 @@ async function run() {
       })()`),
       true,
     );
+    await page.waitFor(
+      "document.querySelector('#weekly-day-list .weekly-day--today dd').textContent === '227 kcal'",
+      "The weekly tracker did not refresh after the confirmed food log.",
+      15_000,
+    );
+    assert.equal(
+      await page.evaluate("document.querySelectorAll('#weekly-day-list > li').length"),
+      7,
+    );
     const todayDate = await page.evaluate("document.querySelector('#daily-date').value");
     await click(page, "#daily-previous");
     await page.waitFor(
@@ -520,6 +553,19 @@ async function run() {
     await page.waitFor(
       `document.querySelector('#daily-date').value === ${JSON.stringify(todayDate)} && document.querySelectorAll('#daily-log-list > li').length === 1`,
       "Today navigation did not restore the current daily log.",
+    );
+    const currentWeekLabel = await page.evaluate(
+      "document.querySelector('#weekly-range-label').textContent",
+    );
+    await click(page, "#weekly-previous");
+    await page.waitFor(
+      `document.querySelector('#weekly-range-label').textContent !== ${JSON.stringify(currentWeekLabel)} && !document.querySelector('#weekly-content').hidden`,
+      "Previous-week navigation did not load another Monday-through-Sunday range.",
+    );
+    await click(page, "#weekly-current");
+    await page.waitFor(
+      `document.querySelector('#weekly-range-label').textContent === ${JSON.stringify(currentWeekLabel)} && document.querySelectorAll('#weekly-day-list > li').length === 7`,
+      "Current-week navigation did not restore the weekly history.",
     );
 
     await page.navigate(APP_URL);
@@ -621,7 +667,7 @@ async function run() {
     await waitForVisible(page, "#auth-error");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
 
-    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, explicit food logging, daily tracker refresh/navigation, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
+    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, explicit food logging, daily and weekly tracker refresh/navigation, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
   } finally {
     await page.close();
   }

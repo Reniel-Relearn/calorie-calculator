@@ -189,3 +189,13 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 **Reason:** V2-P8 and V2-P9 create the remaining weekly, settings, editing, deletion, and account-control screens. Revising earlier would target an incomplete information architecture and cause avoidable rework. Revising after security, accessibility, release, or freeze phases would invalidate late-stage verification.
 
 **Consequences:** Existing phase identifiers remain stable. Seven inserted design phases cover approval, audit, foundations, navigation, primary flows, management flows, and integrated staging verification. V2-P10 depends on their completion. The revision preserves validated behavior and scope and does not authorize a UI framework, native wrapper, PWA work, or future feature.
+
+## V2-ADR-027 — Weekly Average and Presentation Policy
+
+**Status:** ACCEPTED — IMPLEMENTED 2026-10-07
+
+**Decision:** Use fixed Monday-through-Sunday weeks in the profile timezone. For a completed week, average intake across all seven dates, including zero-log dates. For the current week, average intake across elapsed dates from Monday through today and exclude future dates. Average target across only those elapsed dates with an applicable numeric target, and disclose complete, partial, or unavailable target coverage. Use a semantic seven-item ordered list as the complete V2-P8 representation and do not add a chart.
+
+**Reason:** Counting elapsed zero-log dates prevents logging frequency from changing the intake denominator, while excluding future dates avoids depressing a current-week average with days that have not occurred. Target history may be absent for part of a week, so a separate applicable-target denominator is more accurate than inventing or carrying an unavailable value. Seven textual records remain clear on small phones and do not justify duplicate chart interaction or a chart dependency.
+
+**Consequences:** Every weekly result contains exactly seven ordered dates. Upcoming dates remain visible but are labeled and excluded from averages and comparison. The UI states both denominator counts, preserves historical per-day targets, and conveys all information in text without relying on color. The approved V2 design revision may add a lightweight visualization only if it remains equivalent to the semantic list.

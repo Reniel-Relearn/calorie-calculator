@@ -11,9 +11,9 @@ function failure(code, error = null) {
   return { ok: false, code, error };
 }
 
-export function createDailyService(client) {
+export function createWeeklyService(client) {
   return Object.freeze({
-    async loadDay({ userId, localDate }) {
+    async loadWeek({ userId, startDate, endDate }) {
       let logsResult;
       let targetsResult;
       try {
@@ -23,8 +23,10 @@ export function createDailyService(client) {
               .from("food_logs")
               .select(DASHBOARD_LOG_COLUMNS)
               .eq("user_id", userId)
-              .eq("local_date", localDate)
-              .order("consumed_at", { ascending: false }),
+              .gte("local_date", startDate)
+              .lte("local_date", endDate)
+              .order("local_date", { ascending: true })
+              .order("consumed_at", { ascending: true }),
           ),
           fetchDashboardPages(() =>
             client
@@ -35,7 +37,7 @@ export function createDailyService(client) {
           ),
         ]);
       } catch (error) {
-        return failure("DAILY_LOAD_FAILED", error);
+        return failure("WEEKLY_LOAD_FAILED", error);
       }
 
       const queryError = logsResult.error ?? targetsResult.error;
@@ -43,7 +45,7 @@ export function createDailyService(client) {
         return failure(
           isDashboardAuthenticationError(queryError)
             ? "SESSION_REQUIRED"
-            : "DAILY_LOAD_FAILED",
+            : "WEEKLY_LOAD_FAILED",
           queryError,
         );
       }

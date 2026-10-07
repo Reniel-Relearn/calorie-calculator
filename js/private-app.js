@@ -6,9 +6,13 @@ import { createFoodLogService } from "./logs/food-log-service.js";
 import { createDailyController } from "./dashboard/daily-controller.js";
 import { createDailyService } from "./dashboard/daily-service.js";
 import { createDailyView } from "./dashboard/daily-view.js";
+import { createWeeklyController } from "./dashboard/weekly-controller.js";
+import { createWeeklyService } from "./dashboard/weekly-service.js";
+import { createWeeklyView } from "./dashboard/weekly-view.js";
 
 export function createPrivateApplication(client) {
   let dailyController = null;
+  let weeklyController = null;
   const dailyView = createDailyView({
     onNext: () => dailyController?.next(),
     onPrevious: () => dailyController?.previous(),
@@ -20,10 +24,21 @@ export function createPrivateApplication(client) {
     service: createDailyService(client),
     view: dailyView,
   });
+  const weeklyView = createWeeklyView({
+    onCurrent: () => weeklyController?.current(),
+    onNext: () => weeklyController?.next(),
+    onPrevious: () => weeklyController?.previous(),
+    onRetry: () => weeklyController?.retry(),
+  });
+  weeklyController = createWeeklyController({
+    service: createWeeklyService(client),
+    view: weeklyView,
+  });
 
   if (typeof document !== "undefined") {
     document.addEventListener("caloriecheck:food-log-saved", (event) => {
       dailyController.handleFoodLogSaved(event.detail);
+      weeklyController.handleFoodLogSaved(event.detail);
     });
   }
 
@@ -51,10 +66,12 @@ export function createPrivateApplication(client) {
     onProfileReady: (profile) => {
       calculator.activateFoodLogging(profile);
       dailyController.activate(profile);
+      weeklyController.activate(profile);
     },
     onProfileUnavailable: () => {
       calculator.deactivateFoodLogging();
       dailyController.reset();
+      weeklyController.reset();
     },
   });
 
