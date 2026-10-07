@@ -1,0 +1,306 @@
+.daily-tracker {
+  display: grid;
+  gap: var(--space-5);
+  margin-block-start: var(--space-6);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.daily-tracker__header {
+  display: flex;
+  min-width: 0;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.daily-tracker__header .eyebrow {
+  margin-block-end: var(--space-2);
+}
+
+.daily-tracker__header h2 {
+  margin-block-end: var(--space-1);
+  font-size: 1.65rem;
+}
+
+.daily-tracker__header p:last-child {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.daily-tracker__header .button {
+  flex: 0 0 auto;
+}
+
+.daily-date-controls {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 3rem;
+  gap: var(--space-2);
+  align-items: end;
+}
+
+.daily-date-controls input {
+  width: 100%;
+  min-height: 3rem;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+  background: #fff;
+  color: var(--color-text);
+}
+
+.daily-date-button.button--secondary {
+  width: 3rem;
+  min-height: 3rem;
+  padding: 0;
+}
+
+.daily-date-button:disabled,
+#daily-today:disabled {
+  cursor: not-allowed;
+}
+
+.daily-state {
+  padding: var(--space-6) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: #f8faff;
+  text-align: center;
+}
+
+.daily-state p:last-child {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.daily-state--error {
+  background: var(--color-danger-soft);
+}
+
+.daily-state--error p {
+  color: var(--color-danger);
+  font-weight: 650;
+}
+
+.daily-state--error .button {
+  margin-block-start: var(--space-2);
+}
+
+.daily-content {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.daily-summary {
+  padding: var(--space-5);
+  border: 1px solid #bad6fb;
+  border-radius: var(--radius-medium);
+  background: linear-gradient(145deg, var(--color-primary-soft), #fff);
+}
+
+.daily-calorie-totals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.daily-calorie-totals div {
+  min-width: 0;
+}
+
+.daily-calorie-totals dt {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.daily-calorie-totals dd {
+  margin: var(--space-1) 0 0;
+  overflow-wrap: anywhere;
+  color: var(--color-primary-dark);
+  font-size: clamp(1.35rem, 7vw, 2rem);
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.daily-comparison {
+  margin: var(--space-4) 0 0;
+  color: #334a70;
+  font-weight: 700;
+}
+
+.daily-meter {
+  display: grid;
+  gap: var(--space-2);
+  margin-block-start: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.daily-meter meter {
+  width: 100%;
+  height: 0.9rem;
+  accent-color: var(--color-primary);
+}
+
+.daily-nutrients,
+.daily-foods {
+  min-width: 0;
+}
+
+.daily-nutrients h3,
+.daily-foods h3 {
+  margin-block-end: var(--space-3);
+}
+
+.daily-nutrient-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.daily-nutrient-grid > div {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: #fbfcfe;
+}
+
+.daily-nutrient-grid dt {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.daily-nutrient-grid dd {
+  margin: var(--space-1) 0 0;
+  overflow-wrap: anywhere;
+  font-weight: 750;
+}
+
+.daily-nutrient-grid small {
+  display: block;
+  margin-block-start: var(--space-1);
+  color: #765413;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.daily-foods__heading {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.daily-foods__heading span {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  text-align: end;
+}
+
+.daily-empty {
+  padding: var(--space-5);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-medium);
+  background: #fbfcfe;
+  text-align: center;
+}
+
+.daily-empty p {
+  margin-block-end: var(--space-2);
+}
+
+.daily-empty p:nth-child(2) {
+  color: var(--color-text-muted);
+}
+
+.daily-empty .button {
+  margin-block-start: var(--space-2);
+  text-decoration: none;
+}
+
+.daily-log-list {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.daily-log-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: #fff;
+}
+
+.daily-log-item__details {
+  min-width: 0;
+}
+
+.daily-log-item h3 {
+  margin-block-end: var(--space-1);
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+}
+
+.daily-log-item__details p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.daily-log-item__calories {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+@media (min-width: 36rem) {
+  .daily-tracker {
+    padding: var(--space-6);
+  }
+
+  .daily-date-controls {
+    grid-template-columns: 3rem minmax(12rem, 18rem) 3rem;
+    justify-content: center;
+  }
+
+  .daily-nutrient-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .daily-content {
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(24rem, 1.2fr);
+    grid-template-areas:
+      "summary nutrients"
+      "foods foods";
+  }
+
+  .daily-summary {
+    grid-area: summary;
+  }
+
+  .daily-nutrients {
+    grid-area: nutrients;
+  }
+
+  .daily-foods {
+    grid-area: foods;
+  }
+}

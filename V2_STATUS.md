@@ -1,9 +1,9 @@
 # CalorieCheck Version 2 — Operational Status
 
 **Current Version:** V2
-**Current Phase:** V2-P6 — Calculator to Food Log Integration
-**Current Phase Status:** DONE
-**Next Phase:** V2-P7 — Daily Calorie Tracker (planned; not authorized)
+**Current Phase:** V2-P7 — Daily Calorie Tracker
+**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
+**Next Phase:** V2-P8 — Weekly Dashboard and History (planned; not authorized)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -18,49 +18,53 @@
 
 ## Current Blocker
 
-None for V2-P6.
+V2-P7 is implemented and verified locally. It requires no database migration. The new daily tracker has not yet been deployed or reviewed on the staging origin at a phone-sized viewport, so the phase cannot be marked done.
 
 ## Required Human Action
 
-Review and commit this completion-status update when ready. After review, say **“Proceed with the next V2 phase.”** to authorize V2-P7.
+1. Review the V2-P7 diff, especially `js/dashboard/`, `css/dashboard.css`, the daily tracker markup in `index.html`, and the Daily Tracker Contract in `V2_DATA_CONTRACTS.md`.
+2. Commit the reviewed files with the recommended message `Add V2 daily calorie tracker`.
+3. Push the commit so Vercel deploys the matching frontend.
+4. Wait for the staging deployment to report Ready, then open `https://calorie-calculator-gamma-ten.vercel.app/` at a phone-sized viewport or on a smartphone.
+5. Sign in with a synthetic confirmed account and verify:
+   - today's summary loads with the estimated target and an empty state or existing saved foods;
+   - saving a new calculator result immediately updates consumed calories, nutrient totals, and the food list;
+   - the food row shows its serving and calories;
+   - Previous day and Today navigation load the expected dates;
+   - the page has no horizontal overflow and all date controls are comfortable to tap;
+   - comparison wording is neutral and no unavailable nutrient is displayed as zero.
+6. Report **“V2-P7 staging daily tracker passed.”** if all checks succeed. Report the exact failed step and visible message if a check fails.
 
-## V2-P6 Implementation Summary
+Do not share an account password, access token, database password, or API secret in chat. No Supabase dashboard change or migration is required for this phase.
 
-- Added **Add to Today's Log** only to an authenticated, onboarded successful calculator result.
-- Analysis and recalculation do not write food logs.
-- Added a pure mapper from the frozen V1 result to scalar serving/nutrient fields and a versioned provenance snapshot.
-- Added stable dataset version `v1-demo-2026-09-25` and calculation snapshot version `1.0.0`.
-- Captures the source food, reference nutrition, exact food-specific conversion metadata, calculated nutrition, consumed instant, profile timezone, and stable local date.
-- Preserves unavailable nutrients as null and explicit zero as zero.
-- Added an owner-derived `create_food_log` RPC with a browser-generated UUID used as the log ID and idempotency key.
-- Revoked direct authenticated inserts so the browser cannot supply or spoof `user_id` during initial log creation.
-- Keeps an identical command for network retry; identical retries return the existing row and conflicting retries fail.
-- Disables the action while pending, prevents double-click races, confirms success, and keeps the result available after recoverable failure.
-- Publishes `caloriecheck:food-log-saved` with only the saved log ID and local date for V2-P7 refresh integration.
-- Added no daily list, aggregate dashboard, weekly view, log editing/deletion UI, meal grouping, or offline queue.
+## V2-P7 Implementation Summary
 
-## Snapshot Contract
+- Added a private mobile-first daily tracker above the calculator for completed profiles.
+- Defaults to the profile timezone's current local date and supports Previous day, Next day, Today, and native date selection through today.
+- Queries only the authenticated owner's logs for the selected stable `local_date` and paginates ordered results.
+- Resolves today's target at the current instant and a completed day's target from effective history in the profile timezone.
+- Calculates calorie and nutrient totals on demand without a summary table.
+- Preserves explicit zero, known partial totals, and unavailable nutrient values as separate states.
+- Uses neutral remaining/above-target language and a labeled native calorie meter.
+- Shows a semantic saved-food list with serving, normalized amount when useful, local entry time, and calories.
+- Refreshes the current date after a confirmed `caloriecheck:food-log-saved` event.
+- Implements loading, empty, unavailable-target, session-expired, and retryable network states.
+- Keeps the tracker and its private in-memory state hidden or cleared during signed-out, incomplete-profile, and user-change flows.
+- Added no weekly chart, edit/delete controls, meal categories, streaks, badges, recommendations, or offline cache.
 
-`V2_DATA_CONTRACTS.md` documents the scalar mapping, null semantics, time model, request identity, snapshot version, and event contract. The snapshot contains the saved dataset, food source, reference, serving conversion, scale factor, and nutrients needed for a later edit without consulting current food data.
+## Daily Tracker Contract
+
+`V2_DATA_CONTRACTS.md` now documents selected-date behavior, effective-target resolution, complete/partial/unavailable nutrient totals, empty-day semantics, refresh behavior, serving context, and accessible target comparison.
 
 ## Last Verified Tests
 
-- A clean `npm.cmd run supabase:db:reset` applied all three local migrations on 2026-10-07.
-- `npm.cmd run test:db` passed all 131 pgTAP assertions across seven files.
-- Database coverage includes RPC execution grants, direct-insert denial, owner derivation, identical retry idempotency, conflicting retry rejection, cross-user denial, anonymous denial, RLS regressions, constraints, and cascades.
-- `npm.cmd run check` passed all 69 Node tests and the Vite production build.
-- Mapper coverage includes grams, food-specific cups, milliliters, source/dataset snapshots, edit reproduction, null versus zero, timezone boundaries, validation, and source-object nonmutation.
-- Controller and service coverage includes no write on analysis, one write on explicit action, double-click prevention, identical network retry, expired-session handling, safe errors, and no caller-supplied user ID.
-- `npm.cmd run test:auth:local` passed the real local signup, onboarding, explicit food-log RPC, responsive result, refresh, logout/login, password recovery, and frozen calculator flow.
+- `npm.cmd run check` passed all 81 Node tests and the Vite production build on 2026-10-07.
+- Daily unit coverage includes multiple entries, empty days, all-null and mixed-null nutrients, explicit zeros, neutral comparisons, missing targets, target effective-date selection, local midnight, a DST transition, date arithmetic, owner/date filters, pagination range, navigation, refresh after save, retry, expired session, stale private-state rejection, and serving formatting.
+- `npm.cmd run test:auth:local` passed signup, onboarding, empty daily state, target display, responsive/touch checks at 320, 390, 768, and 1280 pixels, explicit food logging, immediate daily refresh, accessible meter text, previous/Today navigation, persistence after refresh, logout/login, password recovery, and frozen calculator behavior.
+- `npm.cmd run test:db` passed all 131 pgTAP assertions across seven files, including signed-out and cross-user food-log and target-history isolation.
 - Local `public` and `private` schema lint reported no errors.
-- `npx.cmd supabase db push --linked` applied `20261007090000_create_food_log_rpc.sql` to staging on 2026-10-07.
-- Local and remote migration histories contain matching `20261003090000`, `20261006090000`, and `20261007090000` entries.
-- The post-apply linked dry run reports that the remote database is up to date with no pending migration, seed, or role changes.
-- The linked `public` and `private` schema lint reports no errors.
-- The deployed staging flow passed human verification on 2026-10-07 for representative grams, food-specific cups, and milliliters.
-- Each staging save displayed **Added to today's log** and disabled the action after the confirmed write.
-- A visible daily log is intentionally absent from V2-P6; V2-P7 owns the daily tracker, saved-food list, and aggregate display.
+- No database migration, provider setting, dependency, or environment-variable change was introduced.
 
 ## Next Intended Action
 
-Stop for human review. V2-P7 is the next planned phase and remains unstarted until the user says **“Proceed with the next V2 phase.”**
+Stop for deployment and the required phone-sized staging review. Do not mark V2-P7 done or begin V2-P8 until the staging daily tracker passes.

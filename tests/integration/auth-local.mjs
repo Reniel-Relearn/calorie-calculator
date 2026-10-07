@@ -414,6 +414,44 @@ async function run() {
       await page.evaluate("Number(document.querySelector('#profile-home-target').textContent.replaceAll(',', '')) > 0"),
       true,
     );
+    await waitForVisible(page, "#daily-tracker");
+    await page.waitFor(
+      "!document.querySelector('#daily-content').hidden && !document.querySelector('#daily-empty').hidden",
+      "The daily tracker did not render its empty-day state.",
+    );
+    assert.notEqual(
+      await page.evaluate("document.querySelector('#daily-target').textContent"),
+      "Not available",
+    );
+    assert.equal(
+      await page.evaluate("document.querySelector('#daily-next').disabled && document.querySelector('#daily-today').disabled"),
+      true,
+    );
+    for (const [width, height] of [
+      [320, 568],
+      [390, 844],
+      [768, 1024],
+      [1280, 800],
+    ]) {
+      await page.setViewport(width, height);
+      assert.equal(
+        await page.evaluate("document.documentElement.scrollWidth === document.documentElement.clientWidth"),
+        true,
+        `The daily tracker overflowed at ${width}x${height}`,
+      );
+      assert.equal(
+        await page.evaluate(`[
+          ...document.querySelectorAll('#daily-tracker button, #daily-tracker input, #daily-tracker a.button')
+        ].filter((control) => !control.closest('[hidden]'))
+          .every((control) => {
+            const rect = control.getBoundingClientRect();
+            return rect.height >= 44 && rect.width >= 44;
+          })`),
+        true,
+        `The daily tracker touch targets were too small at ${width}x${height}`,
+      );
+    }
+    await page.setViewport(390, 844);
 
     await setForm(page, { "#food-query": "150g grilled chicken breast" });
     await click(page, "#analyze-food-button");
@@ -451,6 +489,37 @@ async function run() {
     assert.equal(
       await page.evaluate("document.querySelector('#add-to-log').disabled"),
       true,
+    );
+    await page.waitFor(
+      "!document.querySelector('#daily-log-list').hidden && document.querySelectorAll('#daily-log-list > li').length === 1",
+      "The daily tracker did not refresh after the confirmed food log.",
+      15_000,
+    );
+    assert.equal(
+      await page.evaluate("document.querySelector('#daily-calories').textContent"),
+      "227 kcal",
+    );
+    assert.equal(
+      await page.evaluate("document.querySelector('#daily-log-list h3').textContent"),
+      "Grilled Chicken Breast",
+    );
+    assert.equal(
+      await page.evaluate(`(() => {
+        const meter = document.querySelector('#daily-calorie-meter');
+        return meter.value > 0 && meter.max > 0 && Boolean(meter.getAttribute('aria-valuetext'));
+      })()`),
+      true,
+    );
+    const todayDate = await page.evaluate("document.querySelector('#daily-date').value");
+    await click(page, "#daily-previous");
+    await page.waitFor(
+      `document.querySelector('#daily-date').value !== ${JSON.stringify(todayDate)} && !document.querySelector('#daily-content').hidden`,
+      "Previous-day navigation did not load another local date.",
+    );
+    await click(page, "#daily-today");
+    await page.waitFor(
+      `document.querySelector('#daily-date').value === ${JSON.stringify(todayDate)} && document.querySelectorAll('#daily-log-list > li').length === 1`,
+      "Today navigation did not restore the current daily log.",
     );
 
     await page.navigate(APP_URL);
@@ -552,7 +621,7 @@ async function run() {
     await waitForVisible(page, "#auth-error");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
 
-    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, explicit food logging, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
+    console.log("Local integration passed: signup, confirmation, atomic profile onboarding, explicit food logging, daily tracker refresh/navigation, target summary, protected calculator, session restore, login/logout, password recovery, and bad-link handling.");
   } finally {
     await page.close();
   }

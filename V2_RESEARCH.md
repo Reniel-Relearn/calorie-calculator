@@ -508,7 +508,7 @@ Use one authenticated, idempotent `complete_profile_onboarding` RPC with an empt
 
 ## R-023 — V2-P6 food-log persistence and retry recheck
 
-**Status:** Implemented and verified locally; staging migration and flow verification remain pending.
+**Status:** Implemented and verified locally and on staging on 2026-10-07.
 
 **Official sources**
 
@@ -531,6 +531,32 @@ All sources were accessed on 2026-10-07.
 
 Map a successful frozen V1 result to versioned scalar and JSON snapshots, generate one UUID when the save action begins, and retain that complete command for network retries. Persist through `create_food_log`, which derives ownership, rejects conflicting reuse, and returns an idempotent success for an identical retry. Keep unavailable nutrients as null, publish only a minimal saved-log event, and do not introduce automatic logging or an offline queue.
 
+## R-024 — V2-P7 daily tracker query, aggregation, and accessibility recheck
+
+**Status:** Implemented and verified locally on 2026-10-07; deployed phone-size review remains pending.
+
+**Official sources**
+
+- Supabase JavaScript, [`eq()` filtering](https://supabase.com/docs/reference/javascript/using-filters-eq) and [`range()` pagination](https://supabase.com/docs/reference/javascript/using-modifiers-range).
+- PostgreSQL, [Aggregate Functions](https://www.postgresql.org/docs/current/functions-aggregate.html).
+- MDN, [`Intl.DateTimeFormat.prototype.formatToParts()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts).
+- W3C Web Accessibility Initiative, [Meter Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/).
+- WHATWG, [The `meter` element](https://html.spec.whatwg.org/dev/form-elements.html#the-meter-element).
+
+All sources were accessed on 2026-10-07.
+
+**Finding**
+
+- Supabase equality filters map cleanly to the indexed owner and `local_date` query. Ordered range pagination avoids silently relying on the service's default row cap.
+- PostgreSQL aggregates ignore null inputs and, except for count, return null when no rows are selected. A nutrition dashboard must therefore decide explicitly whether it is presenting a complete total, a known partial total, or no available value.
+- `Intl.DateTimeFormat` with a named timezone can derive stable calendar parts for current-day and effective-target selection without using the device or server default timezone.
+- A calorie value compared with an estimated target is a scalar measurement with a known range, so native `meter` semantics fit better than task-progress semantics. Its value must stay within its declared range and needs a useful text equivalent.
+- Neutral comparison language can state the arithmetic outcome as calories remaining or calories above target without labeling the day or user as good, bad, successful, or failing.
+
+**Implementation consequence**
+
+Query owner-filtered daily logs and effective target history, aggregate them in a pure null-aware module, and keep display rounding in the view. Clamp the visual meter at its target maximum while preserving the full above-target amount in visible and accessible text. Keep empty, missing-target, session, and network states separate, paginate ordered reads, and refresh only when a confirmed saved-log event matches the selected date.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -541,5 +567,6 @@ Map a successful frozen V1 result to versioned scalar and JSON snapshots, genera
 | V2-P4 | All EER coefficients and test vectors; Hall model equations, licensing, domains, goal inputs, loss/gain acceptance |
 | V2-P5 | Atomic Supabase/PostgreSQL RPC pattern, authenticated ownership, IANA timezone validation, PAL wording, accessible sensitive-field UX |
 | V2-P6 | Mutation return behavior, idempotent retry boundary, owner-derived RPC, timezone-to-local-date derivation, sanitized snapshot shape |
+| V2-P7 | Selected-date filtering and pagination, null-aware aggregation, timezone-safe target selection, meter semantics, neutral comparison language |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

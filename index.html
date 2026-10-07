@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/auth.css">
     <link rel="stylesheet" href="./css/profile.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <script type="module" src="./js/main.js"></script>
   </head>
@@ -354,6 +355,83 @@
           </dl>
           <p class="target-summary__note">This estimate has meaningful individual uncertainty. Monitor weight trends over time and seek qualified guidance for personal health questions.</p>
         </article>
+
+        <section class="daily-tracker" id="daily-tracker" aria-labelledby="daily-heading" hidden>
+          <p class="visually-hidden" id="daily-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+          <header class="daily-tracker__header">
+            <div>
+              <p class="eyebrow">Daily tracker</p>
+              <h2 id="daily-heading">Your day</h2>
+              <p id="daily-date-label">Selected day</p>
+            </div>
+            <button class="button button--text" id="daily-today" type="button">Today</button>
+          </header>
+
+          <div class="daily-date-controls" aria-label="Choose tracker date">
+            <button class="button button--secondary daily-date-button" id="daily-previous" type="button" aria-label="View previous day">&larr;</button>
+            <div class="form-field">
+              <label for="daily-date">Date</label>
+              <input id="daily-date" type="date">
+            </div>
+            <button class="button button--secondary daily-date-button" id="daily-next" type="button" aria-label="View next day">&rarr;</button>
+          </div>
+
+          <div class="daily-state" id="daily-loading">
+            <span class="spinner" aria-hidden="true"></span>
+            <p>Loading this day...</p>
+          </div>
+
+          <div class="daily-state daily-state--error" id="daily-error" hidden>
+            <p id="daily-error-message" role="alert">We couldn't load this day.</p>
+            <button class="button button--secondary" id="daily-retry" type="button">Try Again</button>
+          </div>
+
+          <div class="daily-content" id="daily-content" hidden>
+            <article class="daily-summary" aria-labelledby="daily-summary-heading">
+              <h3 class="visually-hidden" id="daily-summary-heading">Daily calorie summary</h3>
+              <dl class="daily-calorie-totals">
+                <div>
+                  <dt>Consumed</dt>
+                  <dd id="daily-calories">0 kcal</dd>
+                </div>
+                <div>
+                  <dt>Estimated target</dt>
+                  <dd id="daily-target">Not available</dd>
+                </div>
+              </dl>
+              <p class="daily-comparison" id="daily-comparison">No calorie target was available for this day.</p>
+              <div class="daily-meter" id="daily-meter-group">
+                <span id="daily-meter-label">Calories compared with estimated target</span>
+                <meter id="daily-calorie-meter" min="0" max="1" value="0" aria-labelledby="daily-meter-label"></meter>
+              </div>
+            </article>
+
+            <section class="daily-nutrients" aria-labelledby="daily-nutrients-heading">
+              <h3 id="daily-nutrients-heading">Nutrition totals</h3>
+              <dl class="daily-nutrient-grid">
+                <div><dt>Protein</dt><dd id="daily-proteinG">Not available</dd><small id="daily-proteinG-note" hidden></small></div>
+                <div><dt>Carbohydrates</dt><dd id="daily-carbohydratesG">Not available</dd><small id="daily-carbohydratesG-note" hidden></small></div>
+                <div><dt>Fat</dt><dd id="daily-fatG">Not available</dd><small id="daily-fatG-note" hidden></small></div>
+                <div><dt>Fiber</dt><dd id="daily-fiberG">Not available</dd><small id="daily-fiberG-note" hidden></small></div>
+                <div><dt>Sugar</dt><dd id="daily-sugarG">Not available</dd><small id="daily-sugarG-note" hidden></small></div>
+                <div><dt>Sodium</dt><dd id="daily-sodiumMg">Not available</dd><small id="daily-sodiumMg-note" hidden></small></div>
+              </dl>
+            </section>
+
+            <section class="daily-foods" aria-labelledby="daily-log-heading">
+              <div class="daily-foods__heading">
+                <h3 id="daily-log-heading">Logged foods (0)</h3>
+                <span>Demo nutrition dataset</span>
+              </div>
+              <div class="daily-empty" id="daily-empty">
+                <p><strong>No food logged for this day.</strong></p>
+                <p>Analyze a supported food, then choose Add to Today's Log.</p>
+                <a class="button button--secondary" href="#app">Go to Food Calculator</a>
+              </div>
+              <ul class="daily-log-list" id="daily-log-list" hidden></ul>
+            </section>
+          </div>
+        </section>
       </section>
 
     <main class="app-shell page-container" id="app" tabindex="-1" hidden>

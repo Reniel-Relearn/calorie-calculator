@@ -61,3 +61,38 @@ The snapshot deliberately omits account data, profile values, aliases, authentic
 ### Save event
 
 After a confirmed save, the private application publishes `caloriecheck:food-log-saved` with only the log ID and stable local date. V2-P7 may use this event to refresh daily aggregates. No nutrient or profile data is placed in the event.
+
+## Daily Tracker Contract — Version 1.0.0
+
+V2-P7 queries one owner's food logs for one stored `local_date` and calculates the view on demand. Browser filters reduce the query to the authenticated user and selected date; database grants and Row Level Security remain the authorization boundary.
+
+### Selected date
+
+- The default date is derived from the current instant in the completed profile's IANA timezone.
+- Date navigation uses calendar-day arithmetic and does not derive a day from server timezone.
+- Previous-day, next-day, direct-date, and Today controls do not navigate later than the user's current local date.
+- Existing log `local_date` values remain stable even if a profile timezone changes in a later phase.
+
+### Effective target
+
+- For today, the view selects the latest target whose `effective_from` is no later than the current instant.
+- For a completed date, the view selects the latest target that became effective by the end of that calendar date in the profile timezone.
+- A missing or null target remains unavailable. The tracker does not substitute maintenance calories or another target.
+
+### Aggregation
+
+- Calories sum every logged `calories_kcal` snapshot for the selected date.
+- Each other nutrient is returned as `{ value, availability }`.
+- `complete` means every entry has a numeric value, including explicit zero.
+- `partial` means the displayed value is the sum of known entries and at least one entry is unavailable. The UI labels it as a known partial total.
+- `unavailable` means no entry provides that nutrient; its value remains `null`.
+- An empty day has zero logged calories and a separate **No food logged for this day** state. It does not turn absent nutrient evidence into zero.
+- Core totals retain calculation precision; display rounding remains in the view layer.
+
+### Refresh and display
+
+- A matching `caloriecheck:food-log-saved` event reloads the selected date after a confirmed write.
+- Food rows show the saved name, original serving, normalized serving when useful, local entry time, and calorie snapshot.
+- Target comparison uses neutral **remaining** or **above target** wording.
+- The target comparison uses a labeled native `meter`; its accessible text states consumed calories and the remaining/above amount.
+- Loading, empty, unavailable-target, session-expired, and retryable network states remain distinct.

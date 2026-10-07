@@ -101,8 +101,8 @@ export function createProfileView(handlers) {
     elements.skipApp.hidden = false;
 
     if (section === elements.home) {
-      elements.skipApp.href = "#app";
-      elements.skipApp.textContent = "Skip to food search";
+      elements.skipApp.href = "#daily-tracker";
+      elements.skipApp.textContent = "Skip to today's summary";
     } else {
       elements.skipApp.href = `#${section.id}`;
       elements.skipApp.textContent = "Skip to profile setup";
