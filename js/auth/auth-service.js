@@ -36,11 +36,11 @@ export function createAuthService(client, applicationOrigin, schedule = queueMic
       });
     },
 
-    async signUp(email, password) {
+    async signUp(email, password, captchaToken) {
       const result = await client.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: confirmationRedirect },
+        options: { emailRedirectTo: confirmationRedirect, captchaToken },
       });
 
       if (result.error) return failure(result.error);
@@ -53,15 +53,20 @@ export function createAuthService(client, applicationOrigin, schedule = queueMic
       return success();
     },
 
-    async signIn(email, password) {
-      const result = await client.auth.signInWithPassword({ email, password });
+    async signIn(email, password, captchaToken) {
+      const result = await client.auth.signInWithPassword({
+        email,
+        password,
+        options: { captchaToken },
+      });
       if (result.error) return failure(result.error);
       return success({ session: result.data.session });
     },
 
-    async requestPasswordReset(email) {
+    async requestPasswordReset(email, captchaToken) {
       const result = await client.auth.resetPasswordForEmail(email, {
         redirectTo: recoveryRedirect,
+        captchaToken,
       });
       if (result.error) return failure(result.error);
       return success();

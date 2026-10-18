@@ -134,6 +134,20 @@ export function createAuthController({
     }
   }
 
+  async function runCaptchaOperation(operation, action) {
+    const captcha = ui.getCaptchaToken(operation);
+    if (!captcha.ok) {
+      ui.showFormError(operation, getAuthErrorMessage({ code: captcha.code }));
+      return null;
+    }
+
+    try {
+      return await runOperation(operation, () => action(captcha.token));
+    } finally {
+      ui.resetCaptcha(operation);
+    }
+  }
+
   async function initialize(callback) {
     ui.showState(AUTH_STATES.SESSION_CHECKING, { focus: false });
     unsubscribe = service.subscribe(handleAuthEvent);
@@ -210,8 +224,8 @@ export function createAuthController({
       return ui.showFormError("login", passwordError, "password");
     }
 
-    const result = await runOperation("login", () =>
-      service.signIn(email.trim(), password),
+    const result = await runCaptchaOperation("login", (captchaToken) =>
+      service.signIn(email.trim(), password, captchaToken),
     );
     if (!result) return;
 
@@ -249,8 +263,8 @@ export function createAuthController({
     }
 
     const normalizedEmail = email.trim();
-    const result = await runOperation("signup", () =>
-      service.signUp(normalizedEmail, password),
+    const result = await runCaptchaOperation("signup", (captchaToken) =>
+      service.signUp(normalizedEmail, password, captchaToken),
     );
     if (!result) return;
 
@@ -273,8 +287,8 @@ export function createAuthController({
     const emailError = validateEmail(email);
     if (emailError) return ui.showFormError("forgot", emailError, "email");
 
-    const result = await runOperation("forgot", () =>
-      service.requestPasswordReset(email.trim()),
+    const result = await runCaptchaOperation("forgot", (captchaToken) =>
+      service.requestPasswordReset(email.trim(), captchaToken),
     );
     if (!result) return;
 
