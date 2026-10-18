@@ -36,7 +36,9 @@ function createFakeUI() {
       record.privateClears += 1;
     },
     getState: () => record.state,
+    getCaptchaToken: () => ({ ok: true, token: "test-captcha" }),
     resetForms() {},
+    resetCaptcha() {},
     setBusy(operation, busy) {
       record.busy.push([operation, busy]);
     },

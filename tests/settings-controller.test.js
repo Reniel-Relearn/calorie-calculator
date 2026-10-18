@@ -31,8 +31,10 @@ function fakeView() {
     clearDeleteErrors: () => calls.push(["clearDeleteErrors"]),
     clearProfileErrors: () => calls.push(["clearProfileErrors"]),
     close: () => calls.push(["close"]),
+    getDeleteCaptchaToken: () => ({ ok: true, token: "captcha-token" }),
     open: () => calls.push(["open"]),
     reset: () => calls.push(["reset"]),
+    resetDeleteCaptcha: () => calls.push(["resetDeleteCaptcha"]),
     setDeleteBusy: (busy) => calls.push(["setDeleteBusy", busy]),
     setProfile: (profile, target) => calls.push(["setProfile", profile, target]),
     setProfileBusy: (busy) => calls.push(["setProfileBusy", busy]),
@@ -132,4 +134,52 @@ test("deletes only after exact confirmation and reports completion", async () =>
   await controller.deleteAccount({ currentPassword: "secret", confirmation: "DELETE" });
   assert.equal(deletes, 1);
   assert.equal(completed, 1);
+});
+
+test("shows bounded retry guidance when account deletion is throttled", async () => {
+  const view = fakeView();
+  const controller = createSettingsController({
+    service: {
+      async deleteAccount() {
+        return { ok: false, code: "ACCOUNT_DELETE_RATE_LIMITED" };
+      },
+    },
+    view,
+  });
+  controller.activate(PROFILE, TARGET);
+  await controller.deleteAccount({
+    currentPassword: "password-123",
+    confirmation: "DELETE",
+  });
+  assert.match(
+    view.calls.find(([name]) => name === "showDeleteError")[1],
+    /wait 15 minutes/i,
+  );
+});
+
+test("does not call deletion until the security check is complete", async () => {
+  let deletes = 0;
+  const view = {
+    ...fakeView(),
+    getDeleteCaptchaToken: () => ({ ok: false, code: "CAPTCHA_REQUIRED" }),
+  };
+  const controller = createSettingsController({
+    service: {
+      async deleteAccount() {
+        deletes += 1;
+        return { ok: true };
+      },
+    },
+    view,
+  });
+  controller.activate(PROFILE, TARGET);
+  await controller.deleteAccount({
+    currentPassword: "password-123",
+    confirmation: "DELETE",
+  });
+  assert.equal(deletes, 0);
+  assert.match(
+    view.calls.find(([name]) => name === "showDeleteError")[1],
+    /complete the security check/i,
+  );
 });

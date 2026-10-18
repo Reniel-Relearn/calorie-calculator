@@ -467,3 +467,18 @@ Browser status at freeze:
 - dedicated screen-reader and platform accessibility combinations: UNVERIFIED EXTERNAL ENVIRONMENTS
 
 The unverified environments are not recorded as passed or failed. Version 1 is not claimed to have formal WCAG certification or exhaustive assistive-technology certification.
+
+# Version 2 Public Security Hardening Tests
+
+V2-S0 adds these mandatory checks before its security pull request may merge:
+
+- CAPTCHA tokens are passed to signup, login, recovery, and account-deletion reauthentication; remote configuration fails closed; missing, expired, failed, and retried challenges stay recoverable.
+- Deletion rejects missing/unapproved origins, wildcard CORS, unsupported methods, wrong content type, missing/invalid JWTs, malformed/extra/oversized bodies, invalid passwords, unavailable throttle state, and attempts above five per 15 minutes.
+- The private deletion counter is inaccessible to `anon` and `authenticated`, executable only by `service_role`, uses a fixed empty function search path, behaves atomically, and cascades on user deletion.
+- CSP and security headers are present without `unsafe-inline`, `unsafe-eval`, wildcard Supabase origins, framing permission, or production source maps.
+- Frontend source contains no executable-HTML or dynamic-code sinks and no production console logging.
+- Dashboard retrieval stops after five 1,000-row pages.
+- A clean locked install, complete Node suite, production build, high-severity dependency audit, tracked/build secret scan, Supabase reset, pgTAP suite, database lint, and browser integration pass.
+- Controlled staging verifies real CAPTCHA behavior, exact deployed headers, bounded 429 behavior, owner isolation, all existing product journeys, provider logs, and rollback without attack-volume load testing.
+
+Provider dashboard settings, local Docker/database checks, remote migration/function application, and staging results must remain marked pending until actually verified.

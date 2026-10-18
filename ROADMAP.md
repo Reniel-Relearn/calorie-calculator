@@ -193,7 +193,7 @@ The authoritative scope and implementation sequence are maintained in:
 - `V2_DECISIONS.md`
 - `V2_RESEARCH.md`
 
-V2-P9 is complete on staging. The interface revision is now the active program before V2-P10. It is divided into V2-D0 through V2-D6 so design inputs, audit, shared foundations, navigation, primary flows, management flows, and staging verification remain reviewable. The mandatory active gate is: **Blocker: Requires user's plan and mockups for design.** V2-P10 may not begin until the design program is complete and approved on staging.
+V2-P9 is complete on staging. Because the staging application is publicly reachable, V2-S0 Public Exposure Security Hardening is now inserted before the interface revision. Repository controls are implemented on a dedicated security branch; free CAPTCHA/provider configuration, local database verification, reviewed staging application, security checks, pull-request approval, and merge remain blocking. After V2-S0, the interface revision proceeds through V2-D0 to V2-D6. V2-P10 remains the complete post-design security regression and may not begin until the design program is complete and approved on staging.
 
 ---
 

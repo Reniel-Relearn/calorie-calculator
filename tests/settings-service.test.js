@@ -79,11 +79,46 @@ test("invokes protected hard deletion and clears only local session state", asyn
   });
   assert.deepEqual(
     await service.deleteAccount({
+      captchaToken: "captcha-token",
       currentPassword: "private",
       confirmation: "DELETE",
     }),
     { ok: true },
   );
   assert.equal(calls[0][1], "delete-account");
+  assert.deepEqual(calls[0][2].body, {
+    currentPassword: "private",
+    confirmation: "DELETE",
+    captchaToken: "captcha-token",
+  });
   assert.deepEqual(calls[1], ["signOut", { scope: "local" }]);
+});
+
+test("maps deletion throttling without retrying or signing out", async () => {
+  const calls = [];
+  const service = createSettingsService({
+    auth: {
+      signOut() {
+        calls.push("signOut");
+      },
+    },
+    functions: {
+      invoke() {
+        calls.push("invoke");
+        return Promise.resolve({
+          data: null,
+          error: { context: { status: 429 } },
+        });
+      },
+    },
+  });
+
+  const result = await service.deleteAccount({
+    captchaToken: "captcha-token",
+    currentPassword: "password-123",
+    confirmation: "DELETE",
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.code, "ACCOUNT_DELETE_RATE_LIMITED");
+  assert.deepEqual(calls, ["invoke"]);
 });

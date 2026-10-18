@@ -209,3 +209,13 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 **Reason:** Target and log history must remain interpretable after settings and dataset changes. The browser cannot safely hold an admin credential, and destructive account removal needs recent proof that the signed-in user knows the current password.
 
 **Consequences:** Direct authenticated updates to food-log calculation fields are revoked. The `update_profile_settings` and `update_food_log` RPCs derive the owner from `auth.uid()` and reject partial or provenance-changing mutations. Existing log dates do not move when the profile timezone changes; an explicit edit may assign a new date and refresh both affected dashboard ranges. The frontend receives only a success or safe failure from `delete-account`; auth-user deletion cascades application rows and the client clears its local session. The staging deployment and disposable-account cascade test passed before V2-P9 was marked complete.
+
+## V2-ADR-029 — Public Exposure Hardening Before Design Revision
+
+**Status:** ACCEPTED — APPROVED 2026-10-19
+
+**Decision:** Insert V2-S0 before V2-D0. Use free-tier controls by default: Vercel security headers and Hobby protections, Cloudflare Turnstile Free with Supabase Auth validation, provider Auth limits, exact-origin Edge Function CORS, a PostgreSQL-backed per-user deletion throttle, locked dependency checks, GitHub security automation, and documented incident actions. Keep V2-P10 after the design program for the full regression.
+
+**Reason:** The staging application is already public. Direct Supabase requests bypass Vercel Firewall, authentication/email quotas can be exhausted, and the privileged deletion endpoint needs durable abuse controls before additional design work expands the interface surface.
+
+**Consequences:** Staging and production authentication fail closed when Turnstile is not configured. The browser receives only the public Turnstile site key; its secret is stored only in Supabase Auth. Account deletion allows five attempts per user in a 15-minute window and rejects oversized, malformed, unsupported-method, unauthenticated, and unapproved-origin requests. Provider settings, migration/deployment, staging checks, repository rules, pull-request approval, and merge remain human-controlled completion gates. No paid service or trial is authorized.

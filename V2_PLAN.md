@@ -214,7 +214,27 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ## Scheduled Design Revision Program — Mandatory Before V2-P10
 
-**Program status:** BLOCKED — USER ACTION REQUIRED
+### V2-S0 — Public Exposure Security Hardening
+
+**Status:** BLOCKED — USER ACTION REQUIRED after repository implementation
+
+V2-S0 was inserted before the design program after V2-P9 because the staging application is publicly reachable. Its approved executable specification is `V2_PUBLIC_SECURITY_HARDENING_PLAN.md`. Repository controls are implemented on `security/v2-public-exposure-hardening`; provider configuration, staging migration/deployment, remote verification, pull-request checks, and merge remain mandatory before V2-S0 is complete. V2-S0 does not replace the full post-design V2-P10 regression.
+
+Scope:
+
+- browser response headers and enforced CSP;
+- Cloudflare Turnstile Free integration for signup, login, and recovery;
+- Supabase Auth abuse-limit review;
+- exact-origin account-deletion CORS, bounded input, and durable throttling;
+- grants, RLS, RPC, migration, XSS, redirect, and secret regression checks;
+- locked dependency audit, Security CI, CodeQL, Dependabot, and vulnerability reporting;
+- monitoring, incident, rollback, and free-tier limitation documentation.
+
+Completion requires the human blockers, controlled staging matrix, security pull-request approval, and merge described in `V2_PUBLIC_SECURITY_HARDENING_PLAN.md`.
+
+---
+
+**Design program status:** BLOCKED — USER ACTION REQUIRED
 
 **Blocker:** Requires user's plan and mockups for design.
 

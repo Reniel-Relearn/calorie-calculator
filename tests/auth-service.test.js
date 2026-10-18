@@ -40,21 +40,44 @@ test("uses fixed callback URLs for signup and password reset", async () => {
   const { client, calls } = createClient();
   const service = createAuthService(client, "https://calorie.example");
 
-  await service.signUp("person@example.com", "password-123");
-  await service.requestPasswordReset("person@example.com");
+  await service.signUp("person@example.com", "password-123", "captcha-signup");
+  await service.requestPasswordReset("person@example.com", "captcha-reset");
 
   assert.deepEqual(calls[0], [
     "signUp",
     {
       email: "person@example.com",
       password: "password-123",
-      options: { emailRedirectTo: "https://calorie.example/?auth=confirm" },
+      options: {
+        emailRedirectTo: "https://calorie.example/?auth=confirm",
+        captchaToken: "captcha-signup",
+      },
     },
   ]);
   assert.deepEqual(calls[1], [
     "reset",
     "person@example.com",
-    { redirectTo: "https://calorie.example/?auth=recovery" },
+    {
+      redirectTo: "https://calorie.example/?auth=recovery",
+      captchaToken: "captcha-reset",
+    },
+  ]);
+});
+
+test("passes CAPTCHA tokens to password sign-in", async () => {
+  const { client, calls } = createClient();
+  await createAuthService(client, "https://calorie.example").signIn(
+    "person@example.com",
+    "password-123",
+    "captcha-login",
+  );
+  assert.deepEqual(calls[0], [
+    "signIn",
+    {
+      email: "person@example.com",
+      password: "password-123",
+      options: { captchaToken: "captcha-login" },
+    },
   ]);
 });
 

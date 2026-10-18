@@ -1,9 +1,9 @@
 # CalorieCheck Version 2 — Operational Status
 
 **Current Version:** V2
-**Current Phase:** V2-D0 — User Design Plan and Mockup Approval Gate
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0)
+**Current Phase:** V2-S0 — Public Exposure Security Hardening
+**Current Phase Status:** BLOCKED — USER ACTION REQUIRED after repository implementation
+**Next Phase:** V2-D0 — User Design Plan and Mockup Approval Gate (blocked by V2-S0 completion)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -30,54 +30,47 @@
 - The linked staging migration and `delete-account` Edge Function were deployed.
 - The user confirmed on 2026-10-07: **“V2-P9 staging settings, log correction, and account deletion passed.”**
 
-## Current Blocker
+## V2-S0 Repository Evidence
 
-**Blocker: Requires user's plan and mockups for design.**
+- The approved branch is `security/v2-public-exposure-hardening`, created from an up-to-date `main`.
+- Vercel headers enforce CSP, HSTS, framing denial, MIME protection, referrer and permissions policies, cross-origin isolation behavior, HTML revalidation, and immutable hashed-asset caching.
+- Cloudflare Turnstile Free is wired to signup, login, password recovery, and account-deletion reauthentication through the supported Supabase `captchaToken` option. Remote environments fail closed without a public site key; local tests use a local-only adapter.
+- `delete-account` now requires an exact allowed origin, JSON, a 4 KiB streamed body limit, exact fields, JWT/user validation, current-password reauthentication, and a durable five-attempt/15-minute per-user throttle with safe 429 behavior.
+- A reviewed migration creates private throttle state and grants its security-definer RPC only to `service_role`.
+- Dashboard pagination is bounded at five 1,000-row pages per query.
+- The high-severity `source-map-js` advisory was resolved through a compatible lockfile update to 1.2.2.
+- Security CI, CodeQL, Dependabot, tracked/build secret scanning, private vulnerability reporting, a threat model, provider instructions, incident response, rollback steps, and free-tier limitations are versioned.
+- A clean `npm ci` completed with zero vulnerabilities. `npm.cmd run check` passed 132 Node tests, the Vite production build, a second zero-vulnerability high-severity audit, and the tracked/untracked/build secret scan across 141 files.
+- Linked staging history matches the four previously applied migrations. `npx.cmd supabase db push --dry-run --linked` reports only `20261019090000_harden_account_deletion.sql` pending and made no remote change.
+- Linked `public`, `private`, and `extensions` schema lint reports no errors before the new migration is applied.
+- The current public response has HSTS and safe HTML revalidation but lacks the planned CSP, framing, permissions, MIME, referrer, and cross-origin headers; those remain deployment verification items.
+- Local Supabase reset, pgTAP, lint, and browser integration remain pending because Docker Desktop is not currently running.
 
-V2-D0 cannot be approved from implementation assumptions alone. The complete interface now includes authentication, onboarding, calculator states, Today, weekly history, settings, log correction/deletion, and account deletion. A user-approved visual and interaction baseline is required before revising these connected journeys.
+## Current Blockers
 
-## Required Human Action
+V2-S0 is stopped at the approved human-action boundary. The user must complete H1 through H4 in `V2_SECURITY_OPERATIONS.md`, start Docker Desktop for the remaining local database/browser verification, and explicitly approve H6 remote migration/function/deployment application after reviewing the dry runs.
 
-Provide the following design inputs:
+Required categories:
 
-1. A written design plan covering:
-   - desired visual character and brand direction;
-   - information hierarchy and navigation model;
-   - colors, typography, imagery, icons, and available brand assets;
-   - motion preferences;
-   - accessibility or interaction constraints beyond the existing requirements;
-   - any existing interface elements that must remain visually recognizable.
+1. Cloudflare Turnstile Free widget, public site key in Vercel, and secret only in Supabase Auth.
+2. Supabase administrator MFA/access, CAPTCHA, Auth limits, password/email/redirect settings, advisors, Storage/Realtime, and available SSL/network controls.
+3. Vercel preview protection, observed log-mode WAF review, usage/alerts, and incident-only Attack Challenge Mode.
+4. GitHub CLI reauthentication, then the `main` ruleset, required checks, Dependabot, secret scanning/push protection, CodeQL, and private reporting where available free.
+5. Docker Desktop running so the clean local migration, pgTAP, lint, and browser integration can execute.
+6. Explicit approval to apply the reviewed migration and deploy the Edge Function/configuration to staging, followed by bounded synthetic-account verification.
 
-2. Approved mobile mockups for:
-   - signup, login, email confirmation, password reset, and auth errors;
-   - onboarding and target explanation;
-   - Today/home with calorie progress, calculator, and logged foods;
-   - calculator ambiguity, missing amount, invalid/not-found, success, and saved states;
-   - weekly history;
-   - profile settings and target-affecting confirmation;
-   - food-log editing and deletion confirmation;
-   - irreversible account deletion;
-   - representative loading, empty, network-error, and expired-session states.
-
-3. Either approved tablet/desktop mockups or written responsive notes explaining how the mobile design should expand on larger screens.
-
-The artifacts may be images, Figma exports/links, annotated sketches, or another reviewable format. They must be detailed enough to identify layout, navigation, hierarchy, component behavior, and responsive intent. Mockups do not authorize new product features outside the approved Version 2 scope.
-
-After supplying these materials, ask:
-
-**Review my V2 design plan and mockups for V2-D0.**
-
-V2-D0 is a review and approval gate. No design implementation begins during that review. If the materials are complete and compatible with the product, V2-D0 will be marked done and V2-D1 will perform the interface inventory and traceability audit.
+Do not send secrets, current passwords, provider tokens, or personal data in chat.
 
 ## Design Program Sequence
 
-1. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-2. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
-3. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
-4. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
-5. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
-6. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
-7. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
+1. V2-S0 — Public Exposure Security Hardening — **BLOCKED — USER ACTION REQUIRED**
+2. V2-D0 — User Design Plan and Mockup Approval Gate — blocked by V2-S0
+3. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
+4. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
+5. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
+6. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
+7. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
+8. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
 
 V2-P10 cannot begin until V2-D0 through V2-D6 are complete and the revised interface passes staging review.
 
@@ -87,4 +80,4 @@ Windows reserved the former default Supabase local port range. The repository's 
 
 ## Next Intended Action
 
-Wait for the user's design plan, mockups, and responsive direction. Review those inputs against the implemented routes, states, accessibility requirements, security boundaries, and approved V2 scope. Do not begin V2-D1 or visual implementation until V2-D0 is explicitly approved.
+Wait for the user to complete the V2-S0 actions in `V2_SECURITY_OPERATIONS.md` and start Docker Desktop. Then run the remaining local checks, present linked migration/function/deployment dry runs, obtain explicit remote-application approval, and complete controlled staging verification. Do not begin V2-D0 until V2-S0 is merged into `main`.

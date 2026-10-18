@@ -320,6 +320,10 @@ DOM modules do not contain scientific formulas or database policy logic. Databas
 
 ## 18. Privacy and Security Requirements
 
+The publicly reachable staging application must complete V2-S0 before the interface revision proceeds. V2-S0 adds enforced browser security headers, CAPTCHA-backed Auth requests, explicit hosted rate-limit review, a narrowly allowed and durably throttled account-deletion endpoint, automated dependency/secret/code scanning, and incident procedures. These immediate controls do not replace the full V2-P10 regression after design changes.
+
+All V2-S0 third-party controls default to free plans. An essential paid-only control becomes a documented limitation and approval blocker; it is never enabled automatically.
+
 - All profile, target, and food-log data is private by default.
 - Public profiles do not exist.
 - The browser uses only the Supabase project URL and current publishable client key.
