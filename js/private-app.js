@@ -63,7 +63,7 @@ export function createPrivateApplication(client, options = {}) {
     onDeleteAccount: (values) => settingsController?.deleteAccount(values),
     onOpen: () => settingsController?.open(),
     onSubmit: (values) => settingsController?.submit(values),
-  });
+  }, options.captcha);
   settingsController = createSettingsController({
     service: createSettingsService(client),
     view: settingsView,

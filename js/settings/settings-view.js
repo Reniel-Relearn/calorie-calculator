@@ -41,7 +41,7 @@ function setRadio(form, name, value) {
   if (field) field.checked = true;
 }
 
-export function createSettingsView(handlers) {
+export function createSettingsView(handlers, captcha) {
   const elements = {
     close: requiredElement("settings-close"),
     deleteConfirmation: requiredElement("settings-delete-confirmation"),
@@ -93,7 +93,9 @@ export function createSettingsView(handlers) {
     clearDeleteErrors: () => clearErrors(elements.deleteError, elements.deleteForm),
     clearProfileErrors: () =>
       clearErrors(elements.profileError, elements.profileForm),
+    getDeleteCaptchaToken: () => captcha.getToken("delete"),
     close() {
+      captcha.reset("delete");
       elements.panel.hidden = true;
       elements.open.setAttribute("aria-expanded", "false");
       elements.open.focus();
@@ -102,9 +104,11 @@ export function createSettingsView(handlers) {
       this.setProfile(profile);
       elements.panel.hidden = false;
       elements.open.setAttribute("aria-expanded", "true");
+      captcha.prepare("delete");
       requestAnimationFrame(() => elements.heading.focus());
     },
     reset() {
+      captcha.reset("delete");
       elements.panel.hidden = true;
       elements.open.setAttribute("aria-expanded", "false");
       elements.profileForm.reset();
@@ -119,6 +123,7 @@ export function createSettingsView(handlers) {
         ? "Deleting account…"
         : "Permanently Delete Account";
     },
+    resetDeleteCaptcha: () => captcha.reset("delete"),
     setProfile(profile) {
       if (!profile) return;
       elements.profileForm.elements.displayName.value = profile.displayName;

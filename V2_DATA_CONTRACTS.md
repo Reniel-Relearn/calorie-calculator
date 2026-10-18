@@ -157,8 +157,10 @@ V2-P9 adds authenticated corrections without rewriting provenance or effective h
 
 ### Account deletion
 
-- The browser sends the current password and exact `DELETE` confirmation only to the protected `delete-account` Edge Function.
+- The browser sends the current password, exact `DELETE` confirmation, and short-lived CAPTCHA token only to the protected `delete-account` Edge Function.
 - The function validates the bearer token with Supabase Auth, rechecks the current password, and performs a hard auth-user deletion with a server-only privileged client.
+- The function accepts only exact approved origins, `POST` JSON no larger than 4 KiB, and the three reviewed fields. It consumes one atomic per-user attempt before CAPTCHA-backed password verification; five attempts are allowed in a 15-minute window and later attempts return `429` with `Retry-After`.
+- Throttle state is private, callable only through a `service_role` RPC, stores only the user ID, window start, and count, and cascades with auth-user deletion.
 - The privileged credential is supplied by the managed Edge Function environment and is never exposed to frontend code or a `VITE_*` variable.
 - Deleting `auth.users` cascades the profile, calorie-target history, and food logs through reviewed foreign keys.
 - On confirmed success, the browser clears its local session and private application state. Ordinary validation/authentication failures leave the account and data intact and return safe user-facing errors.

@@ -86,15 +86,32 @@ export function createSettingsController({
       return;
     }
 
+    const captcha = view.getDeleteCaptchaToken();
+    if (!captcha.ok) {
+      view.showDeleteError(
+        captcha.code === "CAPTCHA_UNAVAILABLE"
+          ? "The security check is unavailable. Try again later."
+          : "Complete the security check, then try again.",
+      );
+      return;
+    }
+
     pending = true;
     view.setDeleteBusy(true);
     try {
-      const result = await service.deleteAccount(values);
+      const result = await service.deleteAccount({
+        ...values,
+        captchaToken: captcha.token,
+      });
       if (!result.ok) {
+        const message =
+          result.code === "ACCOUNT_DELETE_RATE_LIMITED"
+            ? "Too many deletion attempts were made. Wait 15 minutes, then try again."
+            : result.code === "ACCOUNT_REAUTHENTICATION_FAILED"
+              ? "The current password was not accepted. Your account was not deleted."
+              : "We couldn't delete your account. Your account and private data remain available.";
         view.showDeleteError(
-          result.code === "ACCOUNT_REAUTHENTICATION_FAILED"
-            ? "The current password was not accepted. Your account was not deleted."
-            : "We couldn't delete your account. Your account and private data remain available.",
+          message,
         );
         return;
       }
@@ -104,6 +121,7 @@ export function createSettingsController({
       view.reset();
       onAccountDeleted();
     } finally {
+      view.resetDeleteCaptcha();
       pending = false;
       view.setDeleteBusy(false);
     }
