@@ -136,10 +136,50 @@ async function createPage() {
     return result.result.value;
   }
 
+  async function callFunction(functionDeclaration, args = []) {
+    const globalObject = await send("Runtime.evaluate", {
+      expression: "globalThis",
+    });
+    const objectId = globalObject.result.objectId;
+    if (!objectId) {
+      throw new Error("Browser global object was unavailable.");
+    }
+
+    try {
+      const result = await send("Runtime.callFunctionOn", {
+        objectId,
+        functionDeclaration,
+        arguments: args.map((value) => ({ value })),
+        awaitPromise: true,
+        returnByValue: true,
+      });
+      if (result.exceptionDetails) {
+        throw new Error(result.exceptionDetails.text ?? "Browser function call failed.");
+      }
+      return result.result.value;
+    } finally {
+      await send("Runtime.releaseObject", { objectId });
+    }
+  }
+
   async function waitFor(expression, message, timeout = 10_000) {
     const deadline = Date.now() + timeout;
     while (Date.now() < deadline) {
       if (await evaluate(expression)) return;
+      await delay(100);
+    }
+    throw new Error(message);
+  }
+
+  async function waitForFunction(
+    functionDeclaration,
+    args,
+    message,
+    timeout = 10_000,
+  ) {
+    const deadline = Date.now() + timeout;
+    while (Date.now() < deadline) {
+      if (await callFunction(functionDeclaration, args)) return;
       await delay(100);
     }
     throw new Error(message);
@@ -167,6 +207,7 @@ async function createPage() {
   );
 
   return {
+    callFunction,
     close: async () => {
       socket.close();
       await fetch(`${CDP_URL}/json/close/${target.id}`);
@@ -207,12 +248,13 @@ async function createPage() {
       });
     },
     waitFor,
+    waitForFunction,
   };
 }
 
 async function setForm(page, values) {
-  await page.evaluate(`(() => {
-    const values = ${JSON.stringify(values)};
+  await page.callFunction(
+    `function (values) {
     for (const [selector, value] of Object.entries(values)) {
       const field = document.querySelector(selector);
       if (!field) throw new Error('Missing field: ' + selector);
@@ -221,21 +263,30 @@ async function setForm(page, values) {
       field.dispatchEvent(new Event('change', { bubbles: true }));
     }
     return true;
-  })()`);
+  }`,
+    [values],
+  );
 }
 
 async function click(page, selector) {
-  await page.evaluate(`(() => {
-    const element = document.querySelector(${JSON.stringify(selector)});
-    if (!element) throw new Error('Missing element: ' + ${JSON.stringify(selector)});
+  await page.callFunction(
+    `function (selector) {
+    const element = document.querySelector(selector);
+    if (!element) throw new Error('Missing element: ' + selector);
     element.click();
     return true;
-  })()`);
+  }`,
+    [selector],
+  );
 }
 
 async function waitForVisible(page, selector, timeout = 10_000) {
-  await page.waitFor(
-    `(() => { const element = document.querySelector(${JSON.stringify(selector)}); return Boolean(element && !element.hidden); })()`,
+  await page.waitForFunction(
+    `function (selector) {
+      const element = document.querySelector(selector);
+      return Boolean(element && !element.hidden);
+    }`,
+    [selector],
     `Expected visible element: ${selector}`,
     timeout,
   );
@@ -613,8 +664,13 @@ async function run() {
     );
 
     await click(page, "#daily-previous");
-    await page.waitFor(
-      `document.querySelector('#daily-date').value === ${JSON.stringify(previousDate)} && document.querySelectorAll('#daily-log-list > li').length === 1 && document.querySelector('#daily-calories').textContent === '408 kcal'`,
+    await page.waitForFunction(
+      `function (expectedDate) {
+        return document.querySelector('#daily-date').value === expectedDate
+          && document.querySelectorAll('#daily-log-list > li').length === 1
+          && document.querySelector('#daily-calories').textContent === '408 kcal';
+      }`,
+      [previousDate],
       "Edited cup serving did not move to the previous day with recalculated nutrition.",
       15_000,
     );
@@ -636,21 +692,33 @@ async function run() {
       15_000,
     );
     await click(page, "#daily-today");
-    await page.waitFor(
-      `document.querySelector('#daily-date').value === ${JSON.stringify(todayDate)} && !document.querySelector('#daily-empty').hidden`,
+    await page.waitForFunction(
+      `function (expectedDate) {
+        return document.querySelector('#daily-date').value === expectedDate
+          && !document.querySelector('#daily-empty').hidden;
+      }`,
+      [todayDate],
       "Today navigation did not restore the current empty day.",
     );
     const currentWeekLabel = await page.evaluate(
       "document.querySelector('#weekly-range-label').textContent",
     );
     await click(page, "#weekly-previous");
-    await page.waitFor(
-      `document.querySelector('#weekly-range-label').textContent !== ${JSON.stringify(currentWeekLabel)} && !document.querySelector('#weekly-content').hidden`,
+    await page.waitForFunction(
+      `function (expectedLabel) {
+        return document.querySelector('#weekly-range-label').textContent !== expectedLabel
+          && !document.querySelector('#weekly-content').hidden;
+      }`,
+      [currentWeekLabel],
       "Previous-week navigation did not load another Monday-through-Sunday range.",
     );
     await click(page, "#weekly-current");
-    await page.waitFor(
-      `document.querySelector('#weekly-range-label').textContent === ${JSON.stringify(currentWeekLabel)} && document.querySelectorAll('#weekly-day-list > li').length === 7`,
+    await page.waitForFunction(
+      `function (expectedLabel) {
+        return document.querySelector('#weekly-range-label').textContent === expectedLabel
+          && document.querySelectorAll('#weekly-day-list > li').length === 7;
+      }`,
+      [currentWeekLabel],
       "Current-week navigation did not restore the weekly history.",
     );
 
