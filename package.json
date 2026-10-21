@@ -23,7 +23,7 @@
     "supabase:status": "supabase status"
   },
   "dependencies": {
-    "@supabase/supabase-js": "2.117.2"
+    "@supabase/supabase-js": "2.118.0"
   },
   "devDependencies": {
     "supabase": "2.118.0",
