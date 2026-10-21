@@ -216,9 +216,9 @@ A phase with an unmet mandatory external action or acceptance criterion is `BLOC
 
 ### V2-S0 — Public Exposure Security Hardening
 
-**Status:** BLOCKED — USER ACTION REQUIRED after repository implementation
+**Status:** DONE — VERIFIED 2026-10-21
 
-V2-S0 was inserted before the design program after V2-P9 because the staging application is publicly reachable. Its approved executable specification is `V2_PUBLIC_SECURITY_HARDENING_PLAN.md`. Repository controls are implemented on `security/v2-public-exposure-hardening`; provider configuration, staging migration/deployment, remote verification, pull-request checks, and merge remain mandatory before V2-S0 is complete. V2-S0 does not replace the full post-design V2-P10 regression.
+V2-S0 was inserted before the design program after V2-P9 because the staging application is publicly reachable. Its approved executable specification is `V2_PUBLIC_SECURITY_HARDENING_PLAN.md`. Repository controls, free provider configuration, migration and Edge Function deployment, protected pull-request checks, production deployment, and the bounded synthetic-account matrix were completed and verified. V2-S0 does not replace the full post-design V2-P10 regression.
 
 Scope:
 
@@ -230,7 +230,7 @@ Scope:
 - locked dependency audit, Security CI, CodeQL, Dependabot, and vulnerability reporting;
 - monitoring, incident, rollback, and free-tier limitation documentation.
 
-Completion requires the human blockers, controlled staging matrix, security pull-request approval, and merge described in `V2_PUBLIC_SECURITY_HARDENING_PLAN.md`.
+Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incident procedures remain in `V2_SECURITY_OPERATIONS.md`.
 
 ---
 
@@ -252,7 +252,7 @@ Completion requires the human blockers, controlled staging matrix, security pull
 
 **Why this phase exists:** “Make it feel like a mobile app” is too subjective to implement safely without an explicit direction, representative screens, responsive intent, and agreement about which existing behavior must remain.
 
-**Dependencies:** V2-P9 complete on staging; current signed-in flows and states available for review.
+**Dependencies:** V2-P9 and V2-S0 complete on staging; current signed-in flows and states available for review.
 
 **Required user inputs:** A written design plan covering goals, desired visual character, information hierarchy, navigation model, branding/assets, motion preferences, and required constraints; approved mobile mockups for authentication, onboarding, Today/home with calculator, successful result and save state, weekly history, settings, log editing/deletion, account deletion confirmation, and representative loading/empty/error states; and either larger-screen mockups or clear responsive notes for tablet and desktop.
 
@@ -560,15 +560,16 @@ Completion requires the human blockers, controlled staging matrix, security pull
 8. V2-P7 — Daily Calorie Tracker — **DONE**
 9. V2-P8 — Weekly Dashboard and History — **DONE**
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — **DONE**
-11. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-12. V2-D1 — Interface Audit and Design Traceability
-13. V2-D2 — Visual Foundations and Shared Components
-14. V2-D3 — Mobile App Shell and Navigation Revision
-15. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
-16. V2-D5 — Weekly, Settings, and Data-Control Revision
-17. V2-D6 — Integrated Design Verification and Approval
-18. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
-19. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
-20. V2-P12 — Staging Release Verification and Production Deployment
-21. V2-P13 — Final Version 2 Audit
-22. V2-P14 — Version 2 Freeze
+11. V2-S0 — Public Exposure Security Hardening — **DONE**
+12. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
+13. V2-D1 — Interface Audit and Design Traceability
+14. V2-D2 — Visual Foundations and Shared Components
+15. V2-D3 — Mobile App Shell and Navigation Revision
+16. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
+17. V2-D5 — Weekly, Settings, and Data-Control Revision
+18. V2-D6 — Integrated Design Verification and Approval
+19. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
+20. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
+21. V2-P12 — Staging Release Verification and Production Deployment
+22. V2-P13 — Final Version 2 Audit
+23. V2-P14 — Version 2 Freeze

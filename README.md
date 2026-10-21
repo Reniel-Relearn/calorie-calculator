@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, and protected account deletion. V2-S0 public-exposure security hardening is active before the V2-D0 through V2-D6 interface revision. Its repository controls are implemented; provider configuration, local database verification, staging deployment/verification, pull-request checks, and merge remain blocking.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 is now blocked on the user's written design plan and approved mockups before the V2-D1 through V2-D6 interface revision.
 
 Version 2 planning and operational documents:
 

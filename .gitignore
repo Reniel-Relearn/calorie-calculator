@@ -29,3 +29,4 @@ Thumbs.db
 
 # Codex/local working logs if created
 .codex-log/
+.vercel/

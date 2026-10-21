@@ -212,7 +212,7 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 
 ## V2-ADR-029 — Public Exposure Hardening Before Design Revision
 
-**Status:** ACCEPTED — APPROVED 2026-10-19
+**Status:** ACCEPTED — IMPLEMENTED AND VERIFIED ON STAGING 2026-10-21
 
 **Decision:** Insert V2-S0 before V2-D0. Use free-tier controls by default: Vercel security headers and Hobby protections, Cloudflare Turnstile Free with Supabase Auth validation, provider Auth limits, exact-origin Edge Function CORS, a PostgreSQL-backed per-user deletion throttle, locked dependency checks, GitHub security automation, and documented incident actions. Keep V2-P10 after the design program for the full regression.
 
