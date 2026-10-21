@@ -3,7 +3,7 @@
 **Current Version:** V2
 **Current Phase:** V2-D0 — User Design Plan and Mockup Approval Gate
 **Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0)
+**Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0 approval)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -18,6 +18,7 @@
 - V2-P7 — Daily Calorie Tracker — completed 2026-10-07
 - V2-P8 — Weekly Dashboard and History — completed 2026-10-07
 - V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — completed 2026-10-07
+- V2-S0 — Public Exposure Security Hardening — completed 2026-10-21
 
 ## V2-P9 Completion Evidence
 
@@ -30,54 +31,50 @@
 - The linked staging migration and `delete-account` Edge Function were deployed.
 - The user confirmed on 2026-10-07: **“V2-P9 staging settings, log correction, and account deletion passed.”**
 
-## Current Blocker
+## V2-S0 Repository Evidence
+
+- The approved branch is `security/v2-public-exposure-hardening`, created from an up-to-date `main`.
+- Vercel headers enforce CSP, HSTS, framing denial, MIME protection, referrer and permissions policies, cross-origin isolation behavior, HTML revalidation, and immutable hashed-asset caching.
+- Cloudflare Turnstile Free is wired to signup, login, password recovery, and account-deletion reauthentication through the supported Supabase `captchaToken` option. Remote environments fail closed without a public site key; local tests use a local-only adapter.
+- `delete-account` now requires an exact allowed origin, JSON, a 4 KiB streamed body limit, exact fields, JWT/user validation, current-password reauthentication, and a durable five-attempt/15-minute per-user throttle with safe 429 behavior.
+- A reviewed migration creates private throttle state and grants its security-definer RPC only to `service_role`.
+- Dashboard pagination is bounded at five 1,000-row pages per query.
+- The high-severity `source-map-js` advisory was resolved through a compatible lockfile update to 1.2.2.
+- Security CI, CodeQL, Dependabot, tracked/build secret scanning, private vulnerability reporting, a threat model, provider instructions, incident response, rollback steps, and free-tier limitations are versioned.
+- A newly published high-severity Vite 8.3.1 advisory was resolved with the compatible exact patch update to Vite 8.3.4. A subsequent clean `npm ci` completed with zero vulnerabilities, and `npm.cmd run check` passed 132 Node tests, the Vite production build, a zero-vulnerability high-severity audit, and the tracked/build secret scan across 141 files.
+- The pre-application linked staging history matched the four previously applied migrations. `npx.cmd supabase db push --dry-run --linked` reported only `20261019090000_harden_account_deletion.sql` pending and made no remote change.
+- Pre-application linked `public`, `private`, and `extensions` schema lint reported no errors.
+- The pre-deployment public response had HSTS and safe HTML revalidation but lacked the planned CSP, framing, permissions, MIME, referrer, and cross-origin headers; the later production verification below confirmed those headers after deployment.
+- Part 12 local verification passed on 2026-10-21: a clean Supabase reset applied all five migrations; 175 pgTAP assertions across 10 files passed; local `public`, `private`, and `extensions` schema lint reported no errors; and the complete authenticated browser integration passed against Vite 8.3.4. The browser harness now explicitly navigates to the application origin before clearing local storage, removing an `about:blank` startup race without changing production behavior.
+- Part 14 completed on 2026-10-21: commit 4 was amended as `a400dd8`, branch `security/v2-public-exposure-hardening` was pushed, and pull request #1 was opened against `main`. Security CI, CodeQL, Vercel deployment, and Vercel preview-comment checks all passed. The pull request must remain unmerged until the remaining provider controls, controlled staging rollout, and commit 5 verification record are complete.
+- Part 15 completed and verified on 2026-10-21: the active `Protect main` ruleset targets the default branch with no bypass, requires pull requests and resolved conversations, blocks deletion and force pushes, requires strict up-to-date checks, and requires `verify` plus `Analyze JavaScript and TypeScript`. Dependabot security updates, secret scanning, push protection, private vulnerability reporting, and CodeQL are active. CodeQL and secret scanning report zero alerts. Four Dependabot alerts remain visible on the current `main`; pull request #1 updates Vite to 8.3.4 and `source-map-js` to 1.2.2, which meet the advisories' patched versions.
+- The pre-approval Part 16 recheck was non-applying: the linked database dry run identified only `20261019090000_harden_account_deletion.sql`; the hosted `delete-account` function was active at version 1 with JWT verification; and the pull-request preview was protected by Vercel authentication.
+- The user confirmed Parts 9 through 11 complete and explicitly approved Part 16 on 2026-10-21. The reviewed migration was applied, a subsequent dry run reported the remote database up to date, and linked `public` and `private` schema lint reported no errors. The hardened `delete-account` function is active at version 2 with JWT verification enabled.
+- The reviewed security branch was deployed to Vercel production and aliased to `https://calorie-calculator-gamma-ten.vercel.app`. The public origin returns HTTP 200 with the planned CSP, HSTS, frame denial, MIME protection, referrer policy, permissions policy, and cross-origin policies. The deployed production bundle contains the Cloudflare Turnstile runtime. At that checkpoint, hosted Supabase CAPTCHA remained the final manual activation boundary before Part 17 synthetic staging verification.
+- Preliminary live Edge Function verification passed: an approved-origin preflight returns 204 with the exact public origin, a forbidden-origin preflight returns 403 `ORIGIN_NOT_ALLOWED`, and an unauthenticated deletion request returns 401 before application processing. No user data was involved.
+- Part 17 exposed a production configuration failure before user-flow testing: a clean browser reaches the application's fail-closed **Account access unavailable** state. A secure local shape check of the encrypted Vercel Production environment found `VITE_APP_ENV` valid but `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_TURNSTILE_SITE_KEY` malformed. No values were printed or retained. Those three values must be corrected in Vercel and the production deployment repeated before CAPTCHA verification can continue.
+- The user corrected those three Vercel values and the production deployment was repeated successfully. All required public values pass shape validation; a clean browser reaches `auth-signed-out`, opens `auth-login`, loads the Turnstile script/widget container, and reports no runtime or network errors. The public origin remains HTTP 200 with the planned security headers. Temporary environment and diagnostic files were deleted after verification.
+- The user confirmed Part 17 passed on 2026-10-21: signup, email confirmation, login, recovery, private-data isolation, successful account deletion, sixth-attempt throttling, mobile behavior, and desktop behavior all passed on the public origin with Turnstile enabled.
+- The user approved the V2-S0 closeout, commit 5, protected pull-request merge, production verification, and synchronization of `main` on 2026-10-21.
+
+## Current Blockers
+
+V2-S0 has no remaining implementation or provider blocker. The next blocker is external design input for V2-D0:
 
 **Blocker: Requires user's plan and mockups for design.**
 
-V2-D0 cannot be approved from implementation assumptions alone. The complete interface now includes authentication, onboarding, calculator states, Today, weekly history, settings, log correction/deletion, and account deletion. A user-approved visual and interaction baseline is required before revising these connected journeys.
-
-## Required Human Action
-
-Provide the following design inputs:
-
-1. A written design plan covering:
-   - desired visual character and brand direction;
-   - information hierarchy and navigation model;
-   - colors, typography, imagery, icons, and available brand assets;
-   - motion preferences;
-   - accessibility or interaction constraints beyond the existing requirements;
-   - any existing interface elements that must remain visually recognizable.
-
-2. Approved mobile mockups for:
-   - signup, login, email confirmation, password reset, and auth errors;
-   - onboarding and target explanation;
-   - Today/home with calorie progress, calculator, and logged foods;
-   - calculator ambiguity, missing amount, invalid/not-found, success, and saved states;
-   - weekly history;
-   - profile settings and target-affecting confirmation;
-   - food-log editing and deletion confirmation;
-   - irreversible account deletion;
-   - representative loading, empty, network-error, and expired-session states.
-
-3. Either approved tablet/desktop mockups or written responsive notes explaining how the mobile design should expand on larger screens.
-
-The artifacts may be images, Figma exports/links, annotated sketches, or another reviewable format. They must be detailed enough to identify layout, navigation, hierarchy, component behavior, and responsive intent. Mockups do not authorize new product features outside the approved Version 2 scope.
-
-After supplying these materials, ask:
-
-**Review my V2 design plan and mockups for V2-D0.**
-
-V2-D0 is a review and approval gate. No design implementation begins during that review. If the materials are complete and compatible with the product, V2-D0 will be marked done and V2-D1 will perform the interface inventory and traceability audit.
+The user must supply the written design plan, approved mobile mockups for the required signed-out and authenticated journeys, representative loading/empty/error states, and responsive direction for tablet and desktop. Do not begin V2-D1 or later design implementation until the V2-D0 baseline is reviewed and explicitly approved.
 
 ## Design Program Sequence
 
-1. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-2. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
-3. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
-4. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
-5. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
-6. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
-7. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
+1. V2-S0 — Public Exposure Security Hardening — **DONE**
+2. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
+3. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
+4. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
+5. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
+6. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
+7. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
+8. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
 
 V2-P10 cannot begin until V2-D0 through V2-D6 are complete and the revised interface passes staging review.
 
@@ -87,4 +84,4 @@ Windows reserved the former default Supabase local port range. The repository's 
 
 ## Next Intended Action
 
-Wait for the user's design plan, mockups, and responsive direction. Review those inputs against the implemented routes, states, accessibility requirements, security boundaries, and approved V2 scope. Do not begin V2-D1 or visual implementation until V2-D0 is explicitly approved.
+Wait for the user's written design plan and approved mockups required by V2-D0. Review those artifacts and resolve missing states, accessibility conflicts, responsive behavior, and scope questions before authorizing V2-D1. Do not begin design implementation or V2-P10 early.

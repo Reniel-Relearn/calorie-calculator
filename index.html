@@ -63,6 +63,7 @@
             <label for="login-password">Password</label>
             <input id="login-password" name="password" type="password" autocomplete="current-password" minlength="8" required aria-describedby="login-error">
           </div>
+          <div class="auth-captcha" id="login-captcha" aria-label="Security verification"></div>
           <p class="form-error" id="login-error" role="alert" hidden></p>
           <button class="button button--primary" id="login-submit" type="submit">Log In</button>
         </form>
@@ -90,6 +91,7 @@
             <label for="signup-password-confirmation">Confirm password</label>
             <input id="signup-password-confirmation" name="passwordConfirmation" type="password" autocomplete="new-password" minlength="8" required aria-describedby="signup-error">
           </div>
+          <div class="auth-captcha" id="signup-captcha" aria-label="Security verification"></div>
           <p class="form-error" id="signup-error" role="alert" hidden></p>
           <button class="button button--primary" id="signup-submit" type="submit">Create Account</button>
         </form>
@@ -105,6 +107,7 @@
             <label for="forgot-email">Email</label>
             <input id="forgot-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="forgot-error">
           </div>
+          <div class="auth-captcha" id="forgot-captcha" aria-label="Security verification"></div>
           <p class="form-error" id="forgot-error" role="alert" hidden></p>
           <button class="button button--primary" id="forgot-submit" type="submit">Send Reset Link</button>
         </form>
@@ -448,6 +451,7 @@
                 <label for="settings-delete-confirmation">Type DELETE to confirm</label>
                 <input id="settings-delete-confirmation" name="confirmation" type="text" autocomplete="off" required aria-describedby="settings-delete-error">
               </div>
+              <div class="auth-captcha" id="settings-delete-captcha" aria-label="Security verification"></div>
               <button class="button settings-danger__button" id="settings-delete-submit" type="submit">Permanently Delete Account</button>
             </form>
           </section>

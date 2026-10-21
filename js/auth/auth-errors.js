@@ -24,6 +24,14 @@ function isNetworkError(error) {
 export function getAuthErrorMessage(error, context = "general") {
   const code = error?.code ?? "";
 
+  if (code === "CAPTCHA_REQUIRED" || code === "captcha_failed") {
+    return "Complete the security check, then try again.";
+  }
+
+  if (code === "CAPTCHA_UNAVAILABLE") {
+    return "The security check is unavailable. Try again later.";
+  }
+
   if (error?.code === "CONFIRMATION_DISABLED") {
     return "Email confirmation is not enabled for this environment. Account creation has been stopped.";
   }

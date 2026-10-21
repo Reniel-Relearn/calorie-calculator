@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, and protected account deletion. The mandatory V2-D0 through V2-D6 interface revision is now the active program before V2-P10; its first gate requires the user's design plan and approved mockups.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 is now blocked on the user's written design plan and approved mockups before the V2-D1 through V2-D6 interface revision.
 
 Version 2 planning and operational documents:
 
@@ -100,6 +100,8 @@ Version 1 calculation logic remains local, while Version 2 account access requir
 2. Keep `VITE_APP_ENV=local` for local development.
 3. Set the local Supabase URL and current `sb_publishable_...` key printed by the local CLI.
 
+Local development may leave `VITE_TURNSTILE_SITE_KEY` blank. Staging and production must set it to the public site key from a Cloudflare Turnstile Free widget; remote authentication fails closed when it is missing. The matching Turnstile secret belongs only in Supabase Auth CAPTCHA settings.
+
 Every `VITE_*` value is embedded in the browser bundle. Never put a Supabase secret key, legacy `service_role` key, database password, SMTP credential, or Vercel token in `.env.local`, frontend code, or a Vercel variable whose name starts with `VITE_`.
 
 ### Local Supabase stack
@@ -139,7 +141,7 @@ For V2-P2, the staging Supabase Auth URL configuration must use that origin as t
 
 Remote email confirmation must remain enabled and the remote minimum password length must be at least eight characters. Production SMTP remains deferred; staging uses Supabase's limited test sender. Repeated staging email requests may temporarily return a rate-limit error, so wait for the provider quota to reset before requesting another message. Current phase status is maintained in `V2_STATUS.md`.
 
-V2-P9 adds one database migration and the `delete-account` Edge Function. Reproduce their deployment to a linked environment with:
+V2-S0 adds Turnstile, deployment headers, one database throttle migration, and a hardened `delete-account` Edge Function. Follow `V2_SECURITY_OPERATIONS.md` before applying remote changes. Reproduce reviewed database/function deployment to a linked environment with:
 
 ```powershell
 npx.cmd supabase db push --linked
@@ -160,6 +162,7 @@ Supabase supplies the function's project URL and privileged server credential in
 - `js/ui.js` — DOM rendering and interaction binding
 - `js/main.js` — authentication-first browser bootstrap
 - `js/auth/` — auth validation, redirects, service calls, session state, controller, and accessible view binding
+- `js/auth/auth-captcha.js` — explicit Turnstile rendering and single-use token handling with a local-only test adapter
 - `js/config/environment.js` — validated public runtime configuration
 - `js/services/supabase-client.js` — persistent Supabase browser client construction
 - `js/targets/eer-equations.js` — verified National Academies 2023 EER coefficients and equation evaluation
@@ -178,6 +181,9 @@ Supabase supplies the function's project URL and privileged server credential in
 - `supabase/config.toml` — reproducible local Supabase service configuration
 - `supabase/migrations/` — versioned private-data schema, constraints, grants, and RLS policies
 - `supabase/functions/delete-account/` — authenticated current-password verification and server-only hard deletion
+- `vercel.json` — enforced browser security headers and cache policy
+- `.github/` — Security CI, CodeQL, and Dependabot configuration
+- `V2_SECURITY_THREAT_MODEL.md` and `V2_SECURITY_OPERATIONS.md` — public-exposure risks, provider controls, incident actions, and human blockers
 - `supabase/tests/database/` — pgTAP schema, constraint, ownership, and cascade checks
 - `tests/` — auth unit/integration checks plus environment and frozen V1 regressions
 

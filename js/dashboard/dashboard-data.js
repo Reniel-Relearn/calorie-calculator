@@ -34,6 +34,7 @@ export const DASHBOARD_TARGET_COLUMNS = [
 ].join(",");
 
 const PAGE_SIZE = 1000;
+const MAX_PAGES = 5;
 
 function numberOrNull(value) {
   return value === null || value === undefined ? null : Number(value);
@@ -80,13 +81,19 @@ export function normalizeDashboardTarget(row) {
 
 export async function fetchDashboardPages(createQuery) {
   const rows = [];
-  for (let start = 0; ; start += PAGE_SIZE) {
+  for (let pageNumber = 0; pageNumber < MAX_PAGES; pageNumber += 1) {
+    const start = pageNumber * PAGE_SIZE;
     const result = await createQuery().range(start, start + PAGE_SIZE - 1);
     if (result.error) return { ok: false, error: result.error };
     const page = result.data ?? [];
     rows.push(...page);
     if (page.length < PAGE_SIZE) return { ok: true, rows };
   }
+
+  return {
+    ok: false,
+    error: { code: "RESULT_SET_TOO_LARGE" },
+  };
 }
 
 export function isDashboardAuthenticationError(error) {

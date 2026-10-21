@@ -604,6 +604,31 @@ All sources were accessed on 2026-10-07.
 
 Use `update_profile_settings` for atomic canonical profile and target-history changes, and use `update_food_log` for owner-scoped captured-snapshot recalculation. Keep log deletion under owner RLS. Deploy `delete-account` with gateway JWT verification, server-side `getUser()`, current-password sign-in, and an admin hard delete. Do not store or expose a privileged key in frontend code or Vercel `VITE_*` variables. Require a disposable staging-account test before marking V2-P9 complete.
 
+## R-027 — V2-S0 public-exposure security recheck
+
+**Status:** COMPLETE — repository research recorded 2026-10-19; dashboard evidence pending human review
+
+**Official sources**
+
+- Supabase, [Production Checklist](https://supabase.com/docs/guides/deployment/going-into-prod), [Auth rate limits](https://supabase.com/docs/guides/auth/rate-limits), [CAPTCHA protection](https://supabase.com/docs/guides/auth/auth-captcha), and [Edge Function CORS](https://supabase.com/docs/guides/functions/cors).
+- Cloudflare, [Turnstile widget management](https://developers.cloudflare.com/turnstile/get-started/widget-management/dashboard/), [widget configuration](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/), and [hostname management](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/).
+- Vercel, [Firewall](https://vercel.com/docs/vercel-firewall), [WAF custom rules](https://vercel.com/docs/vercel-firewall/vercel-waf/custom-rules), and [Deployment Protection](https://vercel.com/docs/deployment-protection).
+- GitHub, [ruleset rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets), [security settings](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository), and [secure Actions use](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions).
+- Vite, [environment variables](https://vite.dev/guide/env-and-mode) and [build source maps](https://vite.dev/config/build-options.html#build-sourcemap).
+
+**Finding**
+
+- Auth applies documented endpoint and IP buckets, but a public low-traffic demo still benefits from CAPTCHA on signup, password login, and recovery. Turnstile tokens are short-lived and single-use; the public site key belongs in the browser and the secret belongs only in Supabase's server-side CAPTCHA setting.
+- Vercel provides platform DDoS protection and limited Hobby controls for requests that reach Vercel. It cannot protect direct browser-to-Supabase Auth, Data API, or Edge Function traffic.
+- CORS is a browser boundary rather than authentication. The deletion endpoint therefore needs exact origins in addition to JWT validation, current-password reauthentication, strict input limits, and a durable atomic server-side throttle.
+- Vite embeds `VITE_*` values. The Turnstile site key, Supabase URL, and Supabase publishable key are public; every privileged value must stay outside the Vite environment.
+- The dependency baseline contained a high-severity `source-map-js` development-chain denial-of-service advisory. A compatible lockfile update to 1.2.2 removes the finding without changing the selected direct dependencies.
+- Free plans omit some advanced WAF, password, backup, recovery, logging, and availability controls. Synthetic staging data, monitoring, bounded public testing, and documented incident actions are required compensating controls.
+
+**Implementation consequence**
+
+V2-S0 adds enforced response headers and CSP, Turnstile-aware Auth requests, a fail-closed remote configuration, exact-origin and bounded account deletion, a five-attempt/15-minute migration-backed throttle, bounded dashboard retrieval, automated audit/secret/security tests, Dependabot, CodeQL, private vulnerability reporting, and provider/incident runbooks. Human dashboard actions and controlled staging checks remain completion blockers.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -617,4 +642,5 @@ Use `update_profile_settings` for atomic canonical profile and target-history ch
 | V2-P7 | Selected-date filtering and pagination, null-aware aggregation, timezone-safe target selection, meter semantics, neutral comparison language |
 | V2-P8 | Inclusive date-range querying, fixed Monday/Sunday boundaries, average denominator policy, and a complete accessible weekly representation |
 | V2-P9 | Current reauthentication and admin deletion guidance |
+| V2-S0 | Auth/CAPTCHA rate controls, Edge Function CORS and throttling, Vercel/GitHub free security controls, CSP, dependency and secret scanning |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

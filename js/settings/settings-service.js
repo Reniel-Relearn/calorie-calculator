@@ -18,11 +18,11 @@ function isAuthenticationError(error) {
 
 export function createSettingsService(client) {
   return Object.freeze({
-    async deleteAccount({ currentPassword, confirmation }) {
+    async deleteAccount({ currentPassword, confirmation, captchaToken }) {
       let result;
       try {
         result = await client.functions.invoke("delete-account", {
-          body: { currentPassword, confirmation },
+          body: { currentPassword, confirmation, captchaToken },
         });
       } catch (error) {
         return failure("ACCOUNT_DELETE_FAILED", error);
@@ -31,7 +31,9 @@ export function createSettingsService(client) {
       if (result.error || result.data?.deleted !== true) {
         const status = result.error?.context?.status;
         return failure(
-          status === 401 || status === 403
+          status === 429
+            ? "ACCOUNT_DELETE_RATE_LIMITED"
+            : status === 401 || status === 403
             ? "ACCOUNT_REAUTHENTICATION_FAILED"
             : "ACCOUNT_DELETE_FAILED",
           result.error,

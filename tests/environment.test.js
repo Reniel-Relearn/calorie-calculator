@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   EnvironmentConfigurationError,
+  getPublicSecurityConfig,
   getPublicSupabaseConfig,
 } from "../js/config/environment.js";
 
@@ -67,4 +68,32 @@ test("rejects legacy or placeholder client keys", () => {
       /must be a current sb_publishable_ key/,
     );
   }
+});
+
+test("accepts an optional public Turnstile site key without treating it as a secret", () => {
+  assert.deepEqual(
+    getPublicSecurityConfig({
+      VITE_APP_ENV: "staging",
+      VITE_TURNSTILE_SITE_KEY: "0x4AAAAAAAA_test_public_site_key",
+    }),
+    {
+      appEnvironment: "staging",
+      turnstileSiteKey: "0x4AAAAAAAA_test_public_site_key",
+    },
+  );
+  assert.equal(
+    getPublicSecurityConfig({ VITE_APP_ENV: "local" }).turnstileSiteKey,
+    null,
+  );
+});
+
+test("rejects placeholder Turnstile values", () => {
+  assert.throws(
+    () =>
+      getPublicSecurityConfig({
+        VITE_APP_ENV: "staging",
+        VITE_TURNSTILE_SITE_KEY: "REPLACE_WITH_SITE_KEY",
+      }),
+    /valid public Turnstile site key/,
+  );
 });

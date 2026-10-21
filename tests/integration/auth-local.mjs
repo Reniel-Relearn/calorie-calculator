@@ -287,6 +287,7 @@ function getFirstHttpLink(message) {
 async function run() {
   const page = await createPage();
   try {
+    await page.navigate(APP_URL);
     await page.evaluate("localStorage.clear(); true");
     await page.navigate(APP_URL);
     await waitForVisible(page, "#auth-signed-out");

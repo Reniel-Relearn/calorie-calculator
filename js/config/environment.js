@@ -73,12 +73,36 @@ function validatePublishableKey(value) {
   return publishableKey;
 }
 
+function validateTurnstileSiteKey(value) {
+  if (value === undefined || value === null || value === "") return null;
+
+  const siteKey = requireText(value, "VITE_TURNSTILE_SITE_KEY");
+  if (!/^[A-Za-z0-9_-]{10,}$/.test(siteKey) || siteKey.includes("REPLACE_WITH")) {
+    throw new EnvironmentConfigurationError(
+      "VITE_TURNSTILE_SITE_KEY must be a valid public Turnstile site key.",
+    );
+  }
+
+  return siteKey;
+}
+
 export function getPublicSupabaseConfig(environment = import.meta.env) {
   return Object.freeze({
     appEnvironment: validateAppEnvironment(environment?.VITE_APP_ENV),
     supabaseUrl: validateSupabaseUrl(environment?.VITE_SUPABASE_URL),
     supabasePublishableKey: validatePublishableKey(
       environment?.VITE_SUPABASE_PUBLISHABLE_KEY,
+    ),
+  });
+}
+
+export function getPublicSecurityConfig(environment = import.meta.env) {
+  const appEnvironment = validateAppEnvironment(environment?.VITE_APP_ENV);
+
+  return Object.freeze({
+    appEnvironment,
+    turnstileSiteKey: validateTurnstileSiteKey(
+      environment?.VITE_TURNSTILE_SITE_KEY,
     ),
   });
 }

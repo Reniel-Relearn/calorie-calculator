@@ -30,7 +30,7 @@ function formValues(form) {
   return Object.fromEntries(new FormData(form).entries());
 }
 
-export function createAuthUI(handlers) {
+export function createAuthUI(handlers, captcha) {
   let state = AUTH_STATES.SESSION_CHECKING;
   let announcementToken = 0;
 
@@ -83,6 +83,13 @@ export function createAuthUI(handlers) {
     const section = authSections[nextState];
     if (!section) throw new Error(`Unsupported authentication state: ${nextState}`);
     section.hidden = false;
+
+    const captchaOperation = {
+      [AUTH_STATES.LOGIN]: "login",
+      [AUTH_STATES.SIGNUP]: "signup",
+      [AUTH_STATES.FORGOT_PASSWORD]: "forgot",
+    }[nextState];
+    if (captchaOperation) captcha.prepare(captchaOperation);
 
     if (focus) focusHeading(section);
     if (announcement) announce(announcement);
@@ -198,8 +205,10 @@ export function createAuthUI(handlers) {
     announce,
     clearFormError,
     clearPrivateView,
+    getCaptchaToken: (operation) => captcha.getToken(operation),
     getState: () => state,
     resetForms,
+    resetCaptcha: (operation) => captcha.reset(operation),
     setBusy,
     setVerificationEmail(email) {
       elements.verificationEmail.textContent = email;
