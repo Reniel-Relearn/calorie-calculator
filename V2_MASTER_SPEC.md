@@ -42,15 +42,16 @@ Version 2 includes:
 - a seven-day history with a textual summary and accessible visualization;
 - target history, timezone-safe day assignment, and historical interpretation;
 - staging early in implementation and production deployment near completion;
+- a bounded Filipino-first expansion of the curated local demo catalog before the interface revision;
 - security controls, database migrations, Row Level Security, privacy controls, and account deletion.
 
-The local 11-food catalog remains the Version 2 nutrition source unless a later approved scope change says otherwise. The UI must continue to call it a **Demo nutrition dataset**.
+The local 11-food catalog remains the current Version 2 nutrition source. The approved V2-F0 planning amendment proposes expanding it to 60–100 total records, with a target of 80, through the gated V2-F0 through V2-F5 program in `V2_FOOD_CATALOG_PLAN.md`. The UI must continue to call the local catalog a **Demo nutrition dataset**.
 
 ## 4. Explicit Out of Scope
 
 Version 2 does not include:
 
-- a production nutrition API or broad food catalog;
+- a production nutrition API or open-ended/provider-scale food catalog;
 - AI or LLM food parsing;
 - multiple-food sentence parsing or a meal builder;
 - barcode or photo recognition;
@@ -65,6 +66,10 @@ Version 2 does not include:
 - full offline synchronization or conflict resolution;
 - analytics containing profile or food-log data;
 - React, Vue, Angular, Next.js, or another frontend framework.
+
+### Bounded catalog scope amendment
+
+The Filipino-first program is a finite curation project, not production nutrition search. It prioritizes common nationwide Filipino foods, requires direct authoritative nutrition references and food-specific sourced conversions, preserves missing nutrients as missing, and excludes branded products, restaurant menus, custom recipes, and guessed nutrition. Existing logged-food snapshots remain immutable across the dataset-version change. The exact inventory must pass source-matrix review before application records are added.
 
 ## 5. User Types and Access
 
@@ -249,17 +254,19 @@ The authenticated home information order is:
 
 Mobile navigation must keep these destinations reachable with comfortable touch targets and visible focus. The screen must not become a dense desktop dashboard scaled down to a phone.
 
-### Mandatory Version 2 design revision gate
+### Mandatory Version 2 catalog and design gates
 
-V2-P8 and V2-P9 complete the remaining weekly, settings, editing, deletion, and account-control surfaces using the maintained mobile-first baseline. After V2-P9, the project must complete the V2-D0 through V2-D6 design revision program before beginning V2-P10 security hardening.
+V2-P8, V2-P9, and V2-S0 are complete. The project must complete the bounded V2-F0 through V2-F5 catalog program, then V2-D0 through V2-D6, before beginning V2-P10 security hardening.
 
-The design program is currently blocked on this required external input:
+The catalog program is currently blocked on user review of `V2_FOOD_CATALOG_PLAN.md`. V2-F1 may research and document candidates only after approval, and it must stop for source-matrix review before any new food record is written.
+
+After V2-F5, the design program remains blocked on this required external input:
 
 **Blocker: Requires user's plan and mockups for design.**
 
 The user-supplied baseline must include a written design plan, approved mobile mockups for the principal authenticated and signed-out journeys, representative non-happy states, and responsive direction for larger screens. No design revision code may be implemented by guessing missing visual direction. Mockups do not authorize controls, destinations, data, or features outside the approved Version 2 scope.
 
-The executable sequence is defined in `V2_PLAN.md`:
+The executable design sequence is defined in `V2_PLAN.md`:
 
 1. V2-D0 — approve the user plan and mockups;
 2. V2-D1 — audit existing states and create design traceability;
@@ -403,13 +410,14 @@ Version 2 is complete only when:
 18. Migrations reproduce the schema, constraints, indexes, grants, policies, and deletion behavior.
 19. RLS allow and deny tests prove cross-user and unauthenticated isolation for every private table.
 20. Secrets are absent from frontend bundles, the repository, test output, and user-visible errors.
-21. The V2-D0 design gate has an approved user plan, mockups, responsive interpretation, and complete route/state coverage.
-22. The implemented interface passes V2-D1 through V2-D6 traceability and staging approval before security hardening begins.
-23. Primary flows work on supported phone, tablet, and desktop sizes and by keyboard.
-24. Auth, profile, target, logging, dashboard, error, empty, responsive, accessibility, and cross-browser acceptance checks pass.
-25. Staging uses non-production infrastructure and passes release verification.
-26. Production uses separate environment values, exact auth redirects, HTTPS, and the approved release artifact.
-27. The final V2 audit finds no unresolved release blocker and the documentation is frozen consistently.
+21. V2-F0 through V2-F5 produce an approved, source-traceable catalog of 60–100 total demo records without rewriting historical food-log snapshots.
+22. The V2-D0 design gate has an approved user plan, mockups, responsive interpretation, and complete route/state coverage.
+23. The implemented interface passes V2-D1 through V2-D6 traceability and staging approval before security hardening begins.
+24. Primary flows work on supported phone, tablet, and desktop sizes and by keyboard.
+25. Auth, profile, target, logging, dashboard, error, empty, responsive, accessibility, and cross-browser acceptance checks pass.
+26. Staging uses non-production infrastructure and passes release verification.
+27. Production uses separate environment values, exact auth redirects, HTTPS, and the approved release artifact.
+28. The final V2 audit finds no unresolved release blocker and the documentation is frozen consistently.
 
 ## 24. Known Scientific and Product Limitations
 
