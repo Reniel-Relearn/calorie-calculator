@@ -219,3 +219,13 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 **Reason:** The staging application is already public. Direct Supabase requests bypass Vercel Firewall, authentication/email quotas can be exhausted, and the privileged deletion endpoint needs durable abuse controls before additional design work expands the interface surface.
 
 **Consequences:** Staging and production authentication fail closed when Turnstile is not configured. The browser receives only the public Turnstile site key; its secret is stored only in Supabase Auth. Account deletion allows five attempts per user in a 15-minute window and rejects oversized, malformed, unsupported-method, unauthenticated, and unapproved-origin requests. Provider settings, migration/deployment, staging checks, repository rules, pull-request approval, and merge remain human-controlled completion gates. No paid service or trial is authorized.
+
+## V2-ADR-030 — Bounded Filipino-First Demo Catalog Expansion Before Design
+
+**Status:** ACCEPTED — PLANNING AUTHORIZED 2026-11-02; IMPLEMENTATION REQUIRES PLAN REVIEW
+
+**Decision:** Insert V2-F0 through V2-F5 before V2-D0. Plan a Filipino-first expansion from the existing 11 records to 60–100 total records, targeting 80. Continue labeling the catalog **Demo nutrition dataset**. Prefer direct DOST-FNRI PhilFCT matches, use USDA FoodData Central for suitable standard-food fallbacks, and require explicit review for another authoritative source. Exclude live APIs, branded and restaurant products, custom recipes, and invented values. Preserve existing food-log snapshots and deliver the program through one feature branch and one draft pull request with phase-gated commits.
+
+**Reason:** The publicly available calculator needs broader everyday Filipino coverage while the design baseline is still pending, but an unbounded catalog or unsourced expansion would undermine the product's provenance, serving, matching, and historical-data guarantees. Completing the representative catalog first also lets the redesign account for realistic ambiguity, serving choices, result content, and logged-food density.
+
+**Consequences:** V2-F0 stops for approval of `V2_FOOD_CATALOG_PLAN.md`. V2-F1 must create an exact candidate and source matrix and stop again before application data is written. Every accepted record requires a direct preparation match, explicit reference basis, source metadata, safe missing-value handling, and food-specific sourced conversions. Production-scale nutrition search remains future work, and V2-D0 remains the next design gate only after V2-F5 passes staging review.

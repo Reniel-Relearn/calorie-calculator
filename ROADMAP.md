@@ -183,7 +183,7 @@ Committed Version 2 areas:
 - a user-directed mobile interface revision after the complete feature surface exists and before security/release QA
 - mobile-first responsive and accessibility QA
 
-The existing 11-food curated catalog remains the Version 2 nutrition source and continues to be labeled **Demo nutrition dataset**. Production-scale nutrition search is deferred.
+The existing 11-food curated catalog remains the current Version 2 nutrition source and continues to be labeled **Demo nutrition dataset**. A bounded Filipino-first expansion to 60–100 total local records is proposed through V2-F0 to V2-F5 and must pass plan review, source-matrix review, implementation checks, and staging approval. Production-scale nutrition search remains deferred.
 
 The authoritative scope and implementation sequence are maintained in:
 
@@ -192,8 +192,9 @@ The authoritative scope and implementation sequence are maintained in:
 - `V2_STATUS.md`
 - `V2_DECISIONS.md`
 - `V2_RESEARCH.md`
+- `V2_FOOD_CATALOG_PLAN.md`
 
-V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified on staging. The interface revision is now stopped at V2-D0 until the user supplies and approves the written design plan, mobile mockups, representative non-happy states, and responsive direction. After V2-D0 approval, the interface revision proceeds through V2-D1 to V2-D6. V2-P10 remains the complete post-design security regression and may not begin until the design program is complete and approved on staging.
+V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified on staging. V2-F0 is stopped for review of the proposed Filipino-first catalog plan; no new food records have been added. After V2-F0 approval, the catalog program proceeds through V2-F5 with a mandatory source-matrix review before data implementation. The interface revision remains blocked at V2-D0 until the catalog program is complete and the user supplies and approves the written design plan, mobile mockups, representative non-happy states, and responsive direction. V2-P10 remains the complete post-design security regression.
 
 ---
 

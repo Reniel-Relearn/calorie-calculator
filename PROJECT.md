@@ -6,7 +6,7 @@ Version 1 is complete and frozen for the validated demo scope.
 
 The frozen release provides the mobile-first food-to-nutrition workflow using 11 curated local demo records. Required measurement support is grams for solid foods, food-specific sourced cups for compatible solids, and milliliters for liquids. Pieces and serving descriptors remain optional and food-specific.
 
-Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, maintain-only energy target engine, profile onboarding, atomic target history, explicit food logging, daily and weekly trackers, profile settings, captured-snapshot log correction/deletion, and protected hard account deletion are complete and verified on staging through V2-P9. `LOSE` and `GAIN` remain recognized but unavailable because no weight-change method passed the scientific and licensing gate. V2-S0 public-exposure security hardening is active before the user-directed mobile interface revision. Repository controls are implemented; free provider configuration, database/staging verification, and the security pull request remain blocking. V2-D0 follows V2-S0 and still requires the user's design plan and mockups.
+Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, maintain-only energy target engine, profile onboarding, atomic target history, explicit food logging, daily and weekly trackers, profile settings, captured-snapshot log correction/deletion, protected hard account deletion, and V2-S0 public-exposure security hardening are complete and verified. `LOSE` and `GAIN` remain recognized but unavailable because no weight-change method passed the scientific and licensing gate. V2-F0 proposes a bounded Filipino-first expansion of the local demo catalog and is blocked on plan review before source verification or data implementation. V2-D0 follows the completed catalog program and still requires the user's design plan and mockups.
 
 ## Version 2 Planning Documents
 
@@ -15,6 +15,7 @@ Version 2 is now the active development roadmap. Its development platform, authe
 - [V2_STATUS.md](V2_STATUS.md) — concise operational phase control
 - [V2_DECISIONS.md](V2_DECISIONS.md) — Version 2 architecture decisions
 - [V2_RESEARCH.md](V2_RESEARCH.md) — source-backed scientific and platform research
+- [V2_FOOD_CATALOG_PLAN.md](V2_FOOD_CATALOG_PLAN.md) — proposed bounded Filipino-first catalog program
 
 The detailed sections below remain the frozen Version 1 product specification and should not be rewritten as Version 2 requirements.
 

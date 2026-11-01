@@ -234,11 +234,63 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
+## Filipino-First Catalog Expansion Program — Mandatory Before V2-D0
+
+The user authorized V2-F0 planning on 2026-11-02 so the public calculator can gain a bounded, Filipino-first catalog before the interface revision. The executable specification is [V2_FOOD_CATALOG_PLAN.md](V2_FOOD_CATALOG_PLAN.md).
+
+**Catalog program status:** BLOCKED — USER PLAN REVIEW REQUIRED
+
+**Immediate blocker:** The proposed total range, target count, source policy, category allocation, architecture direction, phase sequence, and exclusions require explicit approval before source research begins.
+
+**Sequence rule:** Complete V2-F0 through V2-F5 before V2-D0. V2-F1 produces a verified source matrix and stops for review before any new food record is written. The catalog remains a local **Demo nutrition dataset**; production nutrition search, branded products, restaurant menus, custom recipes, and invented values remain outside Version 2.
+
+### V2-F0 — Filipino-First Catalog Scope and Plan
+
+**Status:** BLOCKED — USER PLAN REVIEW REQUIRED
+
+**Objective:** Define a safe, traceable expansion from 11 records to 60–100 total records, with a target of 80, without changing application data or behavior.
+
+**Deliverable:** `V2_FOOD_CATALOG_PLAN.md`, synchronized roadmap documents, one planning commit, and one draft pull request.
+
+**Acceptance criteria:** The user explicitly approves the count interpretation, source hierarchy, exclusions, phase sequence, test strategy, data architecture direction, and review gates. No food records are added during this phase.
+
+### V2-F1 — Candidate Inventory and Source Verification
+
+**Status:** NOT STARTED — BLOCKED BY V2-F0
+
+**Objective:** Produce the exact proposed food inventory and source matrix using current authoritative references, then stop for user review before writing application data.
+
+### V2-F2 — Catalog Architecture and Validation Foundation
+
+**Status:** NOT STARTED — BLOCKED BY V2-F1
+
+**Objective:** Preserve the `data/foods.js` import contract while preparing maintainable category modules and stronger dataset invariants. Establish the original 11-record behavioral baseline before adding records.
+
+### V2-F3 — Curated Food Batches
+
+**Status:** NOT STARTED — BLOCKED BY V2-F2
+
+**Objective:** Add only approved, source-verified records in reviewable category batches with provenance and food-specific serving metadata.
+
+### V2-F4 — Matching, Ambiguity, and Serving Verification
+
+**Status:** NOT STARTED — BLOCKED BY V2-F3
+
+**Objective:** Verify Filipino and English aliases, preparation distinctions, legitimate ambiguity, measurement bases, and sourced conversions without adding AI parsing or future search features.
+
+### V2-F5 — Integrated Verification and Staging Approval
+
+**Status:** NOT STARTED — BLOCKED BY V2-F4
+
+**Objective:** Run full regression, security, database, browser, responsive, and representative staging checks; verify snapshot compatibility; record the exact final count; and obtain user approval before the pull request can leave draft status.
+
+---
+
 **Design program status:** BLOCKED — USER ACTION REQUIRED
 
 **Blocker:** Requires user's plan and mockups for design.
 
-**Sequence rule:** V2-P8 and V2-P9 may proceed in their documented order. After V2-P9 is complete, stop at V2-D0. Do not begin visual revision work or V2-P10 until V2-D0 is cleared and V2-D1 through V2-D6 are complete.
+**Sequence rule:** V2-P8, V2-P9, and V2-S0 are complete. Complete V2-F0 through V2-F5 before V2-D0. Do not begin visual revision work or V2-P10 until the catalog program is approved and verified, V2-D0 is cleared, and V2-D1 through V2-D6 are complete.
 
 **Purpose:** Revise the complete implemented V2 experience as one coherent mobile-first application after its principal screens and workflows exist, while leaving enough time for security, accessibility, browser, staging, and production verification against the settled interface.
 
@@ -252,7 +304,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 **Why this phase exists:** “Make it feel like a mobile app” is too subjective to implement safely without an explicit direction, representative screens, responsive intent, and agreement about which existing behavior must remain.
 
-**Dependencies:** V2-P9 and V2-S0 complete on staging; current signed-in flows and states available for review.
+**Dependencies:** V2-P9, V2-S0, and V2-F5 complete on staging; current signed-in flows and states available for review.
 
 **Required user inputs:** A written design plan covering goals, desired visual character, information hierarchy, navigation model, branding/assets, motion preferences, and required constraints; approved mobile mockups for authentication, onboarding, Today/home with calculator, successful result and save state, weekly history, settings, log editing/deletion, account deletion confirmation, and representative loading/empty/error states; and either larger-screen mockups or clear responsive notes for tablet and desktop.
 
@@ -561,15 +613,21 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 9. V2-P8 — Weekly Dashboard and History — **DONE**
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — **DONE**
 11. V2-S0 — Public Exposure Security Hardening — **DONE**
-12. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-13. V2-D1 — Interface Audit and Design Traceability
-14. V2-D2 — Visual Foundations and Shared Components
-15. V2-D3 — Mobile App Shell and Navigation Revision
-16. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
-17. V2-D5 — Weekly, Settings, and Data-Control Revision
-18. V2-D6 — Integrated Design Verification and Approval
-19. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
-20. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
-21. V2-P12 — Staging Release Verification and Production Deployment
-22. V2-P13 — Final Version 2 Audit
-23. V2-P14 — Version 2 Freeze
+12. V2-F0 — Filipino-First Catalog Scope and Plan — **BLOCKED — USER PLAN REVIEW REQUIRED**
+13. V2-F1 — Candidate Inventory and Source Verification
+14. V2-F2 — Catalog Architecture and Validation Foundation
+15. V2-F3 — Curated Food Batches
+16. V2-F4 — Matching, Ambiguity, and Serving Verification
+17. V2-F5 — Integrated Verification and Staging Approval
+18. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
+19. V2-D1 — Interface Audit and Design Traceability
+20. V2-D2 — Visual Foundations and Shared Components
+21. V2-D3 — Mobile App Shell and Navigation Revision
+22. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
+23. V2-D5 — Weekly, Settings, and Data-Control Revision
+24. V2-D6 — Integrated Design Verification and Approval
+25. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
+26. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
+27. V2-P12 — Staging Release Verification and Production Deployment
+28. V2-P13 — Final Version 2 Audit
+29. V2-P14 — Version 2 Freeze
