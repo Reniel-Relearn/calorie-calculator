@@ -152,7 +152,7 @@ The product labels the result **Estimated Daily Calorie Target**, **Estimated En
 
 No fixed `±500 kcal` rule is permitted. Goal-specific loss and gain targets require a coherent dynamic model, justified inputs, bounds, validation vectors, and user-facing limitations.
 
-The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in V2-P4. The gate did not produce a supportable Version 2 implementation: required inputs and numerical behavior exceed the accepted profile model, the official implementation has a technology-transfer licensing path without a clearly identified reusable software license, and independent consumer target vectors were insufficient, particularly for intentional gain. The approved Version 2 scope therefore returns an explicit unavailable outcome for `LOSE` and `GAIN` and never fills the gap with an invented surplus or deficit.
+The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in V2-P4. That gate did not produce a supportable implementation: required inputs and numerical behavior exceeded the accepted profile model, the official implementation has a technology-transfer licensing path, and independent consumer target vectors were insufficient, particularly for intentional gain. Production therefore continues returning an explicit unavailable outcome for `LOSE` and `GAIN` and never fills the gap with an invented surplus or deficit. On 2026-11-03, the product owner authorized V2-G0 through V2-G3 to evaluate and, only after approval, implement a separately validated method under `V2_LOSE_GAIN_TARGET_PLAN.md`.
 
 ### Eligibility and life stages
 
@@ -167,12 +167,12 @@ The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in
 The user chooses one of the product goal concepts:
 
 - `MAINTAIN`: the accepted maintenance estimate;
-- `LOSE`: recognized but unavailable in Version 2 because no goal-specific method passed the scientific and licensing gate;
-- `GAIN`: recognized but unavailable in Version 2 because no goal-specific method passed its separate evidence gate.
+- `LOSE`: intended Version 2 direction, currently production-unavailable pending V2-G0 methodology approval and later implementation gates;
+- `GAIN`: intended Version 2 direction, currently production-unavailable pending its separate positive-energy evidence gate and later implementation gates.
 
 “Healthy” or “general wellness” may appear as neutral context or guidance. It is not a fourth formula and does not alter the calorie result.
 
-Goal weight, target date, and target rate are not Version 2 inputs under the approved maintain-only scope. A later approved model must define them explicitly rather than infer a rate silently.
+Goal weight and goal date are approved prototype concepts but are not yet production inputs. V2-G0 must approve their exact semantics, activity/recalculation assumptions, safety rules, and model before V2-G2 adds them to the private contract. No rate may be inferred silently.
 
 ## 11. Calculator Integration
 
@@ -253,17 +253,21 @@ Mobile navigation must keep these destinations reachable with comfortable touch 
 
 V2-P8 and V2-P9 complete the remaining weekly, settings, editing, deletion, and account-control surfaces using the maintained mobile-first baseline. After V2-P9, the project must complete the V2-D0 through V2-D6 design revision program before beginning V2-P10 security hardening.
 
-The V2-D0 written design plan, architecture choices, current ten-artifact visual-reference analysis, representative low-fidelity mobile states, and responsive direction were prepared on 2026-11-02. The low-fidelity information architecture, navigation, destination structure, responsive transformation, system-state architecture, onboarding progression concept, and accessibility principles are provisionally accepted. Screenshot-based D0-C ingestion is complete, while hands-on behavioral UX research remains pending and separate. V2-D0 remains blocked on the remaining visual decisions, behavioral-research timing, an explicit Lose/Gain roadmap disposition, and approval of the reconciled complete baseline. No design revision code may be implemented before that baseline is approved. Wireframes do not authorize controls, destinations, data, or features outside the approved Version 2 scope.
+The V2-D0 written design plan, architecture choices, ten-artifact visual-reference analysis, wireframes, and complete isolated prototype were visually approved on 2026-11-03. Screenshot-based D0-C ingestion is complete; optional hands-on behavioral research is deferred and no hidden interaction is inferred. Lose/Gain were assigned to the separate V2-G0 through V2-G3 program. Prototype sample calorie values do not authorize production logic.
 
 The executable sequence is defined in `V2_PLAN.md`:
 
-1. V2-D0 — approve the user plan and mockups;
-2. V2-D1 — audit existing states and create design traceability;
-3. V2-D2 — implement visual foundations and shared components;
-4. V2-D3 — revise the mobile app shell and navigation;
-5. V2-D4 — revise authentication, onboarding, calculator, logging, and Today;
-6. V2-D5 — revise weekly, settings, editing, deletion, and account controls;
-7. V2-D6 — verify the integrated design on staging and obtain user approval.
+1. V2-D0 — approve the user plan, wireframes, and prototype — complete;
+2. V2-G0 — approve Lose/Gain methodology and safety;
+3. V2-G1 — implement and validate the pure weight-target engine;
+4. V2-G2 — extend private data contracts and migration;
+5. V2-G3 — integrate calculations with application services and target history;
+6. V2-D1 — audit existing states and create design traceability;
+7. V2-D2 — implement visual foundations and shared components;
+8. V2-D3 — revise the mobile app shell and navigation;
+9. V2-D4 — revise authentication, onboarding, calculator, logging, Today, and approved goal presentation;
+10. V2-D5 — revise weekly, settings, editing, deletion, and account controls;
+11. V2-D6 — verify the integrated design on staging and obtain user approval.
 
 The program must preserve the frozen calculator, established V2 behavior, accessibility semantics, security boundaries, privacy rules, scientific language, demo-data disclosure, and vanilla JavaScript/custom CSS architecture. It does not authorize a framework migration, native application wrapper, PWA installation work, gamification, or future-version functionality.
 
@@ -400,7 +404,7 @@ Version 2 is complete only when:
 19. RLS allow and deny tests prove cross-user and unauthenticated isolation for every private table.
 20. Secrets are absent from frontend bundles, the repository, test output, and user-visible errors.
 21. The V2-D0 design gate has an approved user plan, mockups, responsive interpretation, and complete route/state coverage.
-22. The implemented interface passes V2-D1 through V2-D6 traceability and staging approval before security hardening begins.
+22. Approved Lose/Gain behavior passes V2-G0 through V2-G3, and the implemented interface passes V2-D1 through V2-D6 traceability and staging approval before security hardening begins.
 23. Primary flows work on supported phone, tablet, and desktop sizes and by keyboard.
 24. Auth, profile, target, logging, dashboard, error, empty, responsive, accessibility, and cross-browser acceptance checks pass.
 25. Staging uses non-production infrastructure and passes release verification.
@@ -414,8 +418,8 @@ Version 2 is complete only when:
 - The source equations use male/female sex categories and do not provide other coefficients.
 - The 18-year-old branch differs from the 19+ adult equation and requires explicit boundary tests.
 - Pregnancy and breastfeeding targets are excluded.
-- The V2-P4 review did not approve a weight-loss model; `LOSE` is unavailable under the approved maintain-only scope.
-- The V2-P4 review did not approve a weight-gain model; `GAIN` remains unavailable pending stronger evidence, licensing clarity, and validation.
+- Production `LOSE` remains unavailable until V2-G0 approves a method and V2-G1 through V2-G3 pass.
+- Production `GAIN` remains unavailable until its separate positive-energy evidence, licensing, safety, and validation gates pass; it may remain unavailable even if Lose proceeds.
 - The app cannot decide which goal is appropriate for a user.
 - The nutrition catalog remains a small curated demo subset.
 - Logged totals are only as complete as the selected food and its reported nutrient fields.

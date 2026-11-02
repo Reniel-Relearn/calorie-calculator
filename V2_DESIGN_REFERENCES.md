@@ -1,9 +1,9 @@
 # CalorieCheck V2 Design Reference Register
 
 **Created:** 2026-11-02<br>
-**Updated:** 2026-11-02<br>
+**Updated:** 2026-11-03<br>
 **D0-C visual-reference status:** COMPLETE FOR THE CURRENT BATCH<br>
-**Behavioral UX research status:** PENDING — no hands-on Lose It! journey evidence has been supplied<br>
+**Behavioral UX research status:** DEFERRED — D0 closed without inferring hidden Lose It! behavior<br>
 **Interpretation rule:** Borrow principles. Do not copy product-specific expression, trademarks, branded graphics, exact layouts, exact colors, proprietary illustrations, navigation, or feature scope.
 
 ## 1. Evidence boundary
@@ -300,19 +300,12 @@ Use CalorieCheck's requirements and low-fidelity contracts—not imitation—for
 - focus order, keyboard behavior, screen-reader announcements, History API behavior, refresh restoration, and responsive reflow;
 - tablet and desktop composition beyond the accepted CalorieCheck responsive contract.
 
-## 11. Remaining visual questions requiring human approval
+## 11. Visual-question disposition
 
-1. **Today progress:** approve the recommended text-first linear meter, or request a different non-ring, non-copied treatment.
-2. **Density:** approve medium density—spacious primary summary with compact lists below—rather than a multi-card dashboard.
-3. **Card restraint:** approve a few purposeful summary surfaces plus grouped lists instead of a card around every metric or row.
-4. **Week bars:** approve or reject lightweight CSS bars supplementing the complete seven-day text list.
-5. **Icons:** approve a small local audited SVG set as supplementary cues, or keep the first implementation text-only.
-6. **Food rows:** confirm no thumbnails and no meal grouping; retain name, serving/context, trailing calories, and explicit edit/delete access.
-7. **Behavioral research gate:** decide whether the screenshot-derived visual baseline may close D0 before the hands-on Lose It! walkthrough, or whether behavioral findings must be supplied and reconciled first. No external-app behavior will be inferred either way.
-8. **Goal roadmap:** confirm that Lose/Gain remain a later-version evaluation, or authorize planning for a separate V2 scientific/product phase. D0 itself does not change target logic.
+The complete isolated prototype was visually approved on 2026-11-03. Its text-first progress treatment, medium density, restrained cards, lightweight Week bars plus semantic list, supplementary local SVG icons, text-first food rows without thumbnails, and responsive compositions are the D0 baseline. The optional hands-on Lose It! walkthrough is deferred, and no external-app behavior is inferred. Lose/Gain were assigned to the separate V2-G0 through V2-G3 scientific/product program; D0 itself did not change production target logic.
 
 ## 12. D0-C disposition
 
 The current visual-reference batch is fully inventoried and interpreted for screenshot-based D0-C research. The reference hierarchy, conflicts, CalorieCheck translation, exclusions, coverage gaps, and recommended wireframe revisions are documented.
 
-Behavioral UX research remains pending and is deliberately separate. V2-D0 remains open until the remaining human visual questions and goal-roadmap disposition are resolved and the complete baseline is explicitly approved. Production UI implementation remains prohibited.
+Behavioral UX research remains optional and deliberately separate. V2-D0 closed with explicit visual approval on 2026-11-03. Production integration follows the canonical V2-G and V2-D sequence and must preserve the reference-copying restrictions in this register.

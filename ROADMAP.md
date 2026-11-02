@@ -193,7 +193,7 @@ The authoritative scope and implementation sequence are maintained in:
 - `V2_DECISIONS.md`
 - `V2_RESEARCH.md`
 
-V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified. The V2-D0 written plan, architecture choices, ten-artifact screenshot analysis, representative low-fidelity mobile states, and responsive direction are prepared. The low-fidelity structural baseline is provisionally accepted, and visual-reference ingestion is complete for the current batch. The interface revision remains stopped at V2-D0 until the visual decisions, behavioral-research timing, Lose/Gain roadmap disposition, and complete-baseline approval are resolved. After V2-D0 approval, the interface revision proceeds through V2-D1 to V2-D6. V2-P10 remains the complete post-design security regression and may not begin until the design program is complete and approved on staging.
+V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified. V2-D0 closed with explicit visual approval of the complete isolated prototype on 2026-11-03; optional behavioral reference research is deferred. The roadmap now stops at V2-G0 for Lose/Gain methodology and safety review. Production remains Maintain-only until V2-G0 through V2-G3 approve and implement the method, data contract, migration, and application integration. The interface revision then proceeds through V2-D1 to V2-D6. V2-P10 remains the complete post-design security regression and may not begin until both programs are complete and approved on staging.
 
 ---
 

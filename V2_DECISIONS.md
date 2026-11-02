@@ -222,7 +222,7 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 
 ## V2-ADR-030 — Design Architecture, Navigation, and Reference Baseline
 
-**Status:** ACCEPTED FOR V2-D0 PLANNING — APPROVED 2026-11-02
+**Status:** ACCEPTED — D0 BASELINE VISUALLY APPROVED 2026-11-03
 
 **Decision:** Retain Vite, semantic HTML, custom CSS, modular vanilla JavaScript, the existing controller/service/view separation, and the deterministic V1 calculator engine. Use four labeled primary destinations—Today, Analyze, Week, Settings—with lightweight same-document History API and allowlisted non-sensitive query state. Make consumed of estimated target the dominant Today relationship and remaining or neutral above-target text secondary. Use five-stage progressive onboarding with the existing atomic final save. Preserve one information architecture across mobile, tablet, and desktop, using restrained two-column enhancement without a permanent sidebar. Keep deterministic submitted food search and show accessible preparation-specific choices for ambiguity; do not add live typeahead.
 
@@ -230,4 +230,14 @@ Use a hybrid reference model: CalorieCheck V1 for brand/calculator continuity, L
 
 **Reason:** The existing application already has complete tested V2 behavior and hardened security boundaries. The selected approach improves hierarchy and navigation without adding framework or dependency risk, while the hybrid references cover complementary product qualities without importing another product's scope or identity.
 
-**Consequences:** React, Tailwind, React Router, external state management, component libraries, icon packages, chart libraries, decorative food photography, dark mode, path-based private routes, and live autocomplete are excluded from this design program unless a future separately approved decision provides concrete evidence. Auth callbacks, session restoration, accessibility, RLS, privacy, target history, null-aware nutrition, demo-data disclosure, and security controls remain unchanged. The low-fidelity structural baseline may be accepted provisionally, but V2-D0 cannot close or authorize V2-D1 until the visual questions, behavioral-research timing, Lose/Gain roadmap disposition, and complete-baseline approval are resolved. V2-ADR-011 remains authoritative; D0 cannot enable a weight-change method.
+**Consequences:** React, Tailwind, React Router, external state management, component libraries, icon packages, chart libraries, decorative food photography, dark mode, path-based private routes, and live autocomplete are excluded from this design program unless a future separately approved decision provides concrete evidence. Auth callbacks, session restoration, accessibility, RLS, privacy, target history, null-aware nutrition, demo-data disclosure, and security controls remain unchanged. The approved isolated prototype is the design source of truth. The optional hands-on behavioral walkthrough is deferred and no hidden reference behavior is inferred. V2-ADR-011 remains authoritative for production until the separately approved V2-G0 methodology gate changes it.
+
+## V2-ADR-031 — Lose/Gain Scientific Phase Placement
+
+**Status:** ACCEPTED FOR PLANNING — APPROVED 2026-11-03
+
+**Decision:** Keep production Maintain-only while inserting V2-G0 through V2-G3 before production design integration. V2-G0 must approve the scientific method, licensing boundary, separate Gain evidence, inputs, BMI policy, activity/recalculation assumptions, safety thresholds, and independent reference vectors. V2-G1 may then implement the pure model, V2-G2 the private data contract/migration, and V2-G3 the application/service integration. BMI is screening context and never the calorie formula. Fixed deficits/surpluses, linear kilogram rules, copied NIDDK code/UI, undocumented remote calculators, and prototype sample calorie values are prohibited.
+
+**Reason:** The product owner selected Lose/Gain as intended Version 2 directions, but the existing evidence still does not authorize a production method. Settling science and persistence before design integration prevents the approved interface from being wired to invented or temporary logic.
+
+**Consequences:** `V2_LOSE_GAIN_TARGET_PLAN.md` is the active methodology-review artifact. V2-ADR-011 remains the production rule until V2-G0 is approved and later phases pass. Lose and Gain may be selectable only inside the isolated prototype; production continues returning `GOAL_METHOD_UNAVAILABLE`. Gain may remain unavailable even if Lose proceeds when separate positive-energy validation is insufficient.

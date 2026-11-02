@@ -2,10 +2,10 @@
 
 **Created:** 2026-11-02<br>
 **Phase:** V2-D0 — User Design Plan and Mockup Approval Gate<br>
-**Status:** WORKING LOW-FIDELITY BASELINE — PROVISIONALLY ACCEPTED; V2-D0 REMAINS BLOCKED<br>
+**Status:** APPROVED V2-D0 BASELINE — VISUAL APPROVAL 2026-11-03<br>
 **Authorization boundary:** These wireframes define information hierarchy and interaction intent only. They do not authorize production HTML, CSS, JavaScript, provider, database, or deployment changes.
 
-The user provisionally accepted the information architecture, four-destination navigation, Today/Analyze/Week/Settings structure, responsive transformation, system-state architecture, onboarding progression concept, and accessibility principles on 2026-11-02. The current screenshot-based visual reference batch is now ingested. High-fidelity visual choices, the behavioral-research gate, and the calorie-goal roadmap disposition remain open.
+The user visually approved the complete isolated prototype and this baseline on 2026-11-03. The current screenshot-based visual reference batch is ingested. Optional hands-on behavioral research is deferred, and Lose/Gain production calculation remains gated by the separate V2-G0 plan.
 
 ## 1. How to read these wireframes
 
@@ -234,10 +234,10 @@ Step rules:
 | 1 — Personal information | Display name, date of birth, source-equation sex category | Explain age eligibility and that the categories select published coefficients rather than collect gender identity |
 | 2 — Body measurements | Height in cm, weight in kg | Canonical units remain authoritative; no invented health interpretation |
 | 3 — Activity level | Inactive, Low active, Active, Very active | Explain approximation and show plain-language descriptions |
-| 4 — Goal and local day | Maintain Weight — available and selected; Lose Weight — not yet available, approved method required; Gain Weight — not yet available, approved method required; timezone suggestion/correction; non-persistent eligibility confirmation | Do not imply Lose/Gain are permanently rejected or currently supported. No arbitrary deficit/surplus; no persistence of pregnancy/breastfeeding status |
-| 5 — Review estimate | Review inputs, estimated maintenance calories, methodology/source and uncertainty, Edit actions | The estimate is informational; final action triggers the existing atomic profile-plus-target save |
+| 4 — Goal and local day | Select Maintain, Lose, or Gain; Lose/Gain reveal goal weight and goal date; show current/goal BMI context; timezone suggestion/correction; non-persistent eligibility confirmation | Prototype sample values are never production recommendations. BMI is screening context, not the calorie formula. No arbitrary deficit/surplus; no persistence of pregnancy/breastfeeding status |
+| 5 — Review estimate | Review inputs, maintenance estimate, goal-specific estimate when approved, weight/BMI direction, goal date, methodology/source, assumptions, warnings, and Edit actions | Maintain may use the existing atomic save. Lose/Gain remain production-unavailable until V2-G0 through V2-G3 pass; the final implementation must use the same atomic history contract |
 
-Goal-screen wording is provisional until the separate goal-scope disposition is accepted. Under the current implementation and V2-ADR-011, only Maintain is selectable and saveable. “Planned” is intentionally avoided because the accepted roadmap says a later version may revisit Lose/Gain but does not yet commit to delivery. The disabled choices keep the product direction visible without promising a formula, date, or Version 2 implementation.
+The prototype goal-screen direction is approved, but availability remains truthful by environment: all three concepts may be reviewed in the isolated prototype, while production stays Maintain-only until V2-G0 through V2-G3 pass. Prototype values such as 1,750 or 2,300 kcal are visual examples, never calculation fixtures.
 
 ### 6.3 Final review
 
@@ -709,25 +709,16 @@ The plan describes shared presentation contracts, not a new component framework.
 
 | Acceptance requirement | Evidence | Status |
 | --- | --- | --- |
-| Written design plan | `V2_DESIGN_REVISION_PLAN_PROPOSAL.md` | Approved by user for D0 planning on 2026-11-02 |
-| Architecture/product questions resolved | `V2_DESIGN_REVISION_AUDIT.md` sections 16–17 | PARTIAL — R1–R8 and D1–D5 resolved; Lose/Gain delivery placement still requires product-owner disposition |
-| Current visual-reference artifacts inventoried and interpreted | `V2_DESIGN_REFERENCES.md` | COMPLETE FOR SCREENSHOT-BASED D0-C RESEARCH; behavioral UX walkthrough remains pending |
-| Principal signed-out/authenticated journeys represented | Sections 5–10 and 15 | Provisionally accepted as a working low-fidelity baseline |
-| Non-happy states represented | Section 11 and per-screen variants | Provisionally accepted at architecture level; visual treatment remains open |
-| Responsive intent defined | Section 12 | Provisionally accepted; exact compositions remain open |
-| Accessibility/scope/technical review | Sections 3, 13–16 | Provisionally accepted; must be rechecked after final references |
-| Maintain/Lose/Gain scope reconciled | `V2_DESIGN_REVISION_AUDIT.md` section 17 | Current limitation traced; separate product-scope disposition still required before final goal-screen approval |
-| User explicitly approves complete D0 baseline | User action after both blockers resolve | **BLOCKED — REQUIRED** |
+| Written design plan | `V2_DESIGN_REVISION_PLAN_PROPOSAL.md` | COMPLETE |
+| Architecture/product questions resolved | `V2_DESIGN_REVISION_AUDIT.md` sections 16–17 | COMPLETE; Lose/Gain assigned to V2-G0 through V2-G3 |
+| Current visual-reference artifacts inventoried and interpreted | `V2_DESIGN_REFERENCES.md` | COMPLETE for screenshot-based D0 research; optional behavioral walkthrough deferred |
+| Principal signed-out/authenticated journeys represented | Sections 5–10 and 15 plus `prototypes/v2-ui/` | COMPLETE and visually approved |
+| Non-happy states represented | Section 11, per-screen variants, and prototype preview inventory | COMPLETE for D0 baseline |
+| Responsive intent defined | Section 12 and prototype | COMPLETE for D0 baseline |
+| Accessibility/scope/technical review | Sections 3, 13–16 | COMPLETE for D0; implementation must be reverified in D1–D6 |
+| Maintain/Lose/Gain scope reconciled | `V2_DESIGN_REVISION_AUDIT.md` section 17 and `V2_LOSE_GAIN_TARGET_PLAN.md` | COMPLETE for roadmap placement; production methodology remains a V2-G0 blocker |
+| User explicitly approves complete D0 baseline | User approval on 2026-11-03 | **COMPLETE** |
 
-## 18. Remaining D0 actions
+## 18. D0 closeout
 
-V2-D0 stays open. The working low-fidelity baseline may guide continued review, but it is not authorization to finalize the high-fidelity direction or implement production UI.
-
-Before D0 can close:
-
-1. the user resolves the remaining visual questions in `V2_DESIGN_REFERENCES.md` section 11;
-2. the user decides whether the screenshot-derived baseline may close D0 before a hands-on Lose It! walkthrough, or whether behavioral findings must be supplied and reconciled first;
-3. the project explicitly decides whether Lose/Gain remain a later-version evaluation or receive a separately planned V2 scientific/product phase—without changing production logic inside D0; and
-4. the user reviews the resulting complete D0 baseline and explicitly approves closeout.
-
-Until then, the navigation, journey, state, responsive, onboarding-progression, and accessibility structures are provisionally accepted; visual styling, density, component expression, motion details, optional progress graphics, and goal-screen wording remain provisional.
+V2-D0 closed on 2026-11-03. The user approved the complete isolated prototype visually, deferred the optional hands-on behavioral walkthrough, and authorized V2-G0 as the separate Lose/Gain scientific/product gate. This approval authorizes later design implementation through the documented phase sequence; it does not authorize prototype sample calorie values or unvalidated production target logic.

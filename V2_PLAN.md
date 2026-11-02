@@ -234,11 +234,11 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
-**Design program status:** BLOCKED — USER ACTION REQUIRED (VISUAL DECISIONS, BEHAVIORAL GATE, AND GOAL-SCOPE DISPOSITION)
+**Design program status:** APPROVED — V2-D0 CLOSED 2026-11-03; V2-G0 METHODOLOGY REVIEW ACTIVE BEFORE PRODUCTION INTEGRATION
 
-**Blocker:** The written plan and low-fidelity structural baseline are prepared, and the current Lose It!, Apple Fitness, and Cronometer screenshot batch has completed visual-reference ingestion. The user must resolve the remaining visual questions, decide whether the pending hands-on Lose It! walkthrough must precede D0 closeout, and decide whether Lose/Gain remain a later-version evaluation or receive a separately planned V2 scientific/product phase. V2-D0 remains open.
+**Disposition:** The user visually approved the complete isolated prototype on 2026-11-03 and authorized a separate V2 Lose/Gain scientific/product phase. The screenshot-derived visual baseline may proceed without waiting for a hands-on Lose It! walkthrough; that behavioral research is deferred and cannot retroactively imply copied behavior. Production design integration remains sequenced after the active V2-G0 methodology gate and its approved implementation stages.
 
-**Sequence rule:** V2-P8 and V2-P9 may proceed in their documented order. After V2-P9 is complete, stop at V2-D0. Do not begin visual revision work or V2-P10 until V2-D0 is cleared and V2-D1 through V2-D6 are complete.
+**Sequence rule:** V2-D0 is complete. Stop at V2-G0 for methodology review before changing production target logic. After approved V2-G0 through V2-G3 work, proceed through V2-D1 to V2-D6. Do not begin V2-P10 until the goal and design programs are complete and verified.
 
 **Purpose:** Revise the complete implemented V2 experience as one coherent mobile-first application after its principal screens and workflows exist, while leaving enough time for security, accessibility, browser, staging, and production verification against the settled interface.
 
@@ -246,7 +246,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D0 — User Design Plan and Mockup Approval Gate
 
-**Status:** BLOCKED — USER ACTION REQUIRED (VISUAL DECISIONS, BEHAVIORAL GATE, AND GOAL-SCOPE DISPOSITION)
+**Status:** DONE — VISUALLY APPROVED 2026-11-03
 
 **Objective:** Establish the user-approved visual and interaction source of truth before any design revision code is written.
 
@@ -254,11 +254,13 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 **Dependencies:** V2-P9 and V2-S0 complete on staging; current signed-in flows and states available for review.
 
-**Required user inputs:** The user supplied and approved the written architecture/design choices and a ten-artifact visual reference batch on 2026-11-02. Screenshot-based D0-C ingestion is complete and the low-fidelity structural baseline is provisionally accepted. The user must resolve the visual questions in `V2_DESIGN_REFERENCES.md`, decide whether the pending behavioral walkthrough is required before D0 closeout, and disposition Lose/Gain as either a later-version evaluation or a separately planned V2 scientific/product phase. Explicit approval of the complete D0 baseline remains required.
+**Required user inputs:** Complete. The user supplied the architecture/design choices and reference batch, authorized the prototype-first review loop, visually approved the resulting complete prototype on 2026-11-03, deferred the optional hands-on behavioral walkthrough, and authorized planning for a separate V2 Lose/Gain scientific/product phase.
 
 **Exact review scope:** Inventory the supplied artifacts; map every mockup to an implemented route, state, or component; identify missing states, inaccessible interactions, behavior conflicts, and proposed scope additions; document the responsive interpretation and any approved departure from the existing V1 visual reference; return unresolved decisions to the user before implementation.
 
-**Explicit non-goals:** No HTML, CSS, JavaScript, database, or provider change; no inferred design direction where the supplied artifacts are silent; no approval of nonfunctional controls or future-version features shown incidentally in a mockup.
+**Prototype-first review gate:** Maintain an isolated static/sample-data prototype under `prototypes/v2-ui/`. Revise that same prototype through visual feedback until the user explicitly approves it. The prototype is presentation evidence only: production behavior, data, science, security, and calculations remain authoritative in the existing application. Production UI integration is prohibited until explicit prototype approval and D0 closeout.
+
+**Explicit non-goals:** No production runtime, database, provider, or target-method change; no inferred behavior where the supplied artifacts are silent; no approval of prototype sample values as authoritative calculation data.
 
 **Required tests:** Documentation completeness and traceability review; route/state coverage check; mobile-first, accessibility, scope, and technical-feasibility review; confirmation that mockups do not contradict security, privacy, scientific, nutrition, or data-history requirements.
 
@@ -266,7 +268,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 **Documentation updates:** Record artifact locations, approval date, interpretation notes, resolved conflicts, exclusions, and the authorization for V2-D1.
 
-**External/user actions:** Resolve the documented visual questions, confirm whether behavioral UX research must precede D0 closeout, confirm the Lose/Gain roadmap disposition, then review `V2_DESIGN_REFERENCES.md` and `V2_DESIGN_WIREFRAMES.md` and explicitly approve or request changes to the complete baseline.
+**External/user actions:** Complete on 2026-11-03 through explicit visual approval and authorization of V2-G0.
 
 **Stop conditions:** The plan or mockups are missing, incomplete, internally contradictory, inaccessible by design, outside V2 scope, or not explicitly approved.
 
@@ -274,15 +276,91 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
+### V2-G0 — Lose/Gain Scientific Methodology and Safety Gate
+
+**Status:** BLOCKED — METHODOLOGY REVIEW REQUIRED
+
+**Objective:** Approve a scientifically defensible, legally implementable, testable adult Lose/Gain target method before any production target logic changes.
+
+**Dependencies:** V2-D0 complete; existing Maintain EER engine and target-history behavior remain authoritative.
+
+**Executable specification:** `V2_LOSE_GAIN_TARGET_PLAN.md`.
+
+**Exact scope:** Review the published Hall dynamic-model candidate, implementation/licensing boundary, separate Lose and Gain evidence, required inputs, activity and recalculation assumptions, BMI policy, calorie floor, pace/timeframe rules, unsupported medical/life-stage domains, structured outcomes, and independent validation vectors.
+
+**Explicit non-goals:** No production code, migration, RPC, UI integration, copied NIDDK implementation, fixed deficit/surplus, or prototype constant promoted to production.
+
+**Acceptance criteria:** The product owner approves the method candidate and all blocking safety/input policies; the licensing boundary is documented; independent Lose vectors exist; Gain has separate approved vectors or remains explicitly unavailable; G1 receives an exact numerical specification.
+
+**External/user actions:** Review the seven decisions in `V2_LOSE_GAIN_TARGET_PLAN.md` section 12. Obtain professional/legal review if required for health-safety wording or equation implementation rights.
+
+**Recommended commit message:** `Plan V2 Lose and Gain target methodology`
+
+---
+
+### V2-G1 — Pure Weight-Target Engine and Validation
+
+**Status:** NOT STARTED — BLOCKED BY V2-G0
+
+**Objective:** Implement and independently validate the approved pure numerical model while preserving the verified maintenance engine.
+
+**Dependencies:** V2-G0 methodology, input domains, safety thresholds, reference vectors, and licensing position approved.
+
+**Exact scope:** Implement the approved weight-change model and BMI helper in separate modules; add canonical validation, convergence/failure handling, structured outcomes, reproducibility metadata, warnings, deterministic fixtures, and tolerance-based comparisons. Keep unapproved goals/domains unavailable.
+
+**Explicit non-goals:** No DOM, Supabase, migration, persistence, UI redesign, network calculator, fixed adjustment, or automatic medical advice.
+
+**Acceptance criteria:** All independent vectors pass within documented tolerances; Maintain outputs remain unchanged; missing/unsafe/non-finite cases fail safely; Lose and Gain are accepted independently; no source input is mutated.
+
+**Recommended commit message:** `Add validated weight target calculations`
+
+---
+
+### V2-G2 — Weight-Goal Data Contracts and Private Migration
+
+**Status:** NOT STARTED — BLOCKED BY V2-G1
+
+**Objective:** Extend private profile and effective target history for the approved goal inputs and method metadata without weakening ownership or historical integrity.
+
+**Dependencies:** V2-G1 complete and output contract frozen.
+
+**Exact scope:** Finalize `goal_weight_kg`, `goal_date`, optional compact model snapshot, goal-dependent constraints, method/version allow-listing, atomic RPC updates, grants, RLS preservation, rollback, effective-history behavior, pgTAP coverage, reset, and schema lint. Stop for reviewed migration approval before applying remotely.
+
+**Explicit non-goals:** No remote migration without review, public write path, client-controlled owner, history rewrite, weigh-in feature, or production visual integration.
+
+**Acceptance criteria:** Local reset/lint/pgTAP pass; owner/anonymous/cross-user matrix passes; invalid method/snapshot/goal combinations fail; target history remains non-overlapping and reproducible.
+
+**Recommended commit message:** `Extend private target history for weight goals`
+
+---
+
+### V2-G3 — Weight-Goal Application Integration
+
+**Status:** NOT STARTED — BLOCKED BY V2-G2
+
+**Objective:** Connect approved goal calculations to profile/settings controllers and services while leaving visual redesign ownership to V2-D1 through V2-D6.
+
+**Dependencies:** Reviewed V2-G2 migration applied to staging; V2-G1 engine stable.
+
+**Exact scope:** Extend canonical validation, orchestration, commands, service mappings, atomic persistence, session restoration, target-history retrieval, and safe error/unavailable outcomes. Add unit, controller, service, browser, and staging verification without copying prototype values.
+
+**Explicit non-goals:** No final visual redesign, automatic background recalculation, periodic weigh-ins, nutrition-source change, or unsupported Gain activation.
+
+**Acceptance criteria:** Approved goals calculate and persist atomically; unavailable goals remain explicit; retries and rollback are safe; historical Today/Week resolution remains correct; staging owner isolation passes.
+
+**Recommended commit message:** `Integrate weight goals with profile targets`
+
+---
+
 ### V2-D1 — Interface Audit and Design Traceability
 
-**Status:** NOT STARTED — BLOCKED BY V2-D0
+**Status:** NOT STARTED — BLOCKED BY V2-G0 THROUGH V2-G3
 
 **Objective:** Turn the approved design baseline into an implementation-ready inventory and gap map without changing runtime code.
 
 **Why this phase exists:** The application already contains mature V1 and V2 states; each must be preserved, revised, or deliberately reused rather than lost during visual work.
 
-**Dependencies:** V2-D0 approved.
+**Dependencies:** V2-D0 approved; V2-G0 through V2-G3 complete so the traceability audit maps the settled target contract rather than prototype sample behavior.
 
 **Files likely involved:** Design documentation, route/state inventories, component map, V2 status and decision notes.
 
@@ -306,7 +384,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D2 — Visual Foundations and Shared Components
 
-**Status:** NOT STARTED — BLOCKED BY V2-D0
+**Status:** NOT STARTED — BLOCKED BY V2-D1
 
 **Objective:** Implement the approved visual foundations and reusable presentation primitives before revising full screens.
 
@@ -336,7 +414,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D3 — Mobile App Shell and Navigation Revision
 
-**Status:** NOT STARTED — BLOCKED BY V2-D0
+**Status:** NOT STARTED — BLOCKED BY V2-D2
 
 **Objective:** Implement the approved mobile-first application shell and predictable navigation among existing V2 destinations.
 
@@ -366,7 +444,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
 
-**Status:** NOT STARTED — BLOCKED BY V2-D0
+**Status:** NOT STARTED — BLOCKED BY V2-D3
 
 **Objective:** Apply the approved interface to the primary acquisition and daily-use journeys.
 
@@ -396,7 +474,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D5 — Weekly, Settings, and Data-Control Revision
 
-**Status:** NOT STARTED — BLOCKED BY V2-D0
+**Status:** NOT STARTED — BLOCKED BY V2-D4
 
 **Objective:** Apply the approved interface to history, settings, correction, deletion, and account-control journeys.
 
@@ -426,7 +504,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D6 — Integrated Design Verification and Approval
 
-**Status:** NOT STARTED — BLOCKED BY V2-D0
+**Status:** NOT STARTED — BLOCKED BY V2-D5
 
 **Objective:** Verify the complete revision against the approved design baseline and obtain staging approval before security hardening begins.
 
@@ -561,15 +639,19 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 9. V2-P8 — Weekly Dashboard and History — **DONE**
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — **DONE**
 11. V2-S0 — Public Exposure Security Hardening — **DONE**
-12. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-13. V2-D1 — Interface Audit and Design Traceability
-14. V2-D2 — Visual Foundations and Shared Components
-15. V2-D3 — Mobile App Shell and Navigation Revision
-16. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
-17. V2-D5 — Weekly, Settings, and Data-Control Revision
-18. V2-D6 — Integrated Design Verification and Approval
-19. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
-20. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
-21. V2-P12 — Staging Release Verification and Production Deployment
-22. V2-P13 — Final Version 2 Audit
-23. V2-P14 — Version 2 Freeze
+12. V2-D0 — User Design Plan and Mockup Approval Gate — **DONE — APPROVED 2026-11-03**
+13. V2-G0 — Lose/Gain Scientific Methodology and Safety Gate — **BLOCKED — METHODOLOGY REVIEW REQUIRED**
+14. V2-G1 — Pure Weight-Target Engine and Validation
+15. V2-G2 — Weight-Goal Data Contracts and Private Migration
+16. V2-G3 — Weight-Goal Application Integration
+17. V2-D1 — Interface Audit and Design Traceability
+18. V2-D2 — Visual Foundations and Shared Components
+19. V2-D3 — Mobile App Shell and Navigation Revision
+20. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
+21. V2-D5 — Weekly, Settings, and Data-Control Revision
+22. V2-D6 — Integrated Design Verification and Approval
+23. V2-P10 — Security, Privacy, Data Integrity, and RLS QA
+24. V2-P11 — Responsive, Accessibility, and Cross-Browser QA
+25. V2-P12 — Staging Release Verification and Production Deployment
+26. V2-P13 — Final Version 2 Audit
+27. V2-P14 — Version 2 Freeze

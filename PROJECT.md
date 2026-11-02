@@ -6,7 +6,7 @@ Version 1 is complete and frozen for the validated demo scope.
 
 The frozen release provides the mobile-first food-to-nutrition workflow using 11 curated local demo records. Required measurement support is grams for solid foods, food-specific sourced cups for compatible solids, and milliliters for liquids. Pieces and serving descriptors remain optional and food-specific.
 
-Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, maintain-only energy target engine, profile onboarding, atomic target history, explicit food logging, daily and weekly trackers, profile settings, captured-snapshot log correction/deletion, protected hard account deletion, and V2-S0 public-exposure security hardening are complete and verified. `LOSE` and `GAIN` remain recognized but unavailable because no weight-change method passed the scientific, licensing, input, and validation gate. The V2-D0 design audit, plan, ten-artifact screenshot analysis, and low-fidelity wireframes are prepared, and the structural wireframe baseline is provisionally accepted. Visual-reference ingestion is complete for the current batch; behavioral UX research remains pending. V2-D0 remains blocked on visual decisions, behavioral-research timing, an explicit Lose/Gain roadmap disposition, and approval of the complete baseline before V2-D1 through V2-D6.
+Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, maintain-only energy target engine, profile onboarding, atomic target history, explicit food logging, daily and weekly trackers, profile settings, captured-snapshot log correction/deletion, protected hard account deletion, and V2-S0 public-exposure security hardening are complete and verified. V2-D0 closed with explicit visual approval of the complete isolated prototype on 2026-11-03; optional behavioral reference research is deferred. `LOSE` and `GAIN` remain production-unavailable while V2-G0 reviews the dynamic-model candidate, separate Gain evidence, licensing, inputs, safeguards, and validation before any production logic changes.
 
 ## Version 2 Planning Documents
 
@@ -15,10 +15,11 @@ Version 2 is now the active development roadmap. Its development platform, authe
 - [V2_STATUS.md](V2_STATUS.md) — concise operational phase control
 - [V2_DECISIONS.md](V2_DECISIONS.md) — Version 2 architecture decisions
 - [V2_RESEARCH.md](V2_RESEARCH.md) — source-backed scientific and platform research
+- [V2_LOSE_GAIN_TARGET_PLAN.md](V2_LOSE_GAIN_TARGET_PLAN.md) — active Lose/Gain methodology, safety, data, implementation, and verification gate
 - [V2_DESIGN_REVISION_AUDIT.md](V2_DESIGN_REVISION_AUDIT.md) — design, architecture, branch, and compatibility audit
 - [V2_DESIGN_REVISION_PLAN_PROPOSAL.md](V2_DESIGN_REVISION_PLAN_PROPOSAL.md) — user-approved V2-D0 planning sequence
-- [V2_DESIGN_REFERENCES.md](V2_DESIGN_REFERENCES.md) — completed screenshot-based reference ingestion, boundaries, conflicts, and pending behavioral questions
-- [V2_DESIGN_WIREFRAMES.md](V2_DESIGN_WIREFRAMES.md) — provisionally accepted low-fidelity structure with remaining D0 blockers
+- [V2_DESIGN_REFERENCES.md](V2_DESIGN_REFERENCES.md) — completed screenshot-based reference ingestion and approved visual-question disposition
+- [V2_DESIGN_WIREFRAMES.md](V2_DESIGN_WIREFRAMES.md) — approved V2-D0 structural baseline
 
 The detailed sections below remain the frozen Version 1 product specification and should not be rewritten as Version 2 requirements.
 

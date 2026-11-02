@@ -1,6 +1,6 @@
 # CalorieCheck V2 Design Revision Plan Proposal
 
-**Status:** APPROVED FOR V2-D0 PLANNING — VISUAL REFERENCES INGESTED; VISUAL DECISIONS, BEHAVIORAL GATE, AND GOAL DISPOSITION PENDING<br>
+**Status:** COMPLETE — V2-D0 BASELINE VISUALLY APPROVED 2026-11-03<br>
 **Created:** 2026-11-02<br>
 **Implementation authorization:** None. This document does not authorize UI code, dependencies, framework migration, or changes to completed product behavior.
 
@@ -76,7 +76,7 @@ The user resolved all Required Before Implementation questions:
 - desktop transformation;
 - expanded-catalog search behavior.
 
-**Status:** Complete. The answers are recorded in the audit, this finalized proposal, and V2-ADR-030. Record the final artifact approval date and D0 completion only after the user approves the complete wireframe baseline.
+**Status:** Complete. The answers are recorded in the audit, this finalized proposal, and V2-ADR-030. The user approved the complete isolated prototype and D0 baseline on 2026-11-03.
 
 ### D0-C — Reference ingestion
 
@@ -89,7 +89,7 @@ The user resolved all Required Before Implementation questions:
 - conflicts with scope, accessibility, security, or data semantics;
 - approval status.
 
-**Status:** **COMPLETE FOR THE CURRENT SCREENSHOT BATCH.** All ten supplied Lose It!, Apple Fitness, and Cronometer artifacts are inventoried and interpreted in `V2_DESIGN_REFERENCES.md`. The register separates visible screenshot evidence from behavior. Hands-on Lose It! behavioral UX research remains pending and no hidden interaction is inferred.
+**Status:** **COMPLETE FOR THE CURRENT SCREENSHOT BATCH.** All ten supplied Lose It!, Apple Fitness, and Cronometer artifacts are inventoried and interpreted in `V2_DESIGN_REFERENCES.md`. The register separates visible screenshot evidence from behavior. Hands-on Lose It! behavioral UX research is deferred and no hidden interaction is inferred.
 
 ### D0-D — Design definition and approval
 
@@ -110,7 +110,7 @@ Approve:
 
 No production UI implementation begins until D0-D is explicitly approved.
 
-**Status:** The information architecture, navigation, Today/Analyze/Week/Settings structure, responsive transformation, system-state architecture, onboarding progression concept, and accessibility principles are provisionally accepted. The visual batch now supplies evidence for Today hierarchy, diary rows, progress, settings lists, and nutrition detail. Goal-screen wording, the remaining visual choices, and whether behavioral research precedes D0 closeout remain provisional. Explicit approval of the complete D0 baseline is still required.
+**Status:** Complete. The user visually approved the complete isolated prototype on 2026-11-03, including information architecture, navigation, Today/Analyze/Week/Settings, responsive transformation, system states, progressive onboarding, goal presentation, and accessibility direction. The optional hands-on Lose It! behavioral walkthrough is deferred; no hidden interaction is inferred. Lose/Gain production behavior remains governed by V2-G0 rather than D0.
 
 ## Proposed user journeys to specify
 
@@ -170,12 +170,6 @@ React, Tailwind, React Router, external state management, a component library, a
 
 ## Approval gate
 
-The user approved this finalized proposal on 2026-11-02, authorizing low-fidelity wireframe and D0 planning work—not production UI implementation.
+The user approved the planning proposal on 2026-11-02 and visually approved the complete isolated prototype and D0 baseline on 2026-11-03. The user also authorized V2-G0 as the separate Lose/Gain scientific/product gate. Behavioral reference-app research is deferred and may inform later refinements without blocking or overriding this approval.
 
-V2-D1 becomes executable only after:
-
-1. the user resolves the remaining visual questions and the behavioral-research timing decision recorded in `V2_DESIGN_REFERENCES.md`;
-2. the information architecture, state inventory, journeys, responsive rules, design principles, and preliminary token/component plan are reviewed;
-3. the product owner confirms whether Lose/Gain remain a later-version evaluation or authorizes a separate V2 scientific/product phase plan;
-4. the user explicitly approves the complete V2-D0 baseline; and
-5. the canonical V2 plan, decisions, and status are updated without losing catalog-program history.
+V2-D0 is closed. Production design integration remains sequenced after V2-G0 through V2-G3 so the approved goal interface is connected to a settled, validated target contract rather than prototype sample values.

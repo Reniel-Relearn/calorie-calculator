@@ -2,7 +2,7 @@
 
 **Audit date:** 2026-11-02<br>
 **Branch:** `feature/v2-design-revision`<br>
-**Status:** Audit complete, current visual-reference batch ingested, and low-fidelity structure provisionally accepted; V2-D0 remains open for visual decisions, behavioral-research timing, calorie-goal scope disposition, and final approval.
+**Status:** COMPLETE — V2-D0 BASELINE VISUALLY APPROVED 2026-11-03; V2-G0 METHODOLOGY GATE AUTHORIZED.
 
 ## 1. Executive summary
 
@@ -14,15 +14,14 @@ The evidence does **not** justify React or Tailwind for the current V2 redesign.
 
 The user resolved the architecture and product-design questionnaire on 2026-11-02. The accepted baseline retains vanilla JavaScript, uses four mobile destinations, introduces lightweight same-document history, makes consumed-of-target the dominant Today metric, uses progressive onboarding, progressively enhances desktop, and keeps submitted deterministic food matching.
 
-The safest workflow is now:
+The approved workflow is now:
 
-1. retain the provisionally accepted low-fidelity structure;
-2. use the completed screenshot-based reference ingestion without inferring hidden interaction behavior;
-3. resolve the remaining visual choices and decide whether the pending hands-on Lose It! walkthrough must precede D0 closeout;
-4. preserve Maintain-only production behavior while the separate Lose/Gain product-scope disposition is decided;
-5. obtain explicit approval of the complete D0 baseline;
-6. execute the existing V2-D1 through V2-D6 program in small tested slices; and
-7. preserve V2-P10 as the post-redesign security and regression gate.
+1. retain the visually approved isolated prototype as the design source of truth;
+2. keep optional hands-on behavioral research deferred and never infer hidden reference-app behavior;
+3. preserve Maintain-only production behavior during V2-G0 methodology review;
+4. complete the approved V2-G0 through V2-G3 goal program without copying prototype sample values;
+5. execute V2-D1 through V2-D6 in small tested slices; and
+6. preserve V2-P10 as the post-redesign security and regression gate.
 
 No UI code, dependencies, food records, Supabase configuration, deployment configuration, or accepted architectural decisions were changed during this audit.
 
@@ -537,17 +536,9 @@ This is product and scientific development, not visual styling.
 
 ### E. Where does enablement belong?
 
-It does **not** belong inside V2-D0 or the V2-D1 through V2-D6 design revision. Those phases preserve accepted behavior and cannot authorize a new target model. Under the current accepted ADR and master specification, Lose/Gain enablement is a **later-version candidate**.
+It does **not** belong inside V2-D0 or get smuggled into V2-D4 as styling work. On 2026-11-03, the product owner authorized a separate Version 2 scientific/product program, V2-G0 through V2-G3. That program must settle the method, safety policy, data contract, pure engine, migration, and application integration before the corresponding production onboarding/settings design is integrated.
 
-If the product owner wants it inside Version 2, that requires an explicit Version 2 scope change and a separately planned scientific/product phase with its own research gate, data-contract/migration work, tests, and approval. That phase should settle the target contract before the corresponding production onboarding/settings UI is implemented; it must not be smuggled into V2-D4 as a design task.
-
-For the current wireframe, the truthful presentation is:
-
-- **Maintain Weight — available**
-- **Lose Weight — not yet available; approved method required**
-- **Gain Weight — not yet available; approved method required**
-
-This avoids implying either permanent rejection or approved delivery. The word “planned” is not used because the current roadmap permits future reconsideration but does not commit to implementation.
+The approved prototype may show all three selectable concepts, goal weight/date, BMI context, and clearly labeled sample calorie content. Production remains Maintain-only until the V2-G gates pass.
 
 ## 18. Risks
 
@@ -564,15 +555,8 @@ This avoids implying either permanent rejection or approved delivery. The word �
 
 ## 19. Blockers
 
-Production design implementation remains blocked by:
-
-- resolution of the remaining visual questions documented in `V2_DESIGN_REFERENCES.md`;
-- a decision on whether the pending hands-on Lose It! behavioral walkthrough must precede D0 closeout;
-- an explicit product-scope disposition confirming that Lose/Gain stay a later-version evaluation or authorizing a separate V2 scientific/product phase plan;
-- final review and approval of the resulting complete V2-D0 baseline.
-
-The low-fidelity information architecture, navigation, Today/Analyze/Week/Settings structure, responsive transformation, system-state architecture, onboarding progression concept, and accessibility principles are provisionally accepted. High-fidelity visual direction and the goal-screen presentation remain provisional. This audit does not mark V2-D0 or V2-D1 complete.
+V2-D0 has no remaining blocker. Production target and design integration are now blocked by V2-G0 methodology review, specifically the model/licensing decision, separate Gain evidence, activity and recalculation assumptions, BMI policy, safety thresholds, and release sequence recorded in `V2_LOSE_GAIN_TARGET_PLAN.md`.
 
 ## 20. Recommended next step
 
-The user should answer the visual questions and behavioral-research timing question in `V2_DESIGN_REFERENCES.md`, then decide whether Lose/Gain remain a later-version evaluation or should receive a separately planned V2 product phase. Codex should reconcile those decisions, return the complete D0 baseline for explicit approval, and continue to prohibit production UI implementation until D0 closes.
+Review `V2_LOSE_GAIN_TARGET_PLAN.md` section 12. Do not change production target logic until the V2-G0 methodology and safety decisions are explicitly approved.
