@@ -2,7 +2,7 @@
 
 **Current Version:** V2
 **Current Phase:** V2-D0 — User Design Plan and Mockup Approval Gate
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
+**Current Phase Status:** BLOCKED — USER ACTION REQUIRED (VISUAL DECISIONS, BEHAVIORAL GATE, AND GOAL-SCOPE DISPOSITION)
 **Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0 approval)
 **Overall V2 Status:** IN PROGRESS
 
@@ -59,16 +59,21 @@
 
 ## Current Blockers
 
-V2-S0 has no remaining implementation or provider blocker. The next blocker is external design input for V2-D0:
+V2-S0 has no remaining implementation or provider blocker. V2-D0 has a provisionally accepted low-fidelity structural baseline:
 
-**Blocker: Requires user's plan and mockups for design.**
+- `V2_DESIGN_REVISION_AUDIT.md` records repository, architecture, branch, security, catalog, and stack findings.
+- `V2_DESIGN_REVISION_PLAN_PROPOSAL.md` records the user-approved planning sequence and stable boundaries.
+- `V2_DESIGN_REFERENCES.md` inventories and interprets all ten current Lose It!, Apple Fitness, and Cronometer artifacts. Screenshot-based visual-reference ingestion is complete; hands-on Lose It! behavioral UX research remains pending and no hidden behavior is inferred.
+- `V2_DESIGN_WIREFRAMES.md` covers authentication, five-stage onboarding, Today, Analyze, Week, Settings, destructive actions, system states, and responsive transformation. Its information architecture, four-destination navigation, destination structure, responsive transformation, system-state architecture, onboarding progression concept, and accessibility principles are provisionally accepted.
+- V2-ADR-011 and the V2-P4 evidence gate establish the current Maintain-only implementation. Lose/Gain remain recognized but unavailable; enabling them would require a separate scientific/product phase rather than a D0 visual decision.
+- No production HTML, CSS, JavaScript, dependency, database, provider, or deployment change was made.
 
-The user must supply the written design plan, approved mobile mockups for the required signed-out and authenticated journeys, representative loading/empty/error states, and responsive direction for tablet and desktop. Do not begin V2-D1 or later design implementation until the V2-D0 baseline is reviewed and explicitly approved.
+**Blockers:** The user must resolve the remaining visual questions, decide whether the pending hands-on behavioral walkthrough must precede D0 closeout, and choose whether Lose/Gain remain a later-version evaluation or receive a separately planned V2 scientific/product phase. The complete D0 baseline then requires explicit user approval. Do not begin V2-D1 or production design implementation before these gates are resolved.
 
 ## Design Program Sequence
 
 1. V2-S0 — Public Exposure Security Hardening — **DONE**
-2. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
+2. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — VISUAL DECISIONS, BEHAVIORAL GATE, AND GOAL-SCOPE DISPOSITION REQUIRED**
 3. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
 4. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
 5. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
@@ -84,4 +89,4 @@ Windows reserved the former default Supabase local port range. The repository's 
 
 ## Next Intended Action
 
-Wait for the user's written design plan and approved mockups required by V2-D0. Review those artifacts and resolve missing states, accessibility conflicts, responsive behavior, and scope questions before authorizing V2-D1. Do not begin design implementation or V2-P10 early.
+Wait for the user's answers to the visual questions, behavioral-research timing decision, and Lose/Gain roadmap disposition. Reconcile those answers into the D0 artifacts, return the complete baseline for explicit approval, and keep production UI implementation stopped. Do not close V2-D0, commit, begin V2-D1, or begin V2-P10 without separate authorization.

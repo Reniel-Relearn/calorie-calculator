@@ -253,11 +253,7 @@ Mobile navigation must keep these destinations reachable with comfortable touch 
 
 V2-P8 and V2-P9 complete the remaining weekly, settings, editing, deletion, and account-control surfaces using the maintained mobile-first baseline. After V2-P9, the project must complete the V2-D0 through V2-D6 design revision program before beginning V2-P10 security hardening.
 
-The design program is currently blocked on this required external input:
-
-**Blocker: Requires user's plan and mockups for design.**
-
-The user-supplied baseline must include a written design plan, approved mobile mockups for the principal authenticated and signed-out journeys, representative non-happy states, and responsive direction for larger screens. No design revision code may be implemented by guessing missing visual direction. Mockups do not authorize controls, destinations, data, or features outside the approved Version 2 scope.
+The V2-D0 written design plan, architecture choices, current ten-artifact visual-reference analysis, representative low-fidelity mobile states, and responsive direction were prepared on 2026-11-02. The low-fidelity information architecture, navigation, destination structure, responsive transformation, system-state architecture, onboarding progression concept, and accessibility principles are provisionally accepted. Screenshot-based D0-C ingestion is complete, while hands-on behavioral UX research remains pending and separate. V2-D0 remains blocked on the remaining visual decisions, behavioral-research timing, an explicit Lose/Gain roadmap disposition, and approval of the reconciled complete baseline. No design revision code may be implemented before that baseline is approved. Wireframes do not authorize controls, destinations, data, or features outside the approved Version 2 scope.
 
 The executable sequence is defined in `V2_PLAN.md`:
 

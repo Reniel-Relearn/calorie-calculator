@@ -234,9 +234,9 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
-**Design program status:** BLOCKED — USER ACTION REQUIRED
+**Design program status:** BLOCKED — USER ACTION REQUIRED (VISUAL DECISIONS, BEHAVIORAL GATE, AND GOAL-SCOPE DISPOSITION)
 
-**Blocker:** Requires user's plan and mockups for design.
+**Blocker:** The written plan and low-fidelity structural baseline are prepared, and the current Lose It!, Apple Fitness, and Cronometer screenshot batch has completed visual-reference ingestion. The user must resolve the remaining visual questions, decide whether the pending hands-on Lose It! walkthrough must precede D0 closeout, and decide whether Lose/Gain remain a later-version evaluation or receive a separately planned V2 scientific/product phase. V2-D0 remains open.
 
 **Sequence rule:** V2-P8 and V2-P9 may proceed in their documented order. After V2-P9 is complete, stop at V2-D0. Do not begin visual revision work or V2-P10 until V2-D0 is cleared and V2-D1 through V2-D6 are complete.
 
@@ -246,7 +246,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D0 — User Design Plan and Mockup Approval Gate
 
-**Status:** BLOCKED — USER ACTION REQUIRED
+**Status:** BLOCKED — USER ACTION REQUIRED (VISUAL DECISIONS, BEHAVIORAL GATE, AND GOAL-SCOPE DISPOSITION)
 
 **Objective:** Establish the user-approved visual and interaction source of truth before any design revision code is written.
 
@@ -254,7 +254,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 **Dependencies:** V2-P9 and V2-S0 complete on staging; current signed-in flows and states available for review.
 
-**Required user inputs:** A written design plan covering goals, desired visual character, information hierarchy, navigation model, branding/assets, motion preferences, and required constraints; approved mobile mockups for authentication, onboarding, Today/home with calculator, successful result and save state, weekly history, settings, log editing/deletion, account deletion confirmation, and representative loading/empty/error states; and either larger-screen mockups or clear responsive notes for tablet and desktop.
+**Required user inputs:** The user supplied and approved the written architecture/design choices and a ten-artifact visual reference batch on 2026-11-02. Screenshot-based D0-C ingestion is complete and the low-fidelity structural baseline is provisionally accepted. The user must resolve the visual questions in `V2_DESIGN_REFERENCES.md`, decide whether the pending behavioral walkthrough is required before D0 closeout, and disposition Lose/Gain as either a later-version evaluation or a separately planned V2 scientific/product phase. Explicit approval of the complete D0 baseline remains required.
 
 **Exact review scope:** Inventory the supplied artifacts; map every mockup to an implemented route, state, or component; identify missing states, inaccessible interactions, behavior conflicts, and proposed scope additions; document the responsive interpretation and any approved departure from the existing V1 visual reference; return unresolved decisions to the user before implementation.
 
@@ -262,11 +262,11 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 **Required tests:** Documentation completeness and traceability review; route/state coverage check; mobile-first, accessibility, scope, and technical-feasibility review; confirmation that mockups do not contradict security, privacy, scientific, nutrition, or data-history requirements.
 
-**Acceptance criteria:** The design plan and mockups are present; every current V2 journey has an approved direction or documented reuse rule; responsive intent is defined; conflicts and missing states are resolved; the user explicitly approves the reviewed design baseline.
+**Acceptance criteria:** The design plan and complete reference batch are present and interpreted; every current V2 journey has an approved direction or documented reuse rule; responsive intent is defined; goal-scope wording is consistent with the accepted product roadmap; conflicts and missing states are resolved; and the user explicitly approves the reviewed complete design baseline.
 
 **Documentation updates:** Record artifact locations, approval date, interpretation notes, resolved conflicts, exclusions, and the authorization for V2-D1.
 
-**External/user actions:** Supply the plan and mockups, answer identified design questions, and explicitly approve the resulting baseline. Do not share credentials, personal data, or production secrets in design artifacts.
+**External/user actions:** Resolve the documented visual questions, confirm whether behavioral UX research must precede D0 closeout, confirm the Lose/Gain roadmap disposition, then review `V2_DESIGN_REFERENCES.md` and `V2_DESIGN_WIREFRAMES.md` and explicitly approve or request changes to the complete baseline.
 
 **Stop conditions:** The plan or mockups are missing, incomplete, internally contradictory, inaccessible by design, outside V2 scope, or not explicitly approved.
 
