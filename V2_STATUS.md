@@ -1,9 +1,9 @@
 # CalorieCheck Version 2 — Operational Status
 
 **Current Version:** V2
-**Current Phase:** V2-D0 — User Design Plan and Mockup Approval Gate
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0 approval)
+**Current Phase:** V2-F1 — Candidate Inventory and Source Verification
+**Current Phase Status:** BLOCKED — SOURCE-USE PERMISSION REQUIRED
+**Next Phase:** V2-F2 — Catalog Architecture and Validation Foundation (blocked by V2-F1 source-use resolution)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -19,6 +19,28 @@
 - V2-P8 — Weekly Dashboard and History — completed 2026-10-07
 - V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — completed 2026-10-07
 - V2-S0 — Public Exposure Security Hardening — completed 2026-10-21
+- V2-F0 — Filipino-First Catalog Scope and Plan — approved 2026-11-02
+
+## V2-F0 Planning Evidence
+
+- The user authorized a planning-only Filipino-first catalog expansion on 2026-11-02.
+- The proposed program is documented in `V2_FOOD_CATALOG_PLAN.md` and uses one branch, `feature/v2-filipino-catalog-expansion`, and one draft pull request.
+- The proposed final catalog range is 60–100 total records, including the existing 11, with a target of 80.
+- The catalog remains a curated local **Demo nutrition dataset**; production nutrition APIs, branded products, restaurant menus, and invented nutrition values remain excluded.
+- V2-F0 changes documentation only. No food record, nutrition value, alias, conversion, parser, matcher, calculator, UI, database, or provider configuration is changed.
+- The user approved the plan on 2026-11-02 and authorized V2-F1 research. V2-F1 must stop for review of an exact source matrix before any new food record is written.
+
+## V2-F1 Research Evidence
+
+- `V2_FOOD_SOURCE_MATRIX.md` proposes exactly 80 total records: 11 current records retained unchanged and 69 new direct PhilFCT candidates.
+- The final proposed allocation is 13 staples/rice/bread/noodle records, 19 protein/fish/egg/tofu records, 20 prepared Filipino foods, 15 fruits/vegetables, and 13 breakfast/snack/dessert/drink records.
+- Official PhilFCT pages were checked on 2026-11-02 for exact food IDs, descriptions, preparations, edible-portion basis, and the seven required nutrient fields.
+- Sixty-three proposed new records report all seven required nutrients. Six have explicit source-unavailable fields that must remain `null`.
+- The reviewed PhilFCT records provide a 100 g edible-portion basis but no reliable household weight for these candidates. Every proposed new record is therefore grams-only.
+- Seventeen popular foods, including generic adobo, sinigang, tinola, nilaga, menudo, sisig, laing, pinakbet, and cooked lumpiang Shanghai, remain blocked because no direct generic prepared-food record was verified.
+- PhilFCT is officially free to access and supports printable food reports, but DOST-FNRI states that the database is copyrighted and no public redistribution license was found. Source use must be clarified before values are committed.
+- The user approved the updated source matrix for planning on 2026-11-02. Its supplemental client-priority table preserves all requests without authorizing branded/restaurant scope or adding application data.
+- No application food record, nutrition value, parser, matcher, serving conversion, calculator, UI, database, or provider configuration was changed during V2-F1 research.
 
 ## V2-P9 Completion Evidence
 
@@ -59,24 +81,32 @@
 
 ## Current Blockers
 
-V2-S0 has no remaining implementation or provider blocker. The next blocker is external design input for V2-D0:
+The immediate blocker is written DOST-FNRI reuse clarification for reproducing selected PhilFCT data in the public repository/deployment, or approval to replace affected candidates with separately verified permissively licensed authoritative sources.
+
+The existing external design blocker remains queued after the catalog program:
 
 **Blocker: Requires user's plan and mockups for design.**
 
-The user must supply the written design plan, approved mobile mockups for the required signed-out and authenticated journeys, representative loading/empty/error states, and responsive direction for tablet and desktop. Do not begin V2-D1 or later design implementation until the V2-D0 baseline is reviewed and explicitly approved.
+The user must supply the written design plan, approved mobile mockups for the required signed-out and authenticated journeys, representative loading/empty/error states, and responsive direction for tablet and desktop. Do not begin V2-D1 or later design implementation until V2-F5 is complete and the V2-D0 baseline is reviewed and explicitly approved.
 
-## Design Program Sequence
+## Active Program Sequence
 
 1. V2-S0 — Public Exposure Security Hardening — **DONE**
-2. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-3. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
-4. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
-5. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
-6. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
-7. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
-8. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
+2. V2-F0 — Filipino-First Catalog Scope and Plan — **DONE**
+3. V2-F1 — Candidate Inventory and Source Verification — **BLOCKED — SOURCE-USE PERMISSION REQUIRED**
+4. V2-F2 — Catalog Architecture and Validation Foundation — blocked by V2-F1
+5. V2-F3 — Curated Food Batches — blocked by V2-F2
+6. V2-F4 — Matching, Ambiguity, and Serving Verification — blocked by V2-F3
+7. V2-F5 — Integrated Verification and Staging Approval — blocked by V2-F4
+8. V2-D0 — User Design Plan and Mockup Approval Gate — blocked by V2-F5 and user design input
+9. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
+10. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
+11. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
+12. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
+13. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
+14. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
 
-V2-P10 cannot begin until V2-D0 through V2-D6 are complete and the revised interface passes staging review.
+V2-P10 cannot begin until V2-F0 through V2-F5 and V2-D0 through V2-D6 are complete and the revised interface passes staging review.
 
 ## Local Development Port Note
 
@@ -84,4 +114,4 @@ Windows reserved the former default Supabase local port range. The repository's 
 
 ## Next Intended Action
 
-Wait for the user's written design plan and approved mockups required by V2-D0. Review those artifacts and resolve missing states, accessibility conflicts, responsive behavior, and scope questions before authorizing V2-D1. Do not begin design implementation or V2-P10 early.
+Wait for DOST-FNRI resolution of the PhilFCT source-use question. Planning may move to the separate design branch at the user's direction, but do not begin V2-F2, add catalog records, copy nutrition values, implement the design revision, or start V2-P10 early.
