@@ -629,6 +629,33 @@ Use `update_profile_settings` for atomic canonical profile and target-history ch
 
 V2-S0 adds enforced response headers and CSP, Turnstile-aware Auth requests, a fail-closed remote configuration, exact-origin and bounded account deletion, a five-attempt/15-minute migration-backed throttle, bounded dashboard retrieval, automated audit/secret/security tests, Dependabot, CodeQL, private vulnerability reporting, and provider/incident runbooks. Human dashboard actions and controlled staging checks remain completion blockers.
 
+## R-028 — V2-G0 Lose/Gain methodology recheck
+
+**Status:** OPEN — METHODOLOGY REVIEW REQUIRED 2026-11-03
+
+**Authoritative and primary sources**
+
+- National Academies, [Dietary Reference Intakes for Energy, Chapter 5](https://www.nationalacademies.org/read/26818/chapter/7).
+- CDC, [Adult BMI Categories](https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html), [BMI FAQ](https://www.cdc.gov/bmi/faq/), and [Steps for Losing Weight](https://www.cdc.gov/healthy-weight-growth/losing-weight/).
+- NIDDK, [Research Behind the Body Weight Planner](https://www.niddk.nih.gov/research-funding/at-niddk/labs-branches/laboratory-biological-modeling/integrative-physiology-section/research/body-weight-planner), [Dynamic Mathematical Model appendix](https://www.niddk.nih.gov/-/media/Files/BWP/Hall_Lancet_Web_Appendix.pdf), and [Body Weight Simulator licensing record](https://www.niddk.nih.gov/research-funding/technology-advancement-transfer/research-materials-licensing/body-weight-simulator-java-applet).
+- Hall et al., [Quantification of the effect of energy imbalance on bodyweight](https://pmc.ncbi.nlm.nih.gov/articles/PMC3880593/) (2011).
+- NHS, [Healthy ways to gain weight](https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/healthy-ways-to-gain-weight/) (supporting consumer guidance, not a model specification).
+
+**Finding**
+
+- Keep the verified National Academies EER as the explicit maintenance baseline.
+- BMI is a screening calculation and may provide neutral current/goal context; it is not a calorie-target equation or diagnosis.
+- General gradual-loss and gradual-gain guidance can inform warnings, but fixed deficit/surplus rules do not model changing energy expenditure and are insufficient as CalorieCheck's personalized engine.
+- The published Hall adult model is the strongest current Lose candidate because it models dynamic adaptation and supports goal/timeframe planning.
+- NIDDK limits its planner information to adults and excludes pregnancy and breastfeeding. CalorieCheck must retain those eligibility boundaries unless a different approved source expands them.
+- The official simulator has a technology-transfer/licensing record. An implementation must be original, must not copy the NIDDK application, and requires a documented licensing position plus independently reproduced outputs.
+- Positive energy imbalance exists in the published dynamics, but reviewed official validation and consumer guidance do not yet provide enough independent Gain acceptance vectors. Gain needs its own gate and may remain unavailable even if Lose proceeds.
+- The Filipino-first audience creates a BMI-display policy question because some Asian-risk guidance uses additional/lower action points. The application must not infer ethnicity or silently present a population-specific threshold as a diagnosis.
+
+**Implementation consequence**
+
+Use `V2_LOSE_GAIN_TARGET_PLAN.md` as the V2-G0 review artifact. Do not change production logic until its model, licensing, input, activity/recalculation, BMI, safety, and separate Gain decisions are approved. Do not copy prototype sample values into tests or production.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -643,4 +670,5 @@ V2-S0 adds enforced response headers and CSP, Turnstile-aware Auth requests, a f
 | V2-P8 | Inclusive date-range querying, fixed Monday/Sunday boundaries, average denominator policy, and a complete accessible weekly representation |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-S0 | Auth/CAPTCHA rate controls, Edge Function CORS and throttling, Vercel/GitHub free security controls, CSP, dependency and secret scanning |
+| V2-G0 | Dynamic-model equations and licensing boundary, independent Lose/Gain vectors, BMI policy, input domains, activity/recalculation assumptions, safety floors and pace limits |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

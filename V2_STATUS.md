@@ -1,9 +1,9 @@
 # CalorieCheck Version 2 — Operational Status
 
 **Current Version:** V2
-**Current Phase:** V2-D0 — User Design Plan and Mockup Approval Gate
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0 approval)
+**Current Phase:** V2-G0 — Lose/Gain Scientific Methodology and Safety Gate
+**Current Phase Status:** BLOCKED — METHODOLOGY REVIEW REQUIRED; PRODUCTION LOGIC UNCHANGED
+**Next Phase:** V2-G1 — Pure Weight-Target Engine and Validation (blocked by V2-G0 approval)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -19,6 +19,7 @@
 - V2-P8 — Weekly Dashboard and History — completed 2026-10-07
 - V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — completed 2026-10-07
 - V2-S0 — Public Exposure Security Hardening — completed 2026-10-21
+- V2-D0 — User Design Plan and Mockup Approval Gate — completed 2026-11-03
 
 ## V2-P9 Completion Evidence
 
@@ -57,24 +58,45 @@
 - The user confirmed Part 17 passed on 2026-10-21: signup, email confirmation, login, recovery, private-data isolation, successful account deletion, sixth-attempt throttling, mobile behavior, and desktop behavior all passed on the public origin with Turnstile enabled.
 - The user approved the V2-S0 closeout, commit 5, protected pull-request merge, production verification, and synchronization of `main` on 2026-10-21.
 
+## V2-D0 Completion Evidence
+
+- The user explicitly approved the isolated prototype visually on 2026-11-03.
+- The approved baseline covers authentication, progressive onboarding, Today, Analyze, Week, Settings, destructive actions, complete loading/empty/error states, four-destination navigation, and responsive transformation.
+- The prototype includes Maintain/Lose/Gain concepts, goal weight/date inputs, BMI context, and Today goal presentation while clearly labeling Lose/Gain calorie values as illustrative design content.
+- The optional hands-on Lose It! behavioral walkthrough is deferred; the project does not infer or copy hidden reference-app behavior.
+- The user authorized a separate V2-G0 scientific/product plan before any production Lose/Gain target logic.
+- No production runtime, database, provider, security, or deployed target behavior changed during D0.
+
 ## Current Blockers
 
-V2-S0 has no remaining implementation or provider blocker. The next blocker is external design input for V2-D0:
+V2-S0 and V2-D0 have no remaining blockers. V2-G0 is blocked on methodology review:
 
-**Blocker: Requires user's plan and mockups for design.**
+- `V2_DESIGN_REVISION_AUDIT.md` records repository, architecture, branch, security, catalog, and stack findings.
+- `V2_DESIGN_REVISION_PLAN_PROPOSAL.md` records the user-approved planning sequence and stable boundaries.
+- `V2_DESIGN_REFERENCES.md` inventories and interprets all ten current Lose It!, Apple Fitness, and Cronometer artifacts. Screenshot-based visual research is complete; optional behavioral research is deferred and no hidden behavior is inferred.
+- `V2_DESIGN_WIREFRAMES.md` and the isolated prototype cover the approved complete baseline.
+- `V2_LOSE_GAIN_TARGET_PLAN.md` records the dynamic-model candidate, evidence boundary, separate Gain gate, required inputs, unresolved safeguards, persistence contract, architecture boundaries, execution stages, and verification matrix.
+- V2-ADR-011 and the V2-P4 gate remain authoritative for production until V2-G0 approves a replacement or amendment.
+- No production HTML, CSS, JavaScript, dependency, database, provider, or deployment change was made.
 
-The user must supply the written design plan, approved mobile mockups for the required signed-out and authenticated journeys, representative loading/empty/error states, and responsive direction for tablet and desktop. Do not begin V2-D1 or later design implementation until the V2-D0 baseline is reviewed and explicitly approved.
+**Prototype checkpoint:** On 2026-11-03, the user visually approved the complete isolated sample-data browser prototype under `prototypes/v2-ui/`. It exposes the planned Today, Analyze, Week, Settings, account, onboarding, destructive-action, system-state, mobile-navigation, and responsive-desktop inventory. The goal review shows selectable Maintain/Lose/Gain concepts, goal weight/date inputs, calculated BMI context, a Today goal card, and clearly labeled illustrative Lose/Gain calorie content. It does not import or modify production services, application state, food data, Supabase, security, or authoritative target logic.
+
+**Blockers:** Review and approve or revise the seven V2-G0 methodology decisions: Lose model candidate, separate Gain evidence, activity assumption, recalculation/weigh-in policy, BMI policy, safety thresholds, and release sequence. Do not begin V2-G1, a migration, RPC changes, or production UI integration until this review is complete.
 
 ## Design Program Sequence
 
 1. V2-S0 — Public Exposure Security Hardening — **DONE**
-2. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-3. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
-4. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
-5. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
-6. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
-7. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
-8. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
+2. V2-D0 — User Design Plan and Mockup Approval Gate — **DONE — APPROVED 2026-11-03**
+3. V2-G0 — Lose/Gain Scientific Methodology and Safety Gate — **BLOCKED — METHODOLOGY REVIEW REQUIRED**
+4. V2-G1 — Pure Weight-Target Engine and Validation — blocked by V2-G0
+5. V2-G2 — Weight-Goal Data Contracts and Private Migration — blocked by V2-G1
+6. V2-G3 — Weight-Goal Application Integration — blocked by V2-G2
+7. V2-D1 — Interface Audit and Design Traceability — blocked by V2-G3
+8. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D1
+9. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D2
+10. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D3
+11. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D4
+12. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D5
 
 V2-P10 cannot begin until V2-D0 through V2-D6 are complete and the revised interface passes staging review.
 
@@ -84,4 +106,4 @@ Windows reserved the former default Supabase local port range. The repository's 
 
 ## Next Intended Action
 
-Wait for the user's written design plan and approved mockups required by V2-D0. Review those artifacts and resolve missing states, accessibility conflicts, responsive behavior, and scope questions before authorizing V2-D1. Do not begin design implementation or V2-P10 early.
+Have the user review `V2_LOSE_GAIN_TARGET_PLAN.md`, especially section 12, and approve or revise the proposed methodology decisions. Keep production Maintain-only and do not begin V2-G1 until that review is explicit.
