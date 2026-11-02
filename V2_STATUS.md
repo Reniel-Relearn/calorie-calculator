@@ -1,9 +1,9 @@
 # CalorieCheck Version 2 — Operational Status
 
 **Current Version:** V2
-**Current Phase:** V2-F0 — Filipino-First Catalog Scope and Plan
-**Current Phase Status:** BLOCKED — USER PLAN REVIEW REQUIRED
-**Next Phase:** V2-F1 — Candidate Inventory and Source Verification (blocked by V2-F0 approval)
+**Current Phase:** V2-F1 — Candidate Inventory and Source Verification
+**Current Phase Status:** BLOCKED — SOURCE-USE PERMISSION REQUIRED
+**Next Phase:** V2-F2 — Catalog Architecture and Validation Foundation (blocked by V2-F1 source-use resolution)
 **Overall V2 Status:** IN PROGRESS
 
 ## Completed Phases
@@ -19,6 +19,7 @@
 - V2-P8 — Weekly Dashboard and History — completed 2026-10-07
 - V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — completed 2026-10-07
 - V2-S0 — Public Exposure Security Hardening — completed 2026-10-21
+- V2-F0 — Filipino-First Catalog Scope and Plan — approved 2026-11-02
 
 ## V2-F0 Planning Evidence
 
@@ -27,7 +28,19 @@
 - The proposed final catalog range is 60–100 total records, including the existing 11, with a target of 80.
 - The catalog remains a curated local **Demo nutrition dataset**; production nutrition APIs, branded products, restaurant menus, and invented nutrition values remain excluded.
 - V2-F0 changes documentation only. No food record, nutrition value, alias, conversion, parser, matcher, calculator, UI, database, or provider configuration is changed.
-- V2-F1 may begin only after the user approves the plan. V2-F1 must stop for review of an exact source matrix before any new food record is written.
+- The user approved the plan on 2026-11-02 and authorized V2-F1 research. V2-F1 must stop for review of an exact source matrix before any new food record is written.
+
+## V2-F1 Research Evidence
+
+- `V2_FOOD_SOURCE_MATRIX.md` proposes exactly 80 total records: 11 current records retained unchanged and 69 new direct PhilFCT candidates.
+- The final proposed allocation is 13 staples/rice/bread/noodle records, 19 protein/fish/egg/tofu records, 20 prepared Filipino foods, 15 fruits/vegetables, and 13 breakfast/snack/dessert/drink records.
+- Official PhilFCT pages were checked on 2026-11-02 for exact food IDs, descriptions, preparations, edible-portion basis, and the seven required nutrient fields.
+- Sixty-three proposed new records report all seven required nutrients. Six have explicit source-unavailable fields that must remain `null`.
+- The reviewed PhilFCT records provide a 100 g edible-portion basis but no reliable household weight for these candidates. Every proposed new record is therefore grams-only.
+- Seventeen popular foods, including generic adobo, sinigang, tinola, nilaga, menudo, sisig, laing, pinakbet, and cooked lumpiang Shanghai, remain blocked because no direct generic prepared-food record was verified.
+- PhilFCT is officially free to access and supports printable food reports, but DOST-FNRI states that the database is copyrighted and no public redistribution license was found. Source use must be clarified before values are committed.
+- The user approved the updated source matrix for planning on 2026-11-02. Its supplemental client-priority table preserves all requests without authorizing branded/restaurant scope or adding application data.
+- No application food record, nutrition value, parser, matcher, serving conversion, calculator, UI, database, or provider configuration was changed during V2-F1 research.
 
 ## V2-P9 Completion Evidence
 
@@ -68,7 +81,7 @@
 
 ## Current Blockers
 
-The immediate blocker is review of the proposed V2 Filipino-first catalog plan. The user must approve the total-count interpretation, target count, source policy, category allocation, architecture direction, phase sequence, and exclusions before V2-F1 begins.
+The immediate blocker is written DOST-FNRI reuse clarification for reproducing selected PhilFCT data in the public repository/deployment, or approval to replace affected candidates with separately verified permissively licensed authoritative sources.
 
 The existing external design blocker remains queued after the catalog program:
 
@@ -79,8 +92,8 @@ The user must supply the written design plan, approved mobile mockups for the re
 ## Active Program Sequence
 
 1. V2-S0 — Public Exposure Security Hardening — **DONE**
-2. V2-F0 — Filipino-First Catalog Scope and Plan — **BLOCKED — USER PLAN REVIEW REQUIRED**
-3. V2-F1 — Candidate Inventory and Source Verification — blocked by V2-F0
+2. V2-F0 — Filipino-First Catalog Scope and Plan — **DONE**
+3. V2-F1 — Candidate Inventory and Source Verification — **BLOCKED — SOURCE-USE PERMISSION REQUIRED**
 4. V2-F2 — Catalog Architecture and Validation Foundation — blocked by V2-F1
 5. V2-F3 — Curated Food Batches — blocked by V2-F2
 6. V2-F4 — Matching, Ambiguity, and Serving Verification — blocked by V2-F3
@@ -101,4 +114,4 @@ Windows reserved the former default Supabase local port range. The repository's 
 
 ## Next Intended Action
 
-Wait for user review of `V2_FOOD_CATALOG_PLAN.md`. If approved, begin only V2-F1: research and document the exact candidate inventory and source matrix, then stop for source-matrix review before adding food records. Do not begin V2-F2, add catalog records, implement the design revision, or start V2-P10 early.
+Wait for DOST-FNRI resolution of the PhilFCT source-use question. Planning may move to the separate design branch at the user's direction, but do not begin V2-F2, add catalog records, copy nutrition values, implement the design revision, or start V2-P10 early.

@@ -258,7 +258,7 @@ Mobile navigation must keep these destinations reachable with comfortable touch 
 
 V2-P8, V2-P9, and V2-S0 are complete. The project must complete the bounded V2-F0 through V2-F5 catalog program, then V2-D0 through V2-D6, before beginning V2-P10 security hardening.
 
-The catalog program is currently blocked on user review of `V2_FOOD_CATALOG_PLAN.md`. V2-F1 may research and document candidates only after approval, and it must stop for source-matrix review before any new food record is written.
+The V2-F0 plan and updated V2-F1 source matrix are approved for planning. V2-F1 remains blocked on clarification of PhilFCT redistribution permission. No new food record or nutrient value may be written until that gate is resolved.
 
 After V2-F5, the design program remains blocked on this required external input:
 

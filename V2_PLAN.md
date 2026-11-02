@@ -238,15 +238,15 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 The user authorized V2-F0 planning on 2026-11-02 so the public calculator can gain a bounded, Filipino-first catalog before the interface revision. The executable specification is [V2_FOOD_CATALOG_PLAN.md](V2_FOOD_CATALOG_PLAN.md).
 
-**Catalog program status:** BLOCKED — USER PLAN REVIEW REQUIRED
+**Catalog program status:** BLOCKED — SOURCE-USE PERMISSION REQUIRED
 
-**Immediate blocker:** The proposed total range, target count, source policy, category allocation, architecture direction, phase sequence, and exclusions require explicit approval before source research begins.
+**Immediate blocker:** The updated source matrix is approved for planning. Clarify permission to redistribute selected PhilFCT data before application records are written.
 
 **Sequence rule:** Complete V2-F0 through V2-F5 before V2-D0. V2-F1 produces a verified source matrix and stops for review before any new food record is written. The catalog remains a local **Demo nutrition dataset**; production nutrition search, branded products, restaurant menus, custom recipes, and invented values remain outside Version 2.
 
 ### V2-F0 — Filipino-First Catalog Scope and Plan
 
-**Status:** BLOCKED — USER PLAN REVIEW REQUIRED
+**Status:** DONE — APPROVED 2026-11-02
 
 **Objective:** Define a safe, traceable expansion from 11 records to 60–100 total records, with a target of 80, without changing application data or behavior.
 
@@ -256,9 +256,15 @@ The user authorized V2-F0 planning on 2026-11-02 so the public calculator can ga
 
 ### V2-F1 — Candidate Inventory and Source Verification
 
-**Status:** NOT STARTED — BLOCKED BY V2-F0
+**Status:** BLOCKED — SOURCE-USE PERMISSION REQUIRED
 
 **Objective:** Produce the exact proposed food inventory and source matrix using current authoritative references, then stop for user review before writing application data.
+
+**Research result:** `V2_FOOD_SOURCE_MATRIX.md` proposes 80 total records: 11 retained and 69 direct PhilFCT candidates. Sixty-three new candidates report all seven required nutrients; six preserve one or three unavailable fields as `null`. Every new record remains grams-only. Common dishes without a direct preparation match remain blocked.
+
+**Source-use finding:** PhilFCT is free to access and supports printable reports, but DOST-FNRI states that the web database is copyrighted and no public redistribution license was found. Written reuse clarification or an approved permissively licensed replacement is required before nutrient values are committed.
+
+**Review gate:** The user approved the updated inventory, partial-data policy, grams-only scope, and supplemental client-priority review table on 2026-11-02. The supplemental branded and restaurant requests do not amend the existing exclusions. The source-use question remains unresolved; do not begin V2-F2 or add application food records while this gate is open.
 
 ### V2-F2 — Catalog Architecture and Validation Foundation
 
@@ -613,8 +619,8 @@ The user authorized V2-F0 planning on 2026-11-02 so the public calculator can ga
 9. V2-P8 — Weekly Dashboard and History — **DONE**
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — **DONE**
 11. V2-S0 — Public Exposure Security Hardening — **DONE**
-12. V2-F0 — Filipino-First Catalog Scope and Plan — **BLOCKED — USER PLAN REVIEW REQUIRED**
-13. V2-F1 — Candidate Inventory and Source Verification
+12. V2-F0 — Filipino-First Catalog Scope and Plan — **DONE**
+13. V2-F1 — Candidate Inventory and Source Verification — **BLOCKED — SOURCE-USE PERMISSION REQUIRED**
 14. V2-F2 — Catalog Architecture and Validation Foundation
 15. V2-F3 — Curated Food Batches
 16. V2-F4 — Matching, Ambiguity, and Serving Verification

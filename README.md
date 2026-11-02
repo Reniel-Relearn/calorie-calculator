@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-F0 now proposes a bounded Filipino-first expansion of the local demo catalog and is stopped for plan review before any food record is added. V2-D0 remains blocked on the user's written design plan and approved mockups after the catalog program.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-F0 is approved. The V2-F1 Filipino-first source matrix is approved for planning, but food-data implementation remains blocked pending clarification of PhilFCT reuse permission. V2-D0 remains blocked on the user's written design plan and approved mockups after the catalog program.
 
 Version 2 planning and operational documents:
 
@@ -20,6 +20,7 @@ Version 2 planning and operational documents:
 - [Architecture decisions](V2_DECISIONS.md)
 - [Research record](V2_RESEARCH.md)
 - [Filipino-first catalog expansion plan](V2_FOOD_CATALOG_PLAN.md)
+- [Filipino-first candidate and source matrix](V2_FOOD_SOURCE_MATRIX.md)
 
 ## Core Functionality
 
@@ -68,7 +69,7 @@ Nine records use mass references in grams. Whole Milk and Orange Juice use volum
 
 Nutrition values are stored locally with provenance from sources including USDA FoodData Central and the DOST-FNRI Philippine Food Composition Table. The interface identifies the catalog as a **Demo nutrition dataset** because it is a curated local subset rather than a live production nutrition service.
 
-The current application still contains these 11 records. V2-F0 proposes expanding the catalog to 60–100 total Filipino-first records, with a target of 80, but implementation has not started and remains subject to plan and source-matrix review.
+The current application still contains these 11 records. The approved V2-F0 plan targets 80 total records, and the V2-F1 source matrix is approved for planning, but implementation has not started and remains subject to source-use permission.
 
 ## Run Locally
 

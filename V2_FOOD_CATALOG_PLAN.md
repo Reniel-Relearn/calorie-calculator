@@ -1,12 +1,14 @@
 # CalorieCheck V2 Filipino-First Food Catalog Expansion Plan
 
-**Status:** PROPOSED - USER REVIEW REQUIRED
+**Status:** ACTIVE — V2-F1 SOURCE-USE PERMISSION REQUIRED
 
 **Created:** 2026-11-02
 
 **Planning authorization:** Approved 2026-11-02
 
-**Implementation authorization:** Not granted; stop after the V2-F0 draft pull request
+**V2-F1 research authorization:** Approved 2026-11-02
+
+**Data implementation authorization:** Not granted; stop before V2-F2 and before adding food records
 
 **Branch:** `feature/v2-filipino-catalog-expansion`
 
@@ -138,7 +140,7 @@ The expanded catalog receives a new dataset version. Previously saved food logs 
 
 ### V2-F0 - Scope and Catalog Plan
 
-**Current status:** BLOCKED - USER PLAN REVIEW REQUIRED
+**Status:** DONE — APPROVED 2026-11-02
 
 Deliver this plan, synchronize the V2 roadmap documents, push the planning commit, and open one draft pull request. Add no food records.
 
@@ -146,9 +148,13 @@ Acceptance requires explicit user approval of the total-count interpretation, so
 
 ### V2-F1 - Candidate Inventory and Source Verification
 
+**Current status:** BLOCKED — SOURCE-USE PERMISSION REQUIRED
+
 Build the exact proposed food inventory and a source matrix. Research current authoritative sources and usage terms. Record exact IDs, descriptions, reference bases, nutrient availability, preparation matches, conversion evidence, and blocked candidates.
 
-No candidate becomes application data until its source row passes review. Stop for user review of the verified inventory before V2-F2.
+The proposed 80-record inventory, nutrient-availability results, serving limitations, alias risks, blocked foods, supplemental client-priority requests, and source-use finding are recorded in `V2_FOOD_SOURCE_MATRIX.md`. The user approved the updated matrix for planning on 2026-11-02. Supplemental branded and restaurant requests remain review-only and do not authorize a scope amendment or application records.
+
+No candidate becomes application data until its source row passes review. The matrix review is approved, but V2-F1 remains blocked pending clarification of PhilFCT reuse permission before V2-F2.
 
 ### V2-F2 - Catalog Architecture and Validation Foundation
 
@@ -247,7 +253,7 @@ Stop and return for user review when:
 
 ## 13. Plan Review Checklist
 
-Before V2-F1, the user must confirm:
+The V2-F0 checklist below was approved on 2026-11-02:
 
 - 60-100 means total records, including the existing 11;
 - target count is 80;
@@ -261,3 +267,5 @@ Before V2-F1, the user must confirm:
 Approval command after reviewing this plan:
 
 > **Approve the V2 Filipino catalog plan. Proceed with V2-F1 candidate inventory and source verification. Stop for source-matrix review before adding food records.**
+
+The current review decisions and source-use blocker are maintained in `V2_FOOD_SOURCE_MATRIX.md`.

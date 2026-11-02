@@ -629,6 +629,31 @@ Use `update_profile_settings` for atomic canonical profile and target-history ch
 
 V2-S0 adds enforced response headers and CSP, Turnstile-aware Auth requests, a fail-closed remote configuration, exact-origin and bounded account deletion, a five-attempt/15-minute migration-backed throttle, bounded dashboard retrieval, automated audit/secret/security tests, Dependabot, CodeQL, private vulnerability reporting, and provider/incident runbooks. Human dashboard actions and controlled staging checks remain completion blockers.
 
+## Filipino-First Catalog Source Verification — V2-F1
+
+**Research date:** 2026-11-02
+
+**Primary sources reviewed**
+
+- DOST-FNRI, [Philippine Food Composition Table library](https://i.fnri.dost.gov.ph/fct/library) and official category pages A, B, C, D, E, F, G, H, M, and R.
+- DOST-FNRI, [PhilFCT information and contact page](https://i.fnri.dost.gov.ph/login/fct).
+- DOST-FNRI, [Integrated Management and Enhancement of the PhilFCT Online Database](https://www.fnri.dost.gov.ph/images/sources/SeminarSeries/43rd/FCT.pdf).
+- USDA, [FoodData Central API Guide and licensing](https://fdc.nal.usda.gov/api-guide/).
+- USDA, [FoodData Central data-type documentation](https://fdc.nal.usda.gov/data-documentation/).
+
+**Findings**
+
+- The official PhilFCT library provides free online access to nutrient data for about 1,600 commonly consumed foods and exposes stable food IDs, official descriptions, alternate names, edible portions, and nutrient reports per 100 g edible portion.
+- Sixty-nine direct PhilFCT candidates can expand the current 11 records to exactly 80 without treating a similar ingredient, preparation, canned food, or raw food as equivalent.
+- Sixty-three candidates report all seven required Version 2 nutrients. Six have explicit unavailable fields; those fields must remain `null` rather than becoming zero.
+- The reviewed pages do not establish reliable piece, cup, bowl, stick, plate, or generic serving weights for the selected candidates. New records must begin with grams only.
+- Common dishes such as generic adobo, sinigang, tinola, nilaga, menudo, sisig, laing, and pinakbet lack a verified direct generic prepared-food match in the reviewed source. Canned or ingredient records are not acceptable substitutes.
+- USDA FoodData Central publishes its data under CC0 1.0. PhilFCT is free to access and individual reports are printable, but DOST-FNRI reports that copyright for the web database was granted to FNRI in 2016. No public redistribution license was found.
+
+**Implementation consequence**
+
+`V2_FOOD_SOURCE_MATRIX.md` records the exact proposed inventory, nutrient availability, grams-only scope, aliases, ambiguity risks, and blocked foods. No new nutrient values may be copied into application data until the user approves the matrix and DOST-FNRI confirms reuse permission, or the affected candidates are replaced with exact authoritative sources whose reuse terms are compatible with the public repository and deployment.
+
 ## Research Gates by Phase
 
 | Phase | Required recheck |
@@ -643,4 +668,5 @@ V2-S0 adds enforced response headers and CSP, Turnstile-aware Auth requests, a f
 | V2-P8 | Inclusive date-range querying, fixed Monday/Sunday boundaries, average denominator policy, and a complete accessible weekly representation |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-S0 | Auth/CAPTCHA rate controls, Edge Function CORS and throttling, Vercel/GitHub free security controls, CSP, dependency and secret scanning |
+| V2-F1 | Exact food identity/preparation, required nutrient availability, serving evidence, source traceability, and reuse terms |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

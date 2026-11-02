@@ -194,7 +194,7 @@ The authoritative scope and implementation sequence are maintained in:
 - `V2_RESEARCH.md`
 - `V2_FOOD_CATALOG_PLAN.md`
 
-V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified on staging. V2-F0 is stopped for review of the proposed Filipino-first catalog plan; no new food records have been added. After V2-F0 approval, the catalog program proceeds through V2-F5 with a mandatory source-matrix review before data implementation. The interface revision remains blocked at V2-D0 until the catalog program is complete and the user supplies and approves the written design plan, mobile mockups, representative non-happy states, and responsive direction. V2-P10 remains the complete post-design security regression.
+V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified on staging. V2-F0 and the V2-F1 source matrix are approved for planning. V2-F1 remains blocked on clarification of PhilFCT reuse permission; no new food records have been added. The interface revision remains blocked at V2-D0 until the catalog program is complete and the user supplies and approves the written design plan, mobile mockups, representative non-happy states, and responsive direction. V2-P10 remains the complete post-design security regression.
 
 ---
 
