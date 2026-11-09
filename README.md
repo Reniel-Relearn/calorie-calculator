@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval of the complete isolated prototype on 2026-11-03. The active V2-G0 gate now plans and reviews Lose/Gain science, safety, licensing, data, and validation; production remains Maintain-only until later goal phases pass.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval on 2026-11-03. V2-G0 now authorizes Maintain plus adult NASEM directional Lose/Gain starting estimates; G1 through G3 pass local unit, database/RLS, lint, browser, build, and security verification. The reviewed staging migration is applied and a protected preview is ready, while authenticated staging verification remains pending.
 
 Version 2 planning and operational documents:
 

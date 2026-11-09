@@ -150,9 +150,9 @@ The product labels the result **Estimated Daily Calorie Target**, **Estimated En
 
 ### Weight change
 
-No fixed `±500 kcal` rule is permitted. Goal-specific loss and gain targets require a coherent dynamic model, justified inputs, bounds, validation vectors, and user-facing limitations.
+No generic fixed `±500 kcal` rule is permitted. The NIH/NIDDK Body Weight Planner and Hall model remain excluded because their input, numerical, and licensing boundaries do not match Version 2.
 
-The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in V2-P4. That gate did not produce a supportable implementation: required inputs and numerical behavior exceeded the accepted profile model, the official implementation has a technology-transfer licensing path, and independent consumer target vectors were insufficient, particularly for intentional gain. Production therefore continues returning an explicit unavailable outcome for `LOSE` and `GAIN` and never fills the gap with an invented surplus or deficit. On 2026-11-03, the product owner authorized V2-G0 through V2-G3 to evaluate and, only after approval, implement a separately validated method under `V2_LOSE_GAIN_TARGET_PLAN.md`.
+V2-ADR-032 instead adopts the explicit NASEM 2023 Chapter 7 adult directional starting method. Maintain uses the existing raw EER from age 18. From age 19, Lose uses raw `EER − 1.96 × adult SEPV` and Gain uses raw `EER + 1.96 × adult SEPV`, with SEPV `342 kcal/day` for the male equation and `241 kcal/day` for the female equation. These are starting estimates, not predictions. Version 2 collects no goal weight, goal date, desired rate, or forecast inputs.
 
 ### Eligibility and life stages
 
@@ -167,12 +167,12 @@ The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in
 The user chooses one of the product goal concepts:
 
 - `MAINTAIN`: the accepted maintenance estimate;
-- `LOSE`: intended Version 2 direction, currently production-unavailable pending V2-G0 methodology approval and later implementation gates;
-- `GAIN`: intended Version 2 direction, currently production-unavailable pending its separate positive-energy evidence gate and later implementation gates.
+- `LOSE`: age 19+ directional starting estimate using raw EER minus `1.96 × adult SEPV`, subject to safety gates;
+- `GAIN`: age 19+ directional starting estimate using raw EER plus `1.96 × adult SEPV`, subject to safety gates.
 
 “Healthy” or “general wellness” may appear as neutral context or guidance. It is not a fourth formula and does not alter the calorie result.
 
-Goal weight and goal date are approved prototype concepts but are not yet production inputs. V2-G0 must approve their exact semantics, activity/recalculation assumptions, safety rules, and model before V2-G2 adds them to the private contract. No rate may be inferred silently.
+Goal weight, goal date, and desired rate are excluded from the Version 2 production contract. No rate may be inferred silently. Targets recalculate only after the user explicitly saves a target-affecting profile change.
 
 ## 11. Calculator Integration
 
@@ -258,10 +258,10 @@ The V2-D0 written design plan, architecture choices, ten-artifact visual-referen
 The executable sequence is defined in `V2_PLAN.md`:
 
 1. V2-D0 — approve the user plan, wireframes, and prototype — complete;
-2. V2-G0 — approve Lose/Gain methodology and safety;
-3. V2-G1 — implement and validate the pure weight-target engine;
-4. V2-G2 — extend private data contracts and migration;
-5. V2-G3 — integrate calculations with application services and target history;
+2. V2-G0 — approve Lose/Gain methodology and safety — complete;
+3. V2-G1 — implement and validate the pure weight-target engine — implemented locally;
+4. V2-G2 — extend private data contracts and migration — implemented locally, database verification pending;
+5. V2-G3 — integrate calculations with application services and target history — implemented locally, staging verification pending;
 6. V2-D1 — audit existing states and create design traceability;
 7. V2-D2 — implement visual foundations and shared components;
 8. V2-D3 — revise the mobile app shell and navigation;
@@ -418,8 +418,8 @@ Version 2 is complete only when:
 - The source equations use male/female sex categories and do not provide other coefficients.
 - The 18-year-old branch differs from the 19+ adult equation and requires explicit boundary tests.
 - Pregnancy and breastfeeding targets are excluded.
-- Production `LOSE` remains unavailable until V2-G0 approves a method and V2-G1 through V2-G3 pass.
-- Production `GAIN` remains unavailable until its separate positive-energy evidence, licensing, safety, and validation gates pass; it may remain unavailable even if Lose proceeds.
+- Deployment of production `LOSE` and `GAIN` remains pending until the additive migration and application integration pass local database and staging verification.
+- Licensed-professional review is outstanding and recommended but is not a product-owner release prerequisite. CalorieCheck claims neither clinical validation nor professional endorsement.
 - The app cannot decide which goal is appropriate for a user.
 - The nutrition catalog remains a small curated demo subset.
 - Logged totals are only as complete as the selected food and its reported nutrient fields.

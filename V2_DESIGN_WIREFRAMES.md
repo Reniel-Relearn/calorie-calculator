@@ -234,10 +234,10 @@ Step rules:
 | 1 — Personal information | Display name, date of birth, source-equation sex category | Explain age eligibility and that the categories select published coefficients rather than collect gender identity |
 | 2 — Body measurements | Height in cm, weight in kg | Canonical units remain authoritative; no invented health interpretation |
 | 3 — Activity level | Inactive, Low active, Active, Very active | Explain approximation and show plain-language descriptions |
-| 4 — Goal and local day | Select Maintain, Lose, or Gain; Lose/Gain reveal goal weight and goal date; show current/goal BMI context; timezone suggestion/correction; non-persistent eligibility confirmation | Prototype sample values are never production recommendations. BMI is screening context, not the calorie formula. No arbitrary deficit/surplus; no persistence of pregnancy/breastfeeding status |
-| 5 — Review estimate | Review inputs, maintenance estimate, goal-specific estimate when approved, weight/BMI direction, goal date, methodology/source, assumptions, warnings, and Edit actions | Maintain may use the existing atomic save. Lose/Gain remain production-unavailable until V2-G0 through V2-G3 pass; the final implementation must use the same atomic history contract |
+| 4 — Goal and local day | Select Maintain, Lose, or Gain; show the applicable age and safety context; timezone suggestion/correction; non-persistent eligibility confirmations | BMI is safety-screening context, not the calorie formula. Do not collect goal weight, goal date, or desired rate; do not persist pregnancy/breastfeeding or directional-safety confirmations. |
+| 5 — Review estimate | Review inputs, maintenance estimate, approved directional starting estimate when applicable, methodology/source, assumptions, warnings, and Edit actions | All goals use the same atomic effective-history contract. Directional values never promise a rate or date. |
 
-The prototype goal-screen direction is approved, but availability remains truthful by environment: all three concepts may be reviewed in the isolated prototype, while production stays Maintain-only until V2-G0 through V2-G3 pass. Prototype values such as 1,750 or 2,300 kcal are visual examples, never calculation fixtures.
+The prototype goal-screen direction is approved. V2-ADR-032 subsequently authorized real adult directional starting estimates, while goal weight/date and prototype sample figures remain excluded from the production contract. G2/G3 database and staging verification still gate deployment.
 
 ### 6.3 Final review
 

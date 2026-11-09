@@ -631,7 +631,7 @@ V2-S0 adds enforced response headers and CSP, Turnstile-aware Auth requests, a f
 
 ## R-028 — V2-G0 Lose/Gain methodology recheck
 
-**Status:** OPEN — METHODOLOGY REVIEW REQUIRED 2026-11-03
+**Status:** SUPERSEDED BY R-029 AND V2-ADR-032 ON 2026-11-03
 
 **Authoritative and primary sources**
 
@@ -654,7 +654,34 @@ V2-S0 adds enforced response headers and CSP, Turnstile-aware Auth requests, a f
 
 **Implementation consequence**
 
-Use `V2_LOSE_GAIN_TARGET_PLAN.md` as the V2-G0 review artifact. Do not change production logic until its model, licensing, input, activity/recalculation, BMI, safety, and separate Gain decisions are approved. Do not copy prototype sample values into tests or production.
+This was the earlier research position before the two repository reports under `assets/reference/v2-goal-methodology/` identified the explicit NASEM Chapter 7 adult directional method. The Hall-model and licensing analysis remains useful history, but it is no longer the selected V2 implementation path. Prototype sample values remain prohibited as test or production evidence.
+
+## R-029 — NASEM adult directional targets and safety contract
+
+**Status:** REVIEWED — PRODUCT METHOD AUTHORIZED 2026-11-03; PROFESSIONAL REVIEW OUTSTANDING
+
+**Primary evidence**
+
+- National Academies of Sciences, Engineering, and Medicine, *Dietary Reference Intakes for Energy* (2023), Chapter 7, “Individuals Seeking to Lose or Gain Weight,” and Table 5-8. DOI: `10.17226/26818`.
+- `assets/reference/v2-goal-methodology/CALORIECHECK_WEIGHT_CHANGE_METHOD_RESEARCH.md`.
+- `assets/reference/v2-goal-methodology/CALORIECHECK_DIRECTIONAL_TARGET_SAFETY_RESEARCH.md`.
+- NIDDK Diabetes Prevention Program low-intake guidance, NICE weight-management and nutrition-support guidance, and CDC adult BMI screening context as registered in the source reports.
+
+**Finding**
+
+- NASEM explicitly uses `EER − 1.96 × SEPV` and `EER + 1.96 × SEPV` as adult starting intakes for people seeking weight loss or gain.
+- Adult SEPV is `342 kcal/day` for the male equation and `241 kcal/day` for the female equation, producing displacements of `670.32` and `472.36 kcal/day`.
+- These are directional starting estimates, not predictions of a change rate, goal date, or body composition.
+- Version 2 can use the existing EER inputs and does not need goal weight, goal date, desired rate, Hall-model simulation, or copied NIDDK implementation code.
+- Age 18–18.99 remains Maintain-only; directional goals start at age 19.
+- BMI is a safety screen only. Lose is unavailable below BMI `18.5`; both directional goals are unavailable below BMI `16` or when known risk circumstances are reported.
+- A calculated Lose target below `1,200 kcal/day` is unavailable and is never clamped. This is a conservative CalorieCheck product policy, not a NASEM formula requirement or universal biological floor.
+- The application cannot medically screen users. Non-persistent confirmations and referral language distinguish known inputs from unscreened circumstances.
+- Raw calculation precision is retained internally and presentation rounding remains a UI concern.
+
+**Governance consequence**
+
+The product owner explicitly authorized implementation without treating licensed-professional signoff as a release gate. Professional review remains recommended and outstanding. No clinical validation or professional endorsement is claimed. V2-ADR-032 and `V2_LOSE_GAIN_TARGET_PLAN.md` are the controlling decision and execution artifacts.
 
 ## Research Gates by Phase
 
@@ -670,5 +697,5 @@ Use `V2_LOSE_GAIN_TARGET_PLAN.md` as the V2-G0 review artifact. Do not change pr
 | V2-P8 | Inclusive date-range querying, fixed Monday/Sunday boundaries, average denominator policy, and a complete accessible weekly representation |
 | V2-P9 | Current reauthentication and admin deletion guidance |
 | V2-S0 | Auth/CAPTCHA rate controls, Edge Function CORS and throttling, Vercel/GitHub free security controls, CSP, dependency and secret scanning |
-| V2-G0 | Dynamic-model equations and licensing boundary, independent Lose/Gain vectors, BMI policy, input domains, activity/recalculation assumptions, safety floors and pace limits |
+| V2-G0 | NASEM Chapter 7 directional method, adult SEPV constants, BMI/referral policy, low-intake boundary, raw precision, non-forecasting scope, and professional-review status |
 | V2-P12 | Current provider plan limits, production SMTP, domain/DNS/HTTPS, exact redirects, backup/operational settings |

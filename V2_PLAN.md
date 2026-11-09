@@ -234,11 +234,11 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
-**Design program status:** APPROVED — V2-D0 CLOSED 2026-11-03; V2-G0 METHODOLOGY REVIEW ACTIVE BEFORE PRODUCTION INTEGRATION
+**Design program status:** APPROVED — V2-D0 CLOSED 2026-11-03; V2-G0 APPROVED; V2-G1–G3 LOCALLY VERIFIED; STAGING MIGRATION APPLIED; AUTHENTICATED STAGING VERIFICATION BLOCKED BY SUPABASE DASHBOARD MFA ACCESS
 
 **Disposition:** The user visually approved the complete isolated prototype on 2026-11-03 and authorized a separate V2 Lose/Gain scientific/product phase. The screenshot-derived visual baseline may proceed without waiting for a hands-on Lose It! walkthrough; that behavioral research is deferred and cannot retroactively imply copied behavior. Production design integration remains sequenced after the active V2-G0 methodology gate and its approved implementation stages.
 
-**Sequence rule:** V2-D0 is complete. Stop at V2-G0 for methodology review before changing production target logic. After approved V2-G0 through V2-G3 work, proceed through V2-D1 to V2-D6. Do not begin V2-P10 until the goal and design programs are complete and verified.
+**Sequence rule:** V2-D0 and V2-G0 are complete. G1 through G3 are implemented locally and the reviewed migration is applied to staging, but G3 remains open until authenticated staging verification passes. Then proceed through V2-D1 to V2-D6. Do not begin V2-P10 until the goal and design programs are complete and verified.
 
 **Purpose:** Revise the complete implemented V2 experience as one coherent mobile-first application after its principal screens and workflows exist, while leaving enough time for security, accessibility, browser, staging, and production verification against the settled interface.
 
@@ -278,7 +278,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-G0 — Lose/Gain Scientific Methodology and Safety Gate
 
-**Status:** BLOCKED — METHODOLOGY REVIEW REQUIRED
+**Status:** DONE — PRODUCT METHOD AUTHORIZED 2026-11-03
 
 **Objective:** Approve a scientifically defensible, legally implementable, testable adult Lose/Gain target method before any production target logic changes.
 
@@ -286,13 +286,13 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 **Executable specification:** `V2_LOSE_GAIN_TARGET_PLAN.md`.
 
-**Exact scope:** Review the published Hall dynamic-model candidate, implementation/licensing boundary, separate Lose and Gain evidence, required inputs, activity and recalculation assumptions, BMI policy, calorie floor, pace/timeframe rules, unsupported medical/life-stage domains, structured outcomes, and independent validation vectors.
+**Exact scope:** Approve the NASEM Chapter 7 adult `EER ± 1.96 × SEPV` directional method, adult SEPV constants, age domain, BMI/referral policy, CalorieCheck low-intake boundary, raw precision, recalculation policy, unsupported circumstances, structured outcomes, and validation vectors.
 
 **Explicit non-goals:** No production code, migration, RPC, UI integration, copied NIDDK implementation, fixed deficit/surplus, or prototype constant promoted to production.
 
 **Acceptance criteria:** The product owner approves the method candidate and all blocking safety/input policies; the licensing boundary is documented; independent Lose vectors exist; Gain has separate approved vectors or remains explicitly unavailable; G1 receives an exact numerical specification.
 
-**External/user actions:** Review the seven decisions in `V2_LOSE_GAIN_TARGET_PLAN.md` section 12. Obtain professional/legal review if required for health-safety wording or equation implementation rights.
+**External/user actions:** Complete. The product owner authorized the method and explicitly made licensed-professional review an outstanding recommendation rather than a release prerequisite.
 
 **Recommended commit message:** `Plan V2 Lose and Gain target methodology`
 
@@ -300,13 +300,13 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-G1 — Pure Weight-Target Engine and Validation
 
-**Status:** NOT STARTED — BLOCKED BY V2-G0
+**Status:** DONE LOCALLY — AUTOMATED JAVASCRIPT TESTS PASS
 
 **Objective:** Implement and independently validate the approved pure numerical model while preserving the verified maintenance engine.
 
 **Dependencies:** V2-G0 methodology, input domains, safety thresholds, reference vectors, and licensing position approved.
 
-**Exact scope:** Implement the approved weight-change model and BMI helper in separate modules; add canonical validation, convergence/failure handling, structured outcomes, reproducibility metadata, warnings, deterministic fixtures, and tolerance-based comparisons. Keep unapproved goals/domains unavailable.
+**Exact scope:** Implement the approved directional target calculation and BMI helper; add canonical validation, structured outcomes, reproducibility metadata, warnings, deterministic fixtures, and boundary comparisons. Keep unsupported goals/domains unavailable.
 
 **Explicit non-goals:** No DOM, Supabase, migration, persistence, UI redesign, network calculator, fixed adjustment, or automatic medical advice.
 
@@ -318,13 +318,13 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-G2 — Weight-Goal Data Contracts and Private Migration
 
-**Status:** NOT STARTED — BLOCKED BY V2-G1
+**Status:** STAGING MIGRATION APPLIED — CLEAN RESET, 189 PGTAP TESTS, LOCAL/REMOTE LEDGER MATCH, AND REMOTE LINT PASS
 
 **Objective:** Extend private profile and effective target history for the approved goal inputs and method metadata without weakening ownership or historical integrity.
 
 **Dependencies:** V2-G1 complete and output contract frozen.
 
-**Exact scope:** Finalize `goal_weight_kg`, `goal_date`, optional compact model snapshot, goal-dependent constraints, method/version allow-listing, atomic RPC updates, grants, RLS preservation, rollback, effective-history behavior, pgTAP coverage, reset, and schema lint. Stop for reviewed migration approval before applying remotely.
+**Exact scope:** Preserve the minimized profile without goal weight/date/rate fields; add the versioned directional snapshot, method allow-listing, raw target precision, atomic RPC validation, grants, RLS preservation, rollback, effective-history behavior, pgTAP coverage, reset, and schema lint. Stop for reviewed migration approval before applying remotely.
 
 **Explicit non-goals:** No remote migration without review, public write path, client-controlled owner, history rewrite, weigh-in feature, or production visual integration.
 
@@ -336,7 +336,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-G3 — Weight-Goal Application Integration
 
-**Status:** NOT STARTED — BLOCKED BY V2-G2
+**Status:** BLOCKED — PREVIEW READY; ENHANCED LOCAL BROWSER INTEGRATION PASSED; AUTHENTICATED STAGING VERIFICATION REQUIRES RESTORED SUPABASE DASHBOARD MFA ACCESS
 
 **Objective:** Connect approved goal calculations to profile/settings controllers and services while leaving visual redesign ownership to V2-D1 through V2-D6.
 
@@ -344,7 +344,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 **Exact scope:** Extend canonical validation, orchestration, commands, service mappings, atomic persistence, session restoration, target-history retrieval, and safe error/unavailable outcomes. Add unit, controller, service, browser, and staging verification without copying prototype values.
 
-**Explicit non-goals:** No final visual redesign, automatic background recalculation, periodic weigh-ins, nutrition-source change, or unsupported Gain activation.
+**Explicit non-goals:** No unrelated visual redesign, automatic background recalculation, periodic weigh-ins, goal date/rate, forecasting, or nutrition-source change.
 
 **Acceptance criteria:** Approved goals calculate and persist atomically; unavailable goals remain explicit; retries and rollback are safe; historical Today/Week resolution remains correct; staging owner isolation passes.
 
@@ -354,7 +354,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D1 — Interface Audit and Design Traceability
 
-**Status:** NOT STARTED — BLOCKED BY V2-G0 THROUGH V2-G3
+**Status:** NOT STARTED — BLOCKED BY V2-G2/G3 VERIFICATION
 
 **Objective:** Turn the approved design baseline into an implementation-ready inventory and gap map without changing runtime code.
 
@@ -640,10 +640,10 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 10. V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — **DONE**
 11. V2-S0 — Public Exposure Security Hardening — **DONE**
 12. V2-D0 — User Design Plan and Mockup Approval Gate — **DONE — APPROVED 2026-11-03**
-13. V2-G0 — Lose/Gain Scientific Methodology and Safety Gate — **BLOCKED — METHODOLOGY REVIEW REQUIRED**
-14. V2-G1 — Pure Weight-Target Engine and Validation
-15. V2-G2 — Weight-Goal Data Contracts and Private Migration
-16. V2-G3 — Weight-Goal Application Integration
+13. V2-G0 — Lose/Gain Scientific Methodology and Safety Gate — **DONE — APPROVED 2026-11-03**
+14. V2-G1 — Pure Weight-Target Engine and Validation — **DONE LOCALLY**
+15. V2-G2 — Weight-Goal Data Contracts and Private Migration — **STAGING MIGRATION APPLIED; REMOTE LEDGER/LINT VERIFIED**
+16. V2-G3 — Weight-Goal Application Integration — **PREVIEW READY; AUTHENTICATED STAGING VERIFICATION PENDING**
 17. V2-D1 — Interface Audit and Design Traceability
 18. V2-D2 — Visual Foundations and Shared Components
 19. V2-D3 — Mobile App Shell and Navigation Revision

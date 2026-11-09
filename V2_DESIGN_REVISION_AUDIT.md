@@ -18,7 +18,7 @@ The approved workflow is now:
 
 1. retain the visually approved isolated prototype as the design source of truth;
 2. keep optional hands-on behavioral research deferred and never infer hidden reference-app behavior;
-3. preserve Maintain-only production behavior during V2-G0 methodology review;
+3. preserve the verified target engine and integrate only the V2-ADR-032 approved directional method;
 4. complete the approved V2-G0 through V2-G3 goal program without copying prototype sample values;
 5. execute V2-D1 through V2-D6 in small tested slices; and
 6. preserve V2-P10 as the post-redesign security and regression gate.
@@ -134,7 +134,7 @@ The redesign must preserve:
 
 - Version 1 calculation and serving behavior;
 - the curated demo-data disclosure and source provenance;
-- maintain-only V2 calorie targets; Lose and Gain remain unavailable;
+- V2 calorie targets with Maintain plus the V2-ADR-032 adult directional Lose/Gain contract;
 - private user data, RLS, captured log snapshots, and effective-dated target history;
 - explicit logging rather than automatic logging;
 - neutral remaining/above-target language;
@@ -497,9 +497,9 @@ The user resolved R1–R8 and D1–D5 on 2026-11-02:
 
 ## 17. Maintain/Lose/Gain scope audit
 
-### A. Was Maintain-only intentional?
+### A. Was Maintain-only intentional at the time of the D0 audit?
 
-Yes. Maintain-only was an intentional, evidence-gated Version 2 limitation approved on 2026-10-05. It was not introduced by the wireframe and is not merely disabled styling. The product recognizes `MAINTAIN`, `LOSE`, and `GAIN` as goal concepts, but only Maintain has an accepted calculation method and persistence path.
+Yes. Maintain-only was an intentional, evidence-gated Version 2 limitation approved on 2026-10-05. It was not introduced by the wireframe or merely disabled styling. That historical finding was later superseded by V2-ADR-032, which approved the NASEM adult directional method; deployment still depends on V2-G2/G3 verification.
 
 ### B. Which accepted decision established it?
 
@@ -538,7 +538,7 @@ This is product and scientific development, not visual styling.
 
 It does **not** belong inside V2-D0 or get smuggled into V2-D4 as styling work. On 2026-11-03, the product owner authorized a separate Version 2 scientific/product program, V2-G0 through V2-G3. That program must settle the method, safety policy, data contract, pure engine, migration, and application integration before the corresponding production onboarding/settings design is integrated.
 
-The approved prototype may show all three selectable concepts, goal weight/date, BMI context, and clearly labeled sample calorie content. Production remains Maintain-only until the V2-G gates pass.
+The approved prototype may show all three selectable concepts and BMI safety context, but goal weight/date and sample calorie figures are not production inputs or fixtures. V2-ADR-032 now controls the target method, and deployment remains gated on V2-G2/G3 database and staging verification.
 
 ## 18. Risks
 
