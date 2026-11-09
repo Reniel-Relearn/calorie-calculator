@@ -14,7 +14,7 @@ exception when others then
 end;
 $$;
 
-select plan(15);
+select plan(19);
 
 insert into auth.users (id, email) values
   ('70000000-0000-0000-0000-000000000001', 'settings-a@example.test'),
@@ -65,6 +65,20 @@ select is((select count(*)::integer from public.calorie_targets where user_id = 
 select ok((select effective_to is not null from public.calorie_targets where id = '71000000-0000-0000-0000-000000000001'), 'prior target is closed');
 select is((select target_kcal from public.calorie_targets where user_id = '70000000-0000-0000-0000-000000000001' and effective_to is null), 2150.00::numeric, 'new target is current');
 
+select lives_ok(
+  $$select public.update_profile_settings(
+    'Renamed A', '1990-01-01', 'female', 165, 64,
+    'active', 'lose', 'UTC',
+    2150, 1677.64, 'nasem-dri-energy-2023-directional-sepv', '1.0.0',
+    '{"ageYears":36,"sexForEnergyEquation":"female","heightCm":165,"weightKg":64,"activityCategory":"active","goalType":"lose","directionalAdjustment":{"method":"prediction_interval_boundary","sepvKcal":241,"multiplier":1.96,"adjustmentKcal":472.36,"direction":"subtract","safetyPolicyVersion":"1.0.0"}}',
+    '[]', '[]'
+  )$$,
+  'settings can atomically create an eligible directional target'
+);
+select is((select goal_type from public.profiles where user_id = '70000000-0000-0000-0000-000000000001'), 'lose', 'settings stores the directional profile goal');
+select is((select count(*)::integer from public.calorie_targets where user_id = '70000000-0000-0000-0000-000000000001'), 3, 'directional change appends target history');
+select is((select target_kcal from public.calorie_targets where user_id = '70000000-0000-0000-0000-000000000001' and effective_to is null), 1677.64::numeric, 'directional target becomes current');
+
 select is(
   pg_temp.sqlstate_for($$select public.update_profile_settings(
     'Broken', '1990-01-01', 'female', 165, 65,
@@ -77,7 +91,7 @@ select is(
   'invalid target metadata rejects the full settings update'
 );
 select is((select weight_kg from public.profiles where user_id = '70000000-0000-0000-0000-000000000001'), 64.00::numeric, 'failed atomic update leaves profile unchanged');
-select is((select count(*)::integer from public.calorie_targets where user_id = '70000000-0000-0000-0000-000000000001'), 2, 'failed atomic update creates no target');
+select is((select count(*)::integer from public.calorie_targets where user_id = '70000000-0000-0000-0000-000000000001'), 3, 'failed atomic update creates no target');
 
 reset role;
 select is((select display_name from public.profiles where user_id = '70000000-0000-0000-0000-000000000002'), 'Settings B', 'another user profile is unchanged');
