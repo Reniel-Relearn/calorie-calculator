@@ -574,6 +574,57 @@ async function run() {
       "Target-affecting settings update did not complete.",
       15_000,
     );
+    const maintenanceTarget = Number(
+      await page.evaluate(
+        "document.querySelector('#profile-home-target').textContent.replaceAll(',', '')",
+      ),
+    );
+
+    await click(page, "#settings-open");
+    assert.equal(
+      await page.evaluate(
+        "document.querySelector('#settings-panel > section:last-of-type').classList.contains('settings-estimate-disclaimer')",
+      ),
+      true,
+    );
+    await click(page, "#settings-goal-lose");
+    await click(page, "#settings-life-stage-confirmation");
+    await click(page, "#settings-directional-safety-confirmation");
+    await click(page, "#settings-profile-submit");
+    await page.waitFor(
+      "document.querySelector('#settings-panel').hidden && document.querySelector('#profile-home-goal').textContent === 'Lose Weight'",
+      "Eligible Lose settings did not create a directional target.",
+      15_000,
+    );
+    const loseTarget = Number(
+      await page.evaluate(
+        "document.querySelector('#profile-home-target').textContent.replaceAll(',', '')",
+      ),
+    );
+    assert.equal(loseTarget < maintenanceTarget, true);
+
+    await click(page, "#settings-open");
+    assert.equal(
+      await page.evaluate(
+        "!document.querySelector('#settings-life-stage-confirmation').checked && !document.querySelector('#settings-directional-safety-confirmation').checked",
+      ),
+      true,
+    );
+    await click(page, "#settings-goal-gain");
+    await click(page, "#settings-life-stage-confirmation");
+    await click(page, "#settings-directional-safety-confirmation");
+    await click(page, "#settings-profile-submit");
+    await page.waitFor(
+      "document.querySelector('#settings-panel').hidden && document.querySelector('#profile-home-goal').textContent === 'Gain Weight'",
+      "Eligible Gain settings did not create a directional target.",
+      15_000,
+    );
+    const gainTarget = Number(
+      await page.evaluate(
+        "document.querySelector('#profile-home-target').textContent.replaceAll(',', '')",
+      ),
+    );
+    assert.equal(gainTarget > maintenanceTarget, true);
 
     await setForm(page, { "#food-query": "1 cup cooked white rice" });
     await click(page, "#analyze-food-button");
@@ -854,7 +905,7 @@ async function run() {
     await waitForVisible(page, "#auth-error");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
 
-    console.log("Local integration passed: signup, confirmation, onboarding, profile/target settings, captured-snapshot log edit/delete, daily and weekly refresh, protected account deletion, session restoration, password recovery, and bad-link handling.");
+    console.log("Local integration passed: signup, confirmation, onboarding, Maintain/Lose/Gain target settings, captured-snapshot log edit/delete, daily and weekly refresh, protected account deletion, session restoration, password recovery, and bad-link handling.");
   } finally {
     await page.close();
   }

@@ -276,7 +276,7 @@
               <span class="profile-step" aria-hidden="true">4</span>
               <div>
                 <h2 id="profile-goal-heading">Calorie goal</h2>
-                <p>Version 2 currently provides an estimated maintenance target.</p>
+                <p>Choose a maintenance estimate or a directional starting estimate for weight change.</p>
               </div>
             </div>
             <fieldset class="profile-choice-group profile-choice-group--flush">
@@ -285,10 +285,14 @@
                 <input id="profile-goal-maintain" name="goalType" type="radio" value="maintain" checked required>
                 <span><strong>Maintain</strong><small>Estimate energy needed to maintain current weight and activity</small></span>
               </label>
-              <ul class="profile-unavailable-list" aria-label="Unavailable goals">
-                <li><strong>Lose</strong><span>Unavailable in Version 2</span></li>
-                <li><strong>Gain</strong><span>Unavailable in Version 2</span></li>
-              </ul>
+              <label class="profile-choice" for="profile-goal-lose">
+                <input id="profile-goal-lose" name="goalType" type="radio" value="lose" required>
+                <span><strong>Lose Weight</strong><small>Starting estimate below maintenance; available from age 19 with safety checks</small></span>
+              </label>
+              <label class="profile-choice" for="profile-goal-gain">
+                <input id="profile-goal-gain" name="goalType" type="radio" value="gain" required>
+                <span><strong>Gain Weight</strong><small>Starting estimate above maintenance; available from age 19 with safety checks</small></span>
+              </label>
             </fieldset>
           </section>
 
@@ -321,6 +325,12 @@
               <span>I confirm this estimate is not for pregnancy or breastfeeding.</span>
             </label>
             <p class="field-help" id="profile-life-stage-help">Version 2 does not support those life-stage equations. This confirmation is used now and is not stored.</p>
+
+            <label class="profile-confirmation" for="profile-directional-safety-confirmation">
+              <input id="profile-directional-safety-confirmation" name="directionalSafetyEligibilityConfirmed" type="checkbox" aria-describedby="profile-directional-safety-help profile-form-error">
+              <span>For Lose or Gain, I confirm I do not have known circumstances that require supervised nutrition care, including a history of disordered eating, recent unintended weight loss, or known refeeding risk.</span>
+            </label>
+            <p class="field-help" id="profile-directional-safety-help">Required only for Lose or Gain. CalorieCheck does not medically screen or store this confirmation. If any circumstance applies or you are unsure, seek qualified guidance.</p>
           </section>
 
           <aside class="profile-privacy-note" aria-labelledby="profile-privacy-heading">
@@ -352,10 +362,11 @@
         </div>
         <article class="target-summary" aria-labelledby="target-summary-heading">
           <div>
-            <p class="target-summary__label" id="target-summary-heading">Estimated maintenance calories</p>
+            <p class="target-summary__label" id="target-summary-heading">Estimated daily calories</p>
             <p class="target-summary__value"><strong id="profile-home-target">—</strong> <span>kcal/day</span></p>
           </div>
           <dl class="target-summary__details">
+            <div><dt>Goal</dt><dd id="profile-home-goal">—</dd></div>
             <div><dt>Activity</dt><dd id="profile-home-activity">—</dd></div>
             <div><dt>Method</dt><dd id="profile-home-method">—</dd></div>
             <div><dt>Target history</dt><dd id="profile-home-effective">—</dd></div>
@@ -425,7 +436,9 @@
 
             <fieldset class="settings-choice-group">
               <legend>Calorie goal</legend>
-              <label class="profile-choice" for="settings-goal-maintain"><input id="settings-goal-maintain" name="goalType" type="radio" value="maintain" required><span><strong>Maintain</strong><small>Lose and Gain remain unavailable in Version 2.</small></span></label>
+              <label class="profile-choice" for="settings-goal-maintain"><input id="settings-goal-maintain" name="goalType" type="radio" value="maintain" required><span><strong>Maintain</strong><small>Estimate energy needed to maintain current weight and activity.</small></span></label>
+              <label class="profile-choice" for="settings-goal-lose"><input id="settings-goal-lose" name="goalType" type="radio" value="lose" required><span><strong>Lose Weight</strong><small>Directional starting estimate below maintenance for eligible users age 19+.</small></span></label>
+              <label class="profile-choice" for="settings-goal-gain"><input id="settings-goal-gain" name="goalType" type="radio" value="gain" required><span><strong>Gain Weight</strong><small>Directional starting estimate above maintenance for eligible users age 19+.</small></span></label>
             </fieldset>
 
             <label class="profile-confirmation" for="settings-life-stage-confirmation">
@@ -433,6 +446,12 @@
               <span>I confirm this updated estimate is not for pregnancy or breastfeeding.</span>
             </label>
             <p class="field-help" id="settings-life-stage-help">Required when a change creates a new target. This confirmation is not stored.</p>
+
+            <label class="profile-confirmation" for="settings-directional-safety-confirmation">
+              <input id="settings-directional-safety-confirmation" name="directionalSafetyEligibilityConfirmed" type="checkbox" aria-describedby="settings-directional-safety-help settings-profile-error">
+              <span>For Lose or Gain, I confirm I do not have known circumstances that require supervised nutrition care, including a history of disordered eating, recent unintended weight loss, or known refeeding risk.</span>
+            </label>
+            <p class="field-help" id="settings-directional-safety-help">Required only when a new Lose or Gain target is created. CalorieCheck does not medically screen or store this confirmation.</p>
 
             <button class="button button--primary" id="settings-profile-submit" type="submit">Save Settings</button>
             <p class="settings-form__note">Changes to birth date, equation category, measurements, activity, goal, or timezone create a new effective target. Earlier target history remains unchanged.</p>
@@ -454,6 +473,15 @@
               <div class="auth-captcha" id="settings-delete-captcha" aria-label="Security verification"></div>
               <button class="button settings-danger__button" id="settings-delete-submit" type="submit">Permanently Delete Account</button>
             </form>
+          </section>
+
+          <section class="settings-estimate-disclaimer" aria-labelledby="settings-estimate-disclaimer-heading">
+            <h3 id="settings-estimate-disclaimer-heading">About calorie estimates</h3>
+            <p>CalorieCheck uses published energy-requirement research, including the 2023 National Academies Dietary Reference Intakes for Energy, to estimate daily calorie needs.</p>
+            <p>Lose Weight and Gain Weight use directional adjustments to these estimates. CalorieCheck's implementation and safety rules have not yet been independently reviewed or approved by a licensed nutrition or healthcare professional.</p>
+            <p>These values are starting estimates for general informational purposes, not medical advice. They do not guarantee weight loss or gain, or predict how quickly your weight will change.</p>
+            <p>Monitor your progress and update your profile weight to recalculate your estimate. Seek guidance from a qualified healthcare professional if you have medical or nutritional concerns, unintended weight loss, or a history of disordered eating.</p>
+            <p>Reference: National Academies of Sciences, Engineering, and Medicine (2023), <cite>Dietary Reference Intakes for Energy</cite>. DOI: <a href="https://doi.org/10.17226/26818" rel="noreferrer">10.17226/26818</a>.</p>
           </section>
         </section>
 

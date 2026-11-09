@@ -95,7 +95,7 @@ export function createProfileController({
       view.showHome(result.profile, result.target, {
         announcement: result.idempotent
           ? "Your profile was already saved."
-          : "Profile saved. Your maintenance estimate is ready.",
+          : "Profile saved. Your calorie estimate is ready.",
       });
     } finally {
       saving = false;
