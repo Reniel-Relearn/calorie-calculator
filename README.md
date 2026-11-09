@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 is now blocked on the user's written design plan and approved mockups before the V2-D1 through V2-D6 interface revision.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval on 2026-11-03. V2-G0 now authorizes Maintain plus adult NASEM directional Lose/Gain starting estimates; G1 through G3 pass local unit, database/RLS, lint, browser, build, and security verification. The reviewed staging migration is applied and a protected preview is ready, while authenticated staging verification remains pending.
 
 Version 2 planning and operational documents:
 
@@ -19,6 +19,11 @@ Version 2 planning and operational documents:
 - [Current status](V2_STATUS.md)
 - [Architecture decisions](V2_DECISIONS.md)
 - [Research record](V2_RESEARCH.md)
+- [Lose/Gain target methodology plan](V2_LOSE_GAIN_TARGET_PLAN.md)
+- [Design revision audit](V2_DESIGN_REVISION_AUDIT.md)
+- [Design revision plan](V2_DESIGN_REVISION_PLAN_PROPOSAL.md)
+- [Design reference register](V2_DESIGN_REFERENCES.md)
+- [Low-fidelity wireframe baseline](V2_DESIGN_WIREFRAMES.md)
 
 ## Core Functionality
 

@@ -5,6 +5,8 @@ const PROFILE_FIELD_IDS = Object.freeze({
   goalType: "settings-goal-maintain",
   heightCm: "settings-height-cm",
   lifeStageEligibilityConfirmed: "settings-life-stage-confirmation",
+  directionalSafetyEligibilityConfirmed:
+    "settings-directional-safety-confirmation",
   sexForEnergyEquation: "settings-equation-sex-female",
   timezoneName: "settings-timezone",
   weightKg: "settings-weight-kg",
@@ -30,6 +32,9 @@ function formValues(form) {
     goalType: data.get("goalType"),
     heightCm: data.get("heightCm"),
     lifeStageEligibilityConfirmed: data.has("lifeStageEligibilityConfirmed"),
+    directionalSafetyEligibilityConfirmed: data.has(
+      "directionalSafetyEligibilityConfirmed",
+    ),
     sexForEnergyEquation: data.get("sexForEnergyEquation"),
     timezoneName: data.get("timezoneName"),
     weightKg: data.get("weightKg"),
@@ -132,6 +137,7 @@ export function createSettingsView(handlers, captcha) {
       elements.profileForm.elements.weightKg.value = profile.weightKg;
       elements.profileForm.elements.timezoneName.value = profile.timezoneName;
       elements.profileForm.elements.lifeStageEligibilityConfirmed.checked = false;
+      elements.profileForm.elements.directionalSafetyEligibilityConfirmed.checked = false;
       setRadio(
         elements.profileForm,
         "sexForEnergyEquation",

@@ -41,7 +41,7 @@ as $$
   );
 $$;
 
-select plan(18);
+select plan(28);
 
 select ok(
   to_regprocedure('public.complete_profile_onboarding(text,date,text,numeric,numeric,text,text,text,numeric,numeric,text,text,jsonb,jsonb,jsonb)') is not null,
@@ -63,10 +63,19 @@ select ok(
   ),
   'anonymous users cannot execute atomic onboarding'
 );
+select ok(
+  not has_function_privilege(
+    'authenticated',
+    'public.validate_v2_energy_target_payload(date,date,text,numeric,numeric,text,text,numeric,numeric,text,text,jsonb,jsonb,jsonb)',
+    'execute'
+  ),
+  'clients cannot call the trusted target-payload validator directly'
+);
 
 insert into auth.users (id, email) values
   ('50000000-0000-0000-0000-000000000001', 'onboarding-a@example.test'),
-  ('50000000-0000-0000-0000-000000000002', 'onboarding-b@example.test');
+  ('50000000-0000-0000-0000-000000000002', 'onboarding-b@example.test'),
+  ('50000000-0000-0000-0000-000000000003', 'onboarding-c@example.test');
 
 set local role authenticated;
 select set_config(
@@ -127,6 +136,87 @@ select is(
 );
 select is((select count(*)::integer from public.profiles), 0, 'failed onboarding rolls back the profile insert');
 select is((select count(*)::integer from public.calorie_targets), 0, 'failed onboarding leaves no target');
+select is(
+  pg_temp.sqlstate_for($$select public.complete_profile_onboarding(
+    'Age Boundary', ((statement_timestamp() at time zone 'Asia/Manila')::date - interval '18 years')::date, 'female', 165, 63,
+    'low_active', 'gain', 'Asia/Manila', 2200, 2672.36,
+    'nasem-dri-energy-2023-directional-sepv', '1.0.0',
+    '{"ageYears":18,"sexForEnergyEquation":"female","heightCm":165,"weightKg":63,"activityCategory":"low_active","goalType":"gain","directionalAdjustment":{"method":"prediction_interval_boundary","sepvKcal":241,"multiplier":1.96,"adjustmentKcal":472.36,"direction":"add","safetyPolicyVersion":"1.0.0"}}',
+    '[]', '[]'
+  )$$),
+  '23514',
+  'database keeps age 18 directional targets unavailable'
+);
+select is(
+  pg_temp.sqlstate_for($$select public.complete_profile_onboarding(
+    'Underweight Lose', '1990-01-01', 'female', 180, 58,
+    'low_active', 'lose', 'Asia/Manila', 2000, 1527.64,
+    'nasem-dri-energy-2023-directional-sepv', '1.0.0',
+    '{"ageYears":36,"sexForEnergyEquation":"female","heightCm":180,"weightKg":58,"activityCategory":"low_active","goalType":"lose","directionalAdjustment":{"method":"prediction_interval_boundary","sepvKcal":241,"multiplier":1.96,"adjustmentKcal":472.36,"direction":"subtract","safetyPolicyVersion":"1.0.0"}}',
+    '[]', '[]'
+  )$$),
+  '23514',
+  'database blocks Lose below BMI 18.5'
+);
+select is(
+  pg_temp.sqlstate_for($$select public.complete_profile_onboarding(
+    'Severe Underweight Gain', '1990-01-01', 'female', 180, 50,
+    'low_active', 'gain', 'Asia/Manila', 2000, 2472.36,
+    'nasem-dri-energy-2023-directional-sepv', '1.0.0',
+    '{"ageYears":36,"sexForEnergyEquation":"female","heightCm":180,"weightKg":50,"activityCategory":"low_active","goalType":"gain","directionalAdjustment":{"method":"prediction_interval_boundary","sepvKcal":241,"multiplier":1.96,"adjustmentKcal":472.36,"direction":"add","safetyPolicyVersion":"1.0.0"}}',
+    '[]', '[]'
+  )$$),
+  '23514',
+  'database blocks directional targets below BMI 16'
+);
+select is(
+  pg_temp.sqlstate_for($$select public.complete_profile_onboarding(
+    'Low Intake Lose', '1990-01-01', 'female', 140, 37,
+    'inactive', 'lose', 'Asia/Manila', 1600, 1127.64,
+    'nasem-dri-energy-2023-directional-sepv', '1.0.0',
+    '{"ageYears":36,"sexForEnergyEquation":"female","heightCm":140,"weightKg":37,"activityCategory":"inactive","goalType":"lose","directionalAdjustment":{"method":"prediction_interval_boundary","sepvKcal":241,"multiplier":1.96,"adjustmentKcal":472.36,"direction":"subtract","safetyPolicyVersion":"1.0.0"}}',
+    '[]', '[]'
+  )$$),
+  '23514',
+  'database rejects a Lose target below the CalorieCheck safety boundary'
+);
+
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"50000000-0000-0000-0000-000000000003","role":"authenticated"}',
+  true
+);
+select lives_ok(
+  $$select public.complete_profile_onboarding(
+    'Directional User', '1990-01-01', 'female', 165, 63,
+    'low_active', 'gain', 'Asia/Manila', 2200, 2672.36,
+    'nasem-dri-energy-2023-directional-sepv', '1.0.0',
+    '{"ageYears":36,"sexForEnergyEquation":"female","heightCm":165,"weightKg":63,"activityCategory":"low_active","goalType":"gain","directionalAdjustment":{"method":"prediction_interval_boundary","sepvKcal":241,"multiplier":1.96,"adjustmentKcal":472.36,"direction":"add","safetyPolicyVersion":"1.0.0"}}',
+    '[]', '[]'
+  )$$,
+  'eligible adult can complete onboarding with a directional target'
+);
+select is((select goal_type from public.profiles), 'gain', 'directional goal is stored on the profile');
+select is(
+  (select methodology from public.calorie_targets),
+  'nasem-dri-energy-2023-directional-sepv',
+  'directional target stores the versioned methodology'
+);
+select ok(
+  not ((select input_snapshot from public.calorie_targets) ? 'directionalSafetyEligibilityConfirmed'),
+  'directional safety confirmation is not persisted'
+);
+select is(
+  pg_temp.sqlstate_for($$select public.complete_profile_onboarding(
+    'Directional User', '1990-01-01', 'female', 165, 63,
+    'low_active', 'gain', 'Asia/Manila', 2200, 2500,
+    'nasem-dri-energy-2023-directional-sepv', '1.0.0',
+    '{"ageYears":36,"sexForEnergyEquation":"female","heightCm":165,"weightKg":63,"activityCategory":"low_active","goalType":"gain","directionalAdjustment":{"method":"prediction_interval_boundary","sepvKcal":241,"multiplier":1.96,"adjustmentKcal":472.36,"direction":"add","safetyPolicyVersion":"1.0.0"}}',
+    '[]', '[]'
+  )$$),
+  '23514',
+  'database rejects forged directional target arithmetic'
+);
 
 reset role;
 set local role anon;

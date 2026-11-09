@@ -193,7 +193,7 @@ The authoritative scope and implementation sequence are maintained in:
 - `V2_DECISIONS.md`
 - `V2_RESEARCH.md`
 
-V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified on staging. The interface revision is now stopped at V2-D0 until the user supplies and approves the written design plan, mobile mockups, representative non-happy states, and responsive direction. After V2-D0 approval, the interface revision proceeds through V2-D1 to V2-D6. V2-P10 remains the complete post-design security regression and may not begin until the design program is complete and approved on staging.
+V2-P9 and V2-S0 Public Exposure Security Hardening are complete and verified. V2-D0 closed with explicit visual approval on 2026-11-03; optional behavioral reference research is deferred. V2-G0 approved the adult NASEM directional Lose/Gain starting method and safeguards. G1 through G3 pass local calculation, migration, database/RLS, schema-lint, browser, build, and security verification. The reviewed staging migration is applied and the protected preview is ready; authenticated staging verification remains pending. After that gate passes, the interface revision proceeds through V2-D1 to V2-D6. V2-P10 remains the complete post-design security regression and may not begin until both programs are complete and approved on staging.
 
 ---
 

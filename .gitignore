@@ -30,3 +30,8 @@ Thumbs.db
 # Codex/local working logs if created
 .codex-log/
 .vercel/
+
+# Local third-party UI reference screenshots (retain source links and analysis only)
+assets/reference/v2-ui/**/*.png
+assets/reference/v2-ui/**/*.jpg
+assets/reference/v2-ui/**/*.jpeg

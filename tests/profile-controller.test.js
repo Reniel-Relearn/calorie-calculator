@@ -14,6 +14,7 @@ function validValues(overrides = {}) {
     goalType: "maintain",
     timezoneName: "Asia/Manila",
     lifeStageEligibilityConfirmed: true,
+    directionalSafetyEligibilityConfirmed: true,
     ...overrides,
   };
 }
@@ -130,7 +131,7 @@ test("persists the profile and target as one command without eligibility status"
   assert.equal(view.calls.some(([name]) => name === "showHome"), true);
 });
 
-test("keeps unsupported goals and excluded life stages out of persistence", async () => {
+test("keeps invalid goals and excluded life stages out of persistence", async () => {
   const view = fakeView();
   let saves = 0;
   const controller = createProfileController({
@@ -147,7 +148,7 @@ test("keeps unsupported goals and excluded life stages out of persistence", asyn
   });
 
   await controller.activate({ id: "user-1" });
-  await controller.submit(validValues({ goalType: "lose" }));
+  await controller.submit(validValues({ goalType: "healthy" }));
   await controller.submit(validValues({ lifeStageEligibilityConfirmed: false }));
 
   assert.equal(saves, 0);

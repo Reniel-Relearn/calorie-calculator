@@ -150,9 +150,9 @@ The product labels the result **Estimated Daily Calorie Target**, **Estimated En
 
 ### Weight change
 
-No fixed `±500 kcal` rule is permitted. Goal-specific loss and gain targets require a coherent dynamic model, justified inputs, bounds, validation vectors, and user-facing limitations.
+No generic fixed `±500 kcal` rule is permitted. The NIH/NIDDK Body Weight Planner and Hall model remain excluded because their input, numerical, and licensing boundaries do not match Version 2.
 
-The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in V2-P4. The gate did not produce a supportable Version 2 implementation: required inputs and numerical behavior exceed the accepted profile model, the official implementation has a technology-transfer licensing path without a clearly identified reusable software license, and independent consumer target vectors were insufficient, particularly for intentional gain. The approved Version 2 scope therefore returns an explicit unavailable outcome for `LOSE` and `GAIN` and never fills the gap with an invented surplus or deficit.
+V2-ADR-032 instead adopts the explicit NASEM 2023 Chapter 7 adult directional starting method. Maintain uses the existing raw EER from age 18. From age 19, Lose uses raw `EER − 1.96 × adult SEPV` and Gain uses raw `EER + 1.96 × adult SEPV`, with SEPV `342 kcal/day` for the male equation and `241 kcal/day` for the female equation. These are starting estimates, not predictions. Version 2 collects no goal weight, goal date, desired rate, or forecast inputs.
 
 ### Eligibility and life stages
 
@@ -167,12 +167,12 @@ The NIH/NIDDK Body Weight Planner and its published Hall model were evaluated in
 The user chooses one of the product goal concepts:
 
 - `MAINTAIN`: the accepted maintenance estimate;
-- `LOSE`: recognized but unavailable in Version 2 because no goal-specific method passed the scientific and licensing gate;
-- `GAIN`: recognized but unavailable in Version 2 because no goal-specific method passed its separate evidence gate.
+- `LOSE`: age 19+ directional starting estimate using raw EER minus `1.96 × adult SEPV`, subject to safety gates;
+- `GAIN`: age 19+ directional starting estimate using raw EER plus `1.96 × adult SEPV`, subject to safety gates.
 
 “Healthy” or “general wellness” may appear as neutral context or guidance. It is not a fourth formula and does not alter the calorie result.
 
-Goal weight, target date, and target rate are not Version 2 inputs under the approved maintain-only scope. A later approved model must define them explicitly rather than infer a rate silently.
+Goal weight, goal date, and desired rate are excluded from the Version 2 production contract. No rate may be inferred silently. Targets recalculate only after the user explicitly saves a target-affecting profile change.
 
 ## 11. Calculator Integration
 
@@ -253,21 +253,21 @@ Mobile navigation must keep these destinations reachable with comfortable touch 
 
 V2-P8 and V2-P9 complete the remaining weekly, settings, editing, deletion, and account-control surfaces using the maintained mobile-first baseline. After V2-P9, the project must complete the V2-D0 through V2-D6 design revision program before beginning V2-P10 security hardening.
 
-The design program is currently blocked on this required external input:
-
-**Blocker: Requires user's plan and mockups for design.**
-
-The user-supplied baseline must include a written design plan, approved mobile mockups for the principal authenticated and signed-out journeys, representative non-happy states, and responsive direction for larger screens. No design revision code may be implemented by guessing missing visual direction. Mockups do not authorize controls, destinations, data, or features outside the approved Version 2 scope.
+The V2-D0 written design plan, architecture choices, ten-artifact visual-reference analysis, wireframes, and complete isolated prototype were visually approved on 2026-11-03. Screenshot-based D0-C ingestion is complete; optional hands-on behavioral research is deferred and no hidden interaction is inferred. Lose/Gain were assigned to the separate V2-G0 through V2-G3 program. Prototype sample calorie values do not authorize production logic.
 
 The executable sequence is defined in `V2_PLAN.md`:
 
-1. V2-D0 — approve the user plan and mockups;
-2. V2-D1 — audit existing states and create design traceability;
-3. V2-D2 — implement visual foundations and shared components;
-4. V2-D3 — revise the mobile app shell and navigation;
-5. V2-D4 — revise authentication, onboarding, calculator, logging, and Today;
-6. V2-D5 — revise weekly, settings, editing, deletion, and account controls;
-7. V2-D6 — verify the integrated design on staging and obtain user approval.
+1. V2-D0 — approve the user plan, wireframes, and prototype — complete;
+2. V2-G0 — approve Lose/Gain methodology and safety — complete;
+3. V2-G1 — implement and validate the pure weight-target engine — implemented locally;
+4. V2-G2 — extend private data contracts and migration — implemented locally, database verification pending;
+5. V2-G3 — integrate calculations with application services and target history — implemented locally, staging verification pending;
+6. V2-D1 — audit existing states and create design traceability;
+7. V2-D2 — implement visual foundations and shared components;
+8. V2-D3 — revise the mobile app shell and navigation;
+9. V2-D4 — revise authentication, onboarding, calculator, logging, Today, and approved goal presentation;
+10. V2-D5 — revise weekly, settings, editing, deletion, and account controls;
+11. V2-D6 — verify the integrated design on staging and obtain user approval.
 
 The program must preserve the frozen calculator, established V2 behavior, accessibility semantics, security boundaries, privacy rules, scientific language, demo-data disclosure, and vanilla JavaScript/custom CSS architecture. It does not authorize a framework migration, native application wrapper, PWA installation work, gamification, or future-version functionality.
 
@@ -404,7 +404,7 @@ Version 2 is complete only when:
 19. RLS allow and deny tests prove cross-user and unauthenticated isolation for every private table.
 20. Secrets are absent from frontend bundles, the repository, test output, and user-visible errors.
 21. The V2-D0 design gate has an approved user plan, mockups, responsive interpretation, and complete route/state coverage.
-22. The implemented interface passes V2-D1 through V2-D6 traceability and staging approval before security hardening begins.
+22. Approved Lose/Gain behavior passes V2-G0 through V2-G3, and the implemented interface passes V2-D1 through V2-D6 traceability and staging approval before security hardening begins.
 23. Primary flows work on supported phone, tablet, and desktop sizes and by keyboard.
 24. Auth, profile, target, logging, dashboard, error, empty, responsive, accessibility, and cross-browser acceptance checks pass.
 25. Staging uses non-production infrastructure and passes release verification.
@@ -418,8 +418,8 @@ Version 2 is complete only when:
 - The source equations use male/female sex categories and do not provide other coefficients.
 - The 18-year-old branch differs from the 19+ adult equation and requires explicit boundary tests.
 - Pregnancy and breastfeeding targets are excluded.
-- The V2-P4 review did not approve a weight-loss model; `LOSE` is unavailable under the approved maintain-only scope.
-- The V2-P4 review did not approve a weight-gain model; `GAIN` remains unavailable pending stronger evidence, licensing clarity, and validation.
+- Deployment of production `LOSE` and `GAIN` remains pending until the additive migration and application integration pass local database and staging verification.
+- Licensed-professional review is outstanding and recommended but is not a product-owner release prerequisite. CalorieCheck claims neither clinical validation nor professional endorsement.
 - The app cannot decide which goal is appropriate for a user.
 - The nutrition catalog remains a small curated demo subset.
 - Logged totals are only as complete as the selected food and its reported nutrient fields.

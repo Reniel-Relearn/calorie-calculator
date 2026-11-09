@@ -1,87 +1,95 @@
-# CalorieCheck Version 2 — Operational Status
+# CalorieCheck Version 2 Status
 
 **Current Version:** V2
-**Current Phase:** V2-D0 — User Design Plan and Mockup Approval Gate
-**Current Phase Status:** BLOCKED — USER ACTION REQUIRED
-**Next Phase:** V2-D1 — Interface Audit and Design Traceability (blocked by V2-D0 approval)
-**Overall V2 Status:** IN PROGRESS
 
-## Completed Phases
+**Current Program:** V2-G1 through V2-G3 — Adult Lose/Gain Targets
 
-- V2-P0 — Master Planning and Architecture — completed 2026-09-28
-- V2-P1 — Development Platform and Staging Foundation — completed 2026-09-30
-- V2-P2 — Authentication and Persistent Session Foundation — completed 2026-10-02
-- V2-P3 — Database Schema, Migrations, and Row-Level Authorization — completed 2026-10-05
-- V2-P4 — Evidence-Based Energy Target Engine — completed 2026-10-05
-- V2-P5 — Profile Onboarding, Personal Data, and Target History — completed 2026-10-06
-- V2-P6 — Calculator to Food Log Integration — completed 2026-10-07
-- V2-P7 — Daily Calorie Tracker — completed 2026-10-07
-- V2-P8 — Weekly Dashboard and History — completed 2026-10-07
-- V2-P9 — Profile Settings, Goal Changes, Log Editing, and Account Deletion — completed 2026-10-07
-- V2-S0 — Public Exposure Security Hardening — completed 2026-10-21
+**Current Status:** BLOCKED — USER ACTION REQUIRED: RESTORE SUPABASE DASHBOARD MFA ACCESS FOR AUTHENTICATED STAGING VERIFICATION
+**Next Phase after verification:** V2-D1 — Interface Audit and Design Traceability
 
-## V2-P9 Completion Evidence
+## Completed Baseline
 
-- Profile settings, atomic target-history replacement, captured-snapshot food-log correction, confirmed log deletion, dashboard refresh, and protected hard account deletion passed local verification.
-- `npm.cmd run check` passed 110 Node tests and the Vite production build.
-- `npm.cmd run test:db` passed all 156 pgTAP assertions across nine files.
-- Local `public` and `private` schema lint reported no errors.
-- A clean local database reset applied all migrations, including V2-P9.
-- The complete local browser integration passed settings, cross-date log correction, delete cancel/confirm, current-password rejection, cascading hard account deletion, failed login for the deleted user, responsive checks, and frozen calculator behavior.
-- The linked staging migration and `delete-account` Edge Function were deployed.
-- The user confirmed on 2026-10-07: **“V2-P9 staging settings, log correction, and account deletion passed.”**
+- V2-P1 through V2-P9 are complete and staging-verified.
+- V2-S0 public-exposure security hardening is complete and production-verified.
+- V2-D0 design planning, references, wireframes, and isolated prototype were approved on 2026-11-03.
+- V2-G0 scientific/product methodology was authorized by the product owner on 2026-11-03.
 
-## V2-S0 Repository Evidence
+## V2-G0 Decision
 
-- The approved branch is `security/v2-public-exposure-hardening`, created from an up-to-date `main`.
-- Vercel headers enforce CSP, HSTS, framing denial, MIME protection, referrer and permissions policies, cross-origin isolation behavior, HTML revalidation, and immutable hashed-asset caching.
-- Cloudflare Turnstile Free is wired to signup, login, password recovery, and account-deletion reauthentication through the supported Supabase `captchaToken` option. Remote environments fail closed without a public site key; local tests use a local-only adapter.
-- `delete-account` now requires an exact allowed origin, JSON, a 4 KiB streamed body limit, exact fields, JWT/user validation, current-password reauthentication, and a durable five-attempt/15-minute per-user throttle with safe 429 behavior.
-- A reviewed migration creates private throttle state and grants its security-definer RPC only to `service_role`.
-- Dashboard pagination is bounded at five 1,000-row pages per query.
-- The high-severity `source-map-js` advisory was resolved through a compatible lockfile update to 1.2.2.
-- Security CI, CodeQL, Dependabot, tracked/build secret scanning, private vulnerability reporting, a threat model, provider instructions, incident response, rollback steps, and free-tier limitations are versioned.
-- A newly published high-severity Vite 8.3.1 advisory was resolved with the compatible exact patch update to Vite 8.3.4. A subsequent clean `npm ci` completed with zero vulnerabilities, and `npm.cmd run check` passed 132 Node tests, the Vite production build, a zero-vulnerability high-severity audit, and the tracked/build secret scan across 141 files.
-- The pre-application linked staging history matched the four previously applied migrations. `npx.cmd supabase db push --dry-run --linked` reported only `20261019090000_harden_account_deletion.sql` pending and made no remote change.
-- Pre-application linked `public`, `private`, and `extensions` schema lint reported no errors.
-- The pre-deployment public response had HSTS and safe HTML revalidation but lacked the planned CSP, framing, permissions, MIME, referrer, and cross-origin headers; the later production verification below confirmed those headers after deployment.
-- Part 12 local verification passed on 2026-10-21: a clean Supabase reset applied all five migrations; 175 pgTAP assertions across 10 files passed; local `public`, `private`, and `extensions` schema lint reported no errors; and the complete authenticated browser integration passed against Vite 8.3.4. The browser harness now explicitly navigates to the application origin before clearing local storage, removing an `about:blank` startup race without changing production behavior.
-- Part 14 completed on 2026-10-21: commit 4 was amended as `a400dd8`, branch `security/v2-public-exposure-hardening` was pushed, and pull request #1 was opened against `main`. Security CI, CodeQL, Vercel deployment, and Vercel preview-comment checks all passed. The pull request must remain unmerged until the remaining provider controls, controlled staging rollout, and commit 5 verification record are complete.
-- Part 15 completed and verified on 2026-10-21: the active `Protect main` ruleset targets the default branch with no bypass, requires pull requests and resolved conversations, blocks deletion and force pushes, requires strict up-to-date checks, and requires `verify` plus `Analyze JavaScript and TypeScript`. Dependabot security updates, secret scanning, push protection, private vulnerability reporting, and CodeQL are active. CodeQL and secret scanning report zero alerts. Four Dependabot alerts remain visible on the current `main`; pull request #1 updates Vite to 8.3.4 and `source-map-js` to 1.2.2, which meet the advisories' patched versions.
-- The pre-approval Part 16 recheck was non-applying: the linked database dry run identified only `20261019090000_harden_account_deletion.sql`; the hosted `delete-account` function was active at version 1 with JWT verification; and the pull-request preview was protected by Vercel authentication.
-- The user confirmed Parts 9 through 11 complete and explicitly approved Part 16 on 2026-10-21. The reviewed migration was applied, a subsequent dry run reported the remote database up to date, and linked `public` and `private` schema lint reported no errors. The hardened `delete-account` function is active at version 2 with JWT verification enabled.
-- The reviewed security branch was deployed to Vercel production and aliased to `https://calorie-calculator-gamma-ten.vercel.app`. The public origin returns HTTP 200 with the planned CSP, HSTS, frame denial, MIME protection, referrer policy, permissions policy, and cross-origin policies. The deployed production bundle contains the Cloudflare Turnstile runtime. At that checkpoint, hosted Supabase CAPTCHA remained the final manual activation boundary before Part 17 synthetic staging verification.
-- Preliminary live Edge Function verification passed: an approved-origin preflight returns 204 with the exact public origin, a forbidden-origin preflight returns 403 `ORIGIN_NOT_ALLOWED`, and an unauthenticated deletion request returns 401 before application processing. No user data was involved.
-- Part 17 exposed a production configuration failure before user-flow testing: a clean browser reaches the application's fail-closed **Account access unavailable** state. A secure local shape check of the encrypted Vercel Production environment found `VITE_APP_ENV` valid but `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_TURNSTILE_SITE_KEY` malformed. No values were printed or retained. Those three values must be corrected in Vercel and the production deployment repeated before CAPTCHA verification can continue.
-- The user corrected those three Vercel values and the production deployment was repeated successfully. All required public values pass shape validation; a clean browser reaches `auth-signed-out`, opens `auth-login`, loads the Turnstile script/widget container, and reports no runtime or network errors. The public origin remains HTTP 200 with the planned security headers. Temporary environment and diagnostic files were deleted after verification.
-- The user confirmed Part 17 passed on 2026-10-21: signup, email confirmation, login, recovery, private-data isolation, successful account deletion, sixth-attempt throttling, mobile behavior, and desktop behavior all passed on the public origin with Turnstile enabled.
-- The user approved the V2-S0 closeout, commit 5, protected pull-request merge, production verification, and synchronization of `main` on 2026-10-21.
+- Maintain uses the existing 2023 NASEM EER from age 18.
+- Lose uses raw `EER − 1.96 × adult SEPV` from age 19.
+- Gain uses raw `EER + 1.96 × adult SEPV` from age 19.
+- Adult SEPV is `342 kcal/day` for the male equation and `241 kcal/day` for the female equation.
+- These are starting estimates, not rate/date/body-composition predictions.
+- Goal weight, goal date, desired rate, and forecasting are excluded.
+- Lose is unavailable below BMI `18.5`; both directional goals are unavailable below BMI `16` or when the non-persistent safety confirmation is not satisfied.
+- Lose below the CalorieCheck `1,200 kcal/day` safety boundary is unavailable and is never clamped.
+- Professional review remains recommended and outstanding. It is not a product-owner release prerequisite, and no professional endorsement or clinical validation is claimed.
 
-## Current Blockers
+The controlling records are V2-ADR-032, R-029, and `V2_LOSE_GAIN_TARGET_PLAN.md`.
 
-V2-S0 has no remaining implementation or provider blocker. The next blocker is external design input for V2-D0:
+## Local Implementation Evidence
 
-**Blocker: Requires user's plan and mockups for design.**
+Implemented:
 
-The user must supply the written design plan, approved mobile mockups for the required signed-out and authenticated journeys, representative loading/empty/error states, and responsive direction for tablet and desktop. Do not begin V2-D1 or later design implementation until the V2-D0 baseline is reviewed and explicitly approved.
+- shared pure BMI and Maintain/Lose/Gain target engine;
+- structured age, life-stage, safety-confirmation, BMI, low-intake, unsupported, and non-finite outcomes;
+- versioned directional methodology and reproducibility snapshot;
+- raw calculation precision with display-only rounding;
+- onboarding and Settings goal selection and non-persistent safety confirmations;
+- exact bottommost Settings disclaimer;
+- existing profile/settings services and effective target history integration;
+- additive migration `20261103090000_enable_directional_energy_targets.sql`;
+- database-side goal/age/method/snapshot/SEPV/arithmetic/BMI/floor validation;
+- pgTAP directional onboarding/settings cases;
+- unit, controller, UI-contract, boundary, security, and regression tests.
 
-## Design Program Sequence
+Verified locally on 2026-11-03:
 
-1. V2-S0 — Public Exposure Security Hardening — **DONE**
-2. V2-D0 — User Design Plan and Mockup Approval Gate — **BLOCKED — USER ACTION REQUIRED**
-3. V2-D1 — Interface Audit and Design Traceability — blocked by V2-D0
-4. V2-D2 — Visual Foundations and Shared Components — blocked by V2-D0
-5. V2-D3 — Mobile App Shell and Navigation Revision — blocked by V2-D0
-6. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision — blocked by V2-D0
-7. V2-D5 — Weekly, Settings, and Data-Control Revision — blocked by V2-D0
-8. V2-D6 — Integrated Design Verification and Approval — blocked by V2-D0
+- `npm.cmd run check` — 140 tests passed; the 101-module production build passed; dependency audit reported 0 vulnerabilities; repository security scan passed.
+- `npm.cmd run supabase:db:reset` — all six migrations applied cleanly, including `20261103090000_enable_directional_energy_targets.sql`.
+- `npm.cmd run test:db` — 10 pgTAP files and 189 database/RPC/RLS tests passed.
+- `npx.cmd supabase db lint --local --level warning` — no schema errors found.
+- `npm.cmd run test:auth:local` — full browser integration passed, including real Maintain/Lose/Gain Settings target changes.
 
-V2-P10 cannot begin until V2-D0 through V2-D6 are complete and the revised interface passes staging review.
+Verified on staging infrastructure on 2026-11-03:
 
-## Local Development Port Note
+- `20261103090000_enable_directional_energy_targets.sql` was the only pending linked migration and was applied successfully after explicit approval;
+- linked local and remote migration ledgers match through `20261103090000`;
+- `npx.cmd supabase db lint --linked --level warning` reported no schema errors;
+- Vercel preview deployment `dpl_2BG7ntErw59QvJH4KAHBegau93UJ` reached `READY` without promoting to production;
+- authenticated Vercel preview smoke returned HTTP 200 with the expected security headers and the Lose/Gain controls and Settings estimate disclaimer in the built HTML.
 
-Windows reserved the former default Supabase local port range. The repository's local-only Supabase ports use API `55321`, database `55432`, Studio `55323`, and Mailpit `55324`. Staging URLs and provider configuration are unchanged.
+Not yet verified:
+
+- authenticated end-to-end application behavior on the protected staging preview;
+- Supabase advisors/RLS after migration;
+- controlled production deployment.
+
+## Current Blockers / Human Actions
+
+1. Restore the project owner's Supabase dashboard MFA access using the synchronized or repaired TOTP device. Supabase support reports no recovery path when all registered factors are unavailable.
+2. Preserve the currently authenticated Supabase CLI session: do not log out, delete its local account state, or treat it as a replacement for dashboard account recovery.
+3. Allow-list the exact preview origin in Supabase Auth redirect URLs and Cloudflare Turnstile hostnames for this temporary verification deployment.
+4. Open the Vercel-protected preview while signed into the authorized Vercel account.
+5. Verify eligible and unavailable Maintain/Lose/Gain onboarding and Settings flows, target history, Today, Week, disclaimer placement, mobile, and desktop on staging.
+6. Inspect Supabase Security Advisor/RLS after migration and report any new finding.
+7. Explicitly approve the later controlled production rollout only after staging passes.
+
+Do not promote the preview to production, commit, push, or merge automatically. Do not mark V2-G3 complete until authenticated staging verification passes.
+
+## Ordered Roadmap
+
+1. V2-P1 through V2-P9 — **DONE**
+2. V2-S0 — **DONE**
+3. V2-D0 — **DONE — APPROVED 2026-11-03**
+4. V2-G0 — **DONE — APPROVED 2026-11-03**
+5. V2-G1 — **DONE LOCALLY; UNIT/REGRESSION VERIFIED**
+6. V2-G2 — **STAGING MIGRATION APPLIED; LOCAL/REMOTE LEDGERS MATCH; REMOTE LINT PASSED**
+7. V2-G3 — **PREVIEW READY; AUTHENTICATED STAGING VERIFICATION PENDING**
+8. V2-D1 through V2-D6 — **NOT STARTED; BLOCKED BY V2-G2/G3 VERIFICATION**
+9. V2-P10 onward — **NOT STARTED**
 
 ## Next Intended Action
 
-Wait for the user's written design plan and approved mockups required by V2-D0. Review those artifacts and resolve missing states, accessibility conflicts, responsive behavior, and scope questions before authorizing V2-D1. Do not begin design implementation or V2-P10 early.
+Restore Supabase dashboard MFA access, enroll a separate backup factor, then complete the protected preview configuration and human staging matrix. Professional review may occur later and must be recorded honestly, but it is not the active blocker.

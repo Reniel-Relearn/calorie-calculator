@@ -2,6 +2,30 @@
 
 This document records implemented persistence contracts that later Version 2 phases consume. Database column constraints remain authoritative.
 
+## Energy Target Contract — Version 1.1.0
+
+The profile stores one selected goal: `maintain`, `lose`, or `gain`. Every current target is immutable after creation except for closing its effective range; an explicit target-affecting profile update appends one successor row.
+
+### Calculation methods
+
+- Maintain, age 18+: methodology `nasem-dri-energy-2023-eer`, version `1.0.0`; target equals the raw EER.
+- Lose, age 19+: methodology `nasem-dri-energy-2023-directional-sepv`, version `1.0.0`; target equals raw EER minus `1.96 ×` the applicable adult SEPV.
+- Gain, age 19+: the same directional methodology; target equals raw EER plus `1.96 ×` adult SEPV.
+- Adult SEPV is `241 kcal/day` for the female equation and `342 kcal/day` for the male equation.
+
+The target snapshot includes canonical age, equation category, height, weight, activity, goal, and—for directional targets—a `directionalAdjustment` object with the method, SEPV, multiplier, displacement, direction, and safety-policy version. Life-stage and directional-safety confirmations are never persisted.
+
+### Safety and precision
+
+- Age 18–18.99 supports Maintain only.
+- Lose is unavailable below BMI `18.5`.
+- Both directional goals are unavailable below BMI `16` or when the non-persistent safety confirmation is not satisfied.
+- A Lose result below the CalorieCheck `1,200 kcal/day` safety boundary is unavailable and is not clamped.
+- Goal weight, goal date, desired rate, and forecast data are absent from the contract.
+- Core results retain raw calculation precision. Display rounding remains a view concern.
+
+The trusted onboarding/settings RPC boundary validates the selected goal, age, method/version, canonical snapshot, SEPV metadata, displacement arithmetic, BMI policy, and Lose floor. RPC signatures, authenticated ownership, RLS, and historical target selection remain unchanged.
+
 ## Food Log Contract — Version 1.0.0
 
 V2-P6 maps one immutable successful calculator result to one explicit food-log command. An analysis or recalculation does not write data. Persistence begins only when the user activates **Add to Today's Log**.
@@ -138,7 +162,7 @@ V2-P9 adds authenticated corrections without rewriting provenance or effective h
 
 ### Profile and target settings
 
-- Editable canonical profile fields are display name, date of birth, equation sex, height in centimeters, weight in kilograms, activity category, maintain goal, and IANA timezone.
+- Editable canonical profile fields are display name, date of birth, equation sex, height in centimeters, weight in kilograms, activity category, selected calorie goal, and IANA timezone.
 - A display-name-only change updates the profile and keeps the current target row open.
 - A change to date of birth, equation sex, height, weight, activity, goal, or timezone requires a newly calculated target payload.
 - `update_profile_settings` locks the current profile and target, validates the caller and canonical payload, updates the profile, closes the current target, and creates exactly one successor in one transaction.

@@ -71,7 +71,7 @@ export function createPrivateApplication(client, options = {}) {
     onProfileSaved: (_profile, _target, result) =>
       profileController?.refresh({
         announcement: result.targetChanged
-          ? "Settings saved. A new maintenance target is now effective."
+          ? "Settings saved. A new calorie target is now effective."
           : "Display name updated.",
         focus: false,
       }),

@@ -6,7 +6,7 @@ Version 1 is complete and frozen for the validated demo scope.
 
 The frozen release provides the mobile-first food-to-nutrition workflow using 11 curated local demo records. Required measurement support is grams for solid foods, food-specific sourced cups for compatible solids, and milliliters for liquids. Pieces and serving descriptors remain optional and food-specific.
 
-Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, maintain-only energy target engine, profile onboarding, atomic target history, explicit food logging, daily and weekly trackers, profile settings, captured-snapshot log correction/deletion, and protected hard account deletion are complete and verified on staging through V2-P9. `LOSE` and `GAIN` remain recognized but unavailable because no weight-change method passed the scientific and licensing gate. V2-S0 public-exposure security hardening is active before the user-directed mobile interface revision. Repository controls are implemented; free provider configuration, database/staging verification, and the security pull request remain blocking. V2-D0 follows V2-S0 and still requires the user's design plan and mockups.
+Version 2 is now the active development roadmap. Its development platform, authentication foundation, private database schema, profile onboarding, atomic target history, explicit food logging, daily and weekly trackers, profile settings, captured-snapshot log correction/deletion, protected hard account deletion, and V2-S0 public-exposure security hardening are complete and verified. V2-D0 closed with explicit visual approval on 2026-11-03. V2-G0 has now approved Maintain plus adult NASEM directional Lose/Gain starting estimates. G1 through G3 pass local unit, build, security, database/RLS, schema-lint, and browser-integration verification. The reviewed migration is applied to staging and the protected preview is ready; authenticated staging verification remains blocked until the project owner restores Supabase dashboard MFA access.
 
 ## Version 2 Planning Documents
 
@@ -15,6 +15,11 @@ Version 2 is now the active development roadmap. Its development platform, authe
 - [V2_STATUS.md](V2_STATUS.md) — concise operational phase control
 - [V2_DECISIONS.md](V2_DECISIONS.md) — Version 2 architecture decisions
 - [V2_RESEARCH.md](V2_RESEARCH.md) — source-backed scientific and platform research
+- [V2_LOSE_GAIN_TARGET_PLAN.md](V2_LOSE_GAIN_TARGET_PLAN.md) — active Lose/Gain methodology, safety, data, implementation, and verification gate
+- [V2_DESIGN_REVISION_AUDIT.md](V2_DESIGN_REVISION_AUDIT.md) — design, architecture, branch, and compatibility audit
+- [V2_DESIGN_REVISION_PLAN_PROPOSAL.md](V2_DESIGN_REVISION_PLAN_PROPOSAL.md) — user-approved V2-D0 planning sequence
+- [V2_DESIGN_REFERENCES.md](V2_DESIGN_REFERENCES.md) — completed screenshot-based reference ingestion and approved visual-question disposition
+- [V2_DESIGN_WIREFRAMES.md](V2_DESIGN_WIREFRAMES.md) — approved V2-D0 structural baseline
 
 The detailed sections below remain the frozen Version 1 product specification and should not be rewritten as Version 2 requirements.
 

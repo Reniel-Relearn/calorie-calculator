@@ -20,6 +20,7 @@ function values(overrides = {}) {
   return {
     ...PROFILE,
     lifeStageEligibilityConfirmed: false,
+    directionalSafetyEligibilityConfirmed: false,
     ...overrides,
   };
 }
@@ -73,6 +74,53 @@ test("saves a name-only update without replacing the target", async () => {
   assert.equal(commands[0].target, null);
   assert.equal(saved[0][2].targetChanged, false);
   assert.equal(view.calls.some(([name]) => name === "close"), true);
+});
+
+test("creates versioned directional metadata when the goal changes", async () => {
+  const commands = [];
+  const view = fakeView();
+  const controller = createSettingsController({
+    service: {
+      async updateProfile(command) {
+        commands.push(command);
+        return {
+          ok: true,
+          profile: { ...PROFILE, goalType: "lose" },
+          target: { ...TARGET, goalType: "lose", targetKcal: 1711.88 },
+          targetChanged: true,
+        };
+      },
+    },
+    view,
+    now: () => new Date("2026-10-07T04:00:00Z"),
+  });
+  controller.activate(PROFILE, TARGET);
+
+  await controller.submit(
+    values({
+      goalType: "lose",
+      lifeStageEligibilityConfirmed: true,
+      directionalSafetyEligibilityConfirmed: true,
+    }),
+  );
+
+  assert.equal(commands.length, 1);
+  assert.equal(
+    commands[0].target.methodology,
+    "nasem-dri-energy-2023-directional-sepv",
+  );
+  assert.equal(
+    Number(
+      (
+        commands[0].target.maintenanceKcal - commands[0].target.targetKcal
+      ).toFixed(2),
+    ),
+    472.36,
+  );
+  assert.equal(
+    "directionalSafetyEligibilityConfirmed" in commands[0].target.inputSnapshot,
+    false,
+  );
 });
 
 test("requires eligibility confirmation and creates target metadata for a target change", async () => {

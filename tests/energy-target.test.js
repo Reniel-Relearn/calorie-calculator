@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   ENERGY_GOAL_TYPES,
+  DIRECTIONAL_ENERGY_METHODOLOGY,
   ENERGY_METHODOLOGY,
   ENERGY_TARGET_CODES,
   ENERGY_TARGET_STATUSES,
@@ -26,6 +27,7 @@ function createInput(overrides = {}) {
     activityCategory: "low_active",
     goalType: ENERGY_GOAL_TYPES.MAINTAIN,
     lifeStageEligibilityConfirmed: true,
+    directionalSafetyEligibilityConfirmed: true,
     ...overrides,
   };
 }
@@ -140,16 +142,149 @@ test("returns unavailable for categories without a source equation", () => {
   }
 });
 
-test("keeps loss and gain unavailable without inventing a deficit or surplus", () => {
-  for (const goalType of [ENERGY_GOAL_TYPES.LOSE, ENERGY_GOAL_TYPES.GAIN]) {
-    const result = calculateEnergyTarget(createInput({ goalType }));
+test("calculates adult Lose and Gain starting estimates from raw EER and sex-specific SEPV", () => {
+  const lose = calculateEnergyTarget(
+    createInput({ goalType: ENERGY_GOAL_TYPES.LOSE }),
+  );
+  const gain = calculateEnergyTarget(
+    createInput({ goalType: ENERGY_GOAL_TYPES.GAIN }),
+  );
 
-    assert.equal(result.status, ENERGY_TARGET_STATUSES.UNAVAILABLE);
-    assert.equal(result.code, ENERGY_TARGET_CODES.GOAL_METHOD_UNAVAILABLE);
-    assert.equal(result.maintenanceKcal, 2184.24);
-    assert.equal(result.targetKcal, null);
-    assert.equal(result.goalMethodology, undefined);
-  }
+  assert.equal(lose.status, ENERGY_TARGET_STATUSES.SUCCESS);
+  assert.equal(lose.maintenanceKcal, 2184.24);
+  assert.equal(lose.targetKcal, 1711.88);
+  assert.equal(gain.targetKcal, 2656.6);
+  assert.equal(lose.methodology.id, DIRECTIONAL_ENERGY_METHODOLOGY.id);
+  assert.deepEqual(lose.normalizedInputs.directionalAdjustment, {
+    method: "prediction_interval_boundary",
+    sepvKcal: 241,
+    multiplier: 1.96,
+    adjustmentKcal: 472.36,
+    direction: "subtract",
+    safetyPolicyVersion: "1.0.0",
+  });
+
+  const maleLose = calculateEnergyTarget(
+    createInput({
+      ageYears: 45,
+      sexForEnergyEquation: "male",
+      heightCm: 175,
+      weightKg: 100,
+      activityCategory: "low_active",
+      goalType: ENERGY_GOAL_TYPES.LOSE,
+    }),
+  );
+  const maleGain = calculateEnergyTarget(
+    createInput({
+      ageYears: 45,
+      sexForEnergyEquation: "male",
+      heightCm: 175,
+      weightKg: 55,
+      activityCategory: "low_active",
+      goalType: ENERGY_GOAL_TYPES.GAIN,
+    }),
+  );
+
+  assert.equal(maleLose.maintenanceKcal, 3040.62);
+  assert.equal(maleLose.targetKcal, 2370.3);
+  assert.equal(maleGain.maintenanceKcal, 2368.32);
+  assert.equal(maleGain.targetKcal, 3038.64);
+  assert.equal(
+    maleLose.normalizedInputs.directionalAdjustment.sepvKcal,
+    342,
+  );
+});
+
+test("keeps age 18 directional goals unavailable while Maintain remains supported", () => {
+  const maintain = calculateEnergyTarget(createInput({ ageYears: 18 }));
+  const lose = calculateEnergyTarget(
+    createInput({ ageYears: 18.999999, goalType: ENERGY_GOAL_TYPES.LOSE }),
+  );
+
+  assert.equal(maintain.status, ENERGY_TARGET_STATUSES.SUCCESS);
+  assert.equal(lose.status, ENERGY_TARGET_STATUSES.UNAVAILABLE);
+  assert.equal(lose.code, ENERGY_TARGET_CODES.DIRECTIONAL_AGE_UNAVAILABLE);
+});
+
+test("fails closed for directional safety, BMI, and low-intake boundaries", () => {
+  const missingConfirmation = calculateEnergyTarget(
+    createInput({
+      goalType: ENERGY_GOAL_TYPES.GAIN,
+      directionalSafetyEligibilityConfirmed: undefined,
+    }),
+  );
+  const reportedRisk = calculateEnergyTarget(
+    createInput({
+      goalType: ENERGY_GOAL_TYPES.GAIN,
+      directionalSafetyEligibilityConfirmed: false,
+    }),
+  );
+  const underweightLose = calculateEnergyTarget(
+    createInput({
+      goalType: ENERGY_GOAL_TYPES.LOSE,
+      heightCm: 180,
+      weightKg: 58,
+    }),
+  );
+  const severeUnderweightGain = calculateEnergyTarget(
+    createInput({
+      goalType: ENERGY_GOAL_TYPES.GAIN,
+      heightCm: 180,
+      weightKg: 50,
+    }),
+  );
+  const belowFloor = calculateEnergyTarget(
+    createInput({
+      ageYears: 70,
+      goalType: ENERGY_GOAL_TYPES.LOSE,
+      heightCm: 140,
+      weightKg: 37,
+      activityCategory: "inactive",
+    }),
+  );
+
+  assert.equal(
+    missingConfirmation.code,
+    ENERGY_TARGET_CODES.MISSING_DIRECTIONAL_SAFETY_CONFIRMATION,
+  );
+  assert.equal(
+    reportedRisk.code,
+    ENERGY_TARGET_CODES.DIRECTIONAL_SAFETY_NOT_ELIGIBLE,
+  );
+  assert.equal(
+    underweightLose.code,
+    ENERGY_TARGET_CODES.DIRECTIONAL_BMI_UNAVAILABLE,
+  );
+  assert.equal(
+    severeUnderweightGain.code,
+    ENERGY_TARGET_CODES.DIRECTIONAL_BMI_UNAVAILABLE,
+  );
+  assert.equal(
+    belowFloor.code,
+    ENERGY_TARGET_CODES.LOSE_TARGET_BELOW_SAFETY_FLOOR,
+  );
+  assert.equal(belowFloor.targetKcal, null);
+});
+
+test("accepts a Lose target exactly at the 1,200 kcal/day policy boundary", () => {
+  const heightCm = 140;
+  const ageYears = 70;
+  const maintenanceNeeded = 1200 + 472.36;
+  const weightKg =
+    (maintenanceNeeded - (584.9 - 7.01 * ageYears + 5.72 * heightCm)) /
+    11.71;
+  const result = calculateEnergyTarget(
+    createInput({
+      ageYears,
+      heightCm,
+      weightKg,
+      activityCategory: "inactive",
+      goalType: ENERGY_GOAL_TYPES.LOSE,
+    }),
+  );
+
+  assert.equal(result.status, ENERGY_TARGET_STATUSES.SUCCESS);
+  assert.equal(result.targetKcal, 1200);
 });
 
 test("records stable methodology and omits the nonpersistent eligibility confirmation", () => {
@@ -159,6 +294,10 @@ test("records stable methodology and omits the nonpersistent eligibility confirm
   assert.equal(result.methodology.version, ENERGY_METHODOLOGY.version);
   assert.equal(result.methodology.sourceDoi, "10.17226/26818");
   assert.equal(Object.hasOwn(result.normalizedInputs, "lifeStageEligibilityConfirmed"), false);
+  assert.equal(
+    Object.hasOwn(result.normalizedInputs, "directionalSafetyEligibilityConfirmed"),
+    false,
+  );
   assert.equal(Number.isFinite(result.uncertainty.predictionRmseKcal), true);
 });
 
