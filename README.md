@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval on 2026-11-03. V2-G0 now authorizes Maintain plus adult NASEM directional Lose/Gain starting estimates; G1 through G3 pass local unit, database/RLS, lint, browser, build, and security verification. The reviewed staging migration is applied; the full G3 staging checklist passed per user confirmation on 2026-11-23. V2-D1 is ready to begin.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval on 2026-11-03. V2-G0 now authorizes Maintain plus adult NASEM directional Lose/Gain starting estimates; G1 through G3 pass local unit, database/RLS, lint, browser, build, and security verification. The reviewed staging migration is applied; the full G3 staging checklist passed per user confirmation on 2026-11-23. V2-D1 traceability is user-approved; V2-D2 visual foundations is authorized.
 
 Version 2 planning and operational documents:
 
@@ -23,6 +23,7 @@ Version 2 planning and operational documents:
 - [Design revision audit](V2_DESIGN_REVISION_AUDIT.md)
 - [Design revision plan](V2_DESIGN_REVISION_PLAN_PROPOSAL.md)
 - [Design reference register](V2_DESIGN_REFERENCES.md)
+- [D1 interface traceability and implementation slices](V2_DESIGN_TRACEABILITY.md)
 - [Low-fidelity wireframe baseline](V2_DESIGN_WIREFRAMES.md)
 
 ## Core Functionality

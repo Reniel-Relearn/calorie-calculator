@@ -2,6 +2,8 @@
 
 Status: **VISUALLY APPROVED V2-D0 BASELINE — 2026-11-03**
 
+**D1 reconciliation — 2026-11-23:** The prototype remains the visual reference, not the production contract. G3 Maintain/Lose/Gain now passes staging acceptance. Goal-weight/date fields, goal BMI, fixed sample estimates, and pending-method wording in this historical prototype must not be copied into runtime. Follow [V2_DESIGN_TRACEABILITY.md](../../V2_DESIGN_TRACEABILITY.md) and ADR-032 for their implementation disposition; D1 did not change prototype code.
+
 This is an isolated, browser-based design prototype. It is not the production application and it does not connect to Supabase, read the food catalog, calculate authoritative nutrition, save profile data, or write food logs.
 
 ## Run locally

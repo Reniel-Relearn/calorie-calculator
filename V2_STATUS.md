@@ -2,10 +2,10 @@
 
 **Current Version:** V2
 
-**Current Program:** V2 design integration — V2-D1 ready to begin
+**Current Program:** V2 design integration — V2-D2 authorized
 
-**Current Status:** V2-G3 DONE — STAGING CHECKLIST PASSED, USER-CONFIRMED 2026-11-23.
-**Next Phase:** V2-D1 — Interface Audit and Design Traceability (ready; not started)
+**Current Status:** V2-D1 DONE — USER-APPROVED 2026-11-23; COMMIT/PUSH REQUESTED. V2-D2 AUTHORIZED.
+**Next Phase:** V2-D2 — Visual Foundations and Shared Components
 
 ## Completed Baseline
 
@@ -70,12 +70,22 @@ Verified on 2026-11-23:
 
 ## Current Blockers / Human Actions
 
-No G3 blocker remains. D1 may begin after review and authorization.
+No G3 or D1 blocker remains. The user approved D1, requested its commit/push, and authorized D2 on 2026-11-23.
 
 - Separate backup-factor enrollment remains recommended and unconfirmed; it is not a design-phase blocker.
 - Four intentional SECURITY DEFINER RPC warnings, one free-plan leaked-password-protection warning, and one private throttle-table informational finding remain documented in `V2_G3_STAGING_VERIFICATION.md`.
 - Professional review remains recommended and outstanding under the accepted decision.
-- Commit, push, merge, and production deployment require their respective user authorization. This closeout updates documentation only.
+- [V2_DESIGN_TRACEABILITY.md](V2_DESIGN_TRACEABILITY.md) is user-approved; D2 follows its visual-foundation scope.
+- Commit/push G3 completed as `71990c2` on `feature/v2-design-revision`; all five PR checks passed and its new Vercel preview is Ready. No merge or production deployment occurred.
+- D1 commit/push is authorized. D2 implementation must return for local review before its commit/push. The two research PDFs remain excluded.
+
+## V2-D1 Evidence
+
+- Read the canonical product, design, architecture, decisions, research, and testing documents; audited runtime markup, view/controller/service boundaries, CSS, and isolated prototype sources.
+- Mapped all 10 auth states, all 7 calculator states, profile/onboarding/target outcomes, daily/weekly variants, logging/management/settings/deletion states, and cross-application feedback.
+- Defined component ownership, allowed query/history behavior, responsive/asset rules, concrete D2–D6 slices/tests, catalog checkpoint, and regression risks in `V2_DESIGN_TRACEABILITY.md`.
+- Reconciled prototype goal weight/date/BMI/sample data against ADR-032; no new formula, data field, or product feature approved.
+- Source/anchor/prototype inventory checks, referenced-file checks, and whitespace checks passed. D1 changed documentation only; no new runtime, database, visual, or hosted acceptance test is claimed.
 
 ## Ordered Roadmap
 
@@ -86,9 +96,9 @@ No G3 blocker remains. D1 may begin after review and authorization.
 5. V2-G1 — **DONE LOCALLY; UNIT/REGRESSION VERIFIED**
 6. V2-G2 — **STAGING MIGRATION APPLIED; LOCAL/REMOTE LEDGERS MATCH; REMOTE LINT PASSED**
 7. V2-G3 — **DONE — STAGING CHECKLIST PASSED, USER-CONFIRMED 2026-11-23**
-8. V2-D1 — **READY; NOT STARTED**; V2-D2 through V2-D6 follow their existing dependencies
+8. V2-D1 — **DONE — USER-APPROVED 2026-11-23**; V2-D2 **AUTHORIZED**; V2-D3 through V2-D6 **NOT STARTED**
 9. V2-P10 onward — **NOT STARTED**
 
 ## Next Intended Action
 
-Review the G3 closeout documentation, then authorize V2-D1 to map the approved prototype to existing production screens/states and define implementation slices. Matching accepted PR #14 preview: `https://calorie-calculator-jepz4rxal-reniel-relearn-qg-x-plai.vercel.app/`, deployment `dpl_E2hnwnuKj72jNN2nzHBzacusUPSt`, commit `75f3b39`. See [V2_G3_STAGING_VERIFICATION.md](V2_G3_STAGING_VERIFICATION.md).
+Commit/push the approved D1 documents, then implement D2 tokens and reusable presentation primitives and provide a local component specimen for review. Do not begin D3 navigation. Accepted G3 functional evidence remains in `V2_G3_STAGING_VERIFICATION.md`; new preview hostnames may need provider allow-listing before Auth tests.

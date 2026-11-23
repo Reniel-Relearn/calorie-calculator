@@ -1,5 +1,7 @@
 # CalorieCheck V2 Design Reference Register
 
+**D1 reconciliation (2026-11-23):** [V2_DESIGN_TRACEABILITY.md](V2_DESIGN_TRACEABILITY.md) controls implementation mapping after G3 staging acceptance. Maintain-only and methodology-pending remarks below describe the earlier D0 research context; ADR-032 now governs eligible Maintain/Lose/Gain. Reference imagery does not authorize goal-weight/date fields, charts, or prototype sample values.
+
 **Created:** 2026-11-02<br>
 **Updated:** 2026-11-03<br>
 **D0-C visual-reference status:** COMPLETE FOR THE CURRENT BATCH<br>

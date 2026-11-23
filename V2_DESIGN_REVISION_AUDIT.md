@@ -1,5 +1,7 @@
 # CalorieCheck V2 Design Revision Audit
 
+**D1 follow-up (2026-11-23):** The implementation traceability audit is in [V2_DESIGN_TRACEABILITY.md](V2_DESIGN_TRACEABILITY.md). It maps runtime/prototype states, component ownership, responsive rules, D2–D6 slices/tests, and prototype drift resolved by ADR-032. Earlier D0 findings below retain their historical context; G3 is now accepted on staging.
+
 **Audit date:** 2026-11-02<br>
 **Branch:** `feature/v2-design-revision`<br>
 **Status:** COMPLETE — V2-D0 BASELINE VISUALLY APPROVED 2026-11-03; V2-G0 METHODOLOGY GATE AUTHORIZED.

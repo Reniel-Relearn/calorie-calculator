@@ -259,10 +259,10 @@ The executable sequence is defined in `V2_PLAN.md`:
 
 1. V2-D0 — approve the user plan, wireframes, and prototype — complete;
 2. V2-G0 — approve Lose/Gain methodology and safety — complete;
-3. V2-G1 — implement and validate the pure weight-target engine — implemented locally;
-4. V2-G2 — extend private data contracts and migration — implemented locally, database verification pending;
-5. V2-G3 — integrate calculations with application services and target history — implemented locally, staging verification pending;
-6. V2-D1 — audit existing states and create design traceability;
+3. V2-G1 — implement and validate the pure weight-target engine — complete locally;
+4. V2-G2 — extend private data contracts and migration — staging migration/ledger/lint verified;
+5. V2-G3 — integrate calculations with application services and target history — complete for staging, checklist passed per user confirmation 2026-11-23;
+6. V2-D1 — audit existing states and create design traceability — audit delivered for document review in `V2_DESIGN_TRACEABILITY.md`;
 7. V2-D2 — implement visual foundations and shared components;
 8. V2-D3 — revise the mobile app shell and navigation;
 9. V2-D4 — revise authentication, onboarding, calculator, logging, Today, and approved goal presentation;

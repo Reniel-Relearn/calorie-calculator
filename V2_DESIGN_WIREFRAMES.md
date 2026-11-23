@@ -1,5 +1,7 @@
 # CalorieCheck V2 Low-Fidelity Wireframe Baseline
 
+**D1 reconciliation (2026-11-23):** See [V2_DESIGN_TRACEABILITY.md](V2_DESIGN_TRACEABILITY.md) for runtime mapping and resolved prototype drift. G3 is now accepted on staging. Historical pending-method/unavailable-goal remarks below do not override ADR-032; production excludes goal weight/date/rate and uses the accepted engine with its eligibility outcomes.
+
 **Created:** 2026-11-02<br>
 **Phase:** V2-D0 — User Design Plan and Mockup Approval Gate<br>
 **Status:** APPROVED V2-D0 BASELINE — VISUAL APPROVAL 2026-11-03<br>

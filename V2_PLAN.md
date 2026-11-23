@@ -234,11 +234,11 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
-**Design program status:** APPROVED — V2-D0 CLOSED 2026-11-03; V2-G0 APPROVED; V2-G1–G3 COMPLETE FOR STAGING; G3 CHECKLIST PASSED, USER-CONFIRMED 2026-11-23; V2-D1 READY
+**Design program status:** V2-D1 APPROVED BY USER 2026-11-23. V2-D0 and V2-G0–G3 are complete for staging. V2-D2 is authorized as the next phase.
 
 **Disposition:** The user visually approved the complete isolated prototype on 2026-11-03 and authorized a separate V2 Lose/Gain scientific/product phase. The screenshot-derived visual baseline may proceed without waiting for a hands-on Lose It! walkthrough; that behavioral research is deferred and cannot retroactively imply copied behavior. Production design integration remains sequenced after the active V2-G0 methodology gate and its approved implementation stages.
 
-**Sequence rule:** V2-D0 and V2-G0 through V2-G3 are complete for staging. The user confirmed the G3 checklist passed on 2026-11-23. V2-D1 is ready for authorization, followed by V2-D2 to V2-D6. Do not begin V2-P10 until the goal and design programs are complete and verified.
+**Sequence rule:** V2-D0 and V2-G0 through V2-G3 are complete for staging. The user approved [V2_DESIGN_TRACEABILITY.md](V2_DESIGN_TRACEABILITY.md) and authorized V2-D2 on 2026-11-23. Implement D2 only, then follow reviewed V2-D3 to V2-D6. Do not begin V2-P10 until the goal and design programs are complete and verified.
 
 **Purpose:** Revise the complete implemented V2 experience as one coherent mobile-first application after its principal screens and workflows exist, while leaving enough time for security, accessibility, browser, staging, and production verification against the settled interface.
 
@@ -354,7 +354,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D1 — Interface Audit and Design Traceability
 
-**Status:** READY — NOT STARTED; V2-G2/G3 STAGING DEPENDENCIES SATISFIED 2026-11-23
+**Status:** DONE — AUDIT APPROVED BY USER 2026-11-23. Evidence: [V2_DESIGN_TRACEABILITY.md](V2_DESIGN_TRACEABILITY.md). No runtime changes in D1.
 
 **Objective:** Turn the approved design baseline into an implementation-ready inventory and gap map without changing runtime code.
 
@@ -384,7 +384,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D2 — Visual Foundations and Shared Components
 
-**Status:** NOT STARTED — BLOCKED BY V2-D1
+**Status:** AUTHORIZED — USER APPROVED D1 AND REQUESTED V2-D2 ON 2026-11-23
 
 **Objective:** Implement the approved visual foundations and reusable presentation primitives before revising full screens.
 
@@ -644,7 +644,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 14. V2-G1 — Pure Weight-Target Engine and Validation — **DONE LOCALLY**
 15. V2-G2 — Weight-Goal Data Contracts and Private Migration — **STAGING MIGRATION APPLIED; REMOTE LEDGER/LINT VERIFIED**
 16. V2-G3 — Weight-Goal Application Integration — **DONE — STAGING CHECKLIST PASSED, USER-CONFIRMED 2026-11-23**
-17. V2-D1 — Interface Audit and Design Traceability
+17. V2-D1 — Interface Audit and Design Traceability — **DONE — USER-APPROVED 2026-11-23**
 18. V2-D2 — Visual Foundations and Shared Components
 19. V2-D3 — Mobile App Shell and Navigation Revision
 20. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
