@@ -103,14 +103,27 @@ export function createSettingsView(handlers, captcha) {
       captcha.reset("delete");
       elements.panel.hidden = true;
       elements.open.setAttribute("aria-expanded", "false");
-      elements.open.focus();
+      if (handlers.onClosed) handlers.onClosed();
+      else elements.open.focus();
+    },
+    hide() {
+      captcha.reset("delete");
+      elements.panel.hidden = true;
+      elements.open.setAttribute("aria-expanded", "false");
+      elements.deletePassword.value = "";
+      elements.deleteConfirmation.value = "";
     },
     open(profile) {
       this.setProfile(profile);
+      this.resume();
+    },
+    resume({ focus = true } = {}) {
       elements.panel.hidden = false;
       elements.open.setAttribute("aria-expanded", "true");
       captcha.prepare("delete");
-      requestAnimationFrame(() => elements.heading.focus());
+      requestAnimationFrame(() => {
+        if (focus && !elements.panel.closest("[hidden]")) elements.heading.focus();
+      });
     },
     reset() {
       captcha.reset("delete");

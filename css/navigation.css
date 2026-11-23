@@ -1,0 +1,33 @@
+.private-shell { padding-block-end: calc(6rem + env(safe-area-inset-bottom, 0px)); }
+.private-navigation-ready .private-shell,
+.private-navigation-ready .site-header { padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px); }
+.private-navigation-ready :is(input, button, a, [tabindex]) { scroll-margin-block: 6rem; }
+.destination-header { padding-block: var(--space-4) var(--space-5); }
+.destination-header h1 { margin: 0; font-size: var(--font-size-title); }
+.destination-header .eyebrow { margin-block-end: var(--space-1); }
+.primary-navigation {
+  position: fixed;
+  z-index: 5;
+  inset-inline: 0;
+  inset-block-end: 0;
+  padding: var(--space-2) max(var(--space-2), env(safe-area-inset-right, 0px)) max(var(--space-2), env(safe-area-inset-bottom, 0px)) max(var(--space-2), env(safe-area-inset-left, 0px));
+  border-block-start: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.primary-navigation__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-1); max-width: 76rem; padding: 0; margin: 0 auto; list-style: none; }
+.primary-navigation a { display: flex; min-height: 3.5rem; align-items: center; justify-content: center; flex-direction: column; gap: var(--space-1); padding: var(--space-2) var(--space-1); border: 2px solid transparent; border-radius: var(--radius-small); color: var(--color-text-muted); font-size: var(--font-size-small); font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
+.primary-navigation a[aria-current="page"] { color: var(--color-primary-dark); background: var(--color-primary-soft); border-block-end-color: currentColor; }
+.settings-account { display: grid; gap: var(--space-2); padding-block: var(--space-4); border-block-end: 1px solid var(--color-border); margin-block-end: var(--space-5); }
+.settings-account .account-controls { flex-wrap: wrap; justify-content: space-between; }
+.settings-account .account-controls__email { max-width: 100%; overflow-wrap: anywhere; white-space: normal; font-size: var(--font-size-small); }
+.private-navigation-ready .site-header { padding-block-start: max(var(--space-4), env(safe-area-inset-top, 0px)); }
+.private-shell .settings-panel { margin-block: 0; }
+.private-shell .profile-home { padding-block-start: 0; }
+@media (min-width: 48rem) {
+  .primary-navigation { position: sticky; inset-block-start: 0; inset-block-end: auto; padding: var(--space-2) var(--space-5); border-block: 1px solid var(--color-border); }
+  .primary-navigation a { flex-direction: row; gap: var(--space-3); font-size: 1rem; }
+  .private-shell { padding-block-end: var(--space-10); }
+}
+@media (forced-colors: active) {
+  .primary-navigation a[aria-current="page"] { border-color: Highlight; }
+}

@@ -510,3 +510,14 @@ Run Vite locally, then `npm.cmd run test:design:local`. The local-only browser s
 Required D2 checks cover the maintained viewport matrix plus short height; no page overflow; important enabled controls at least 44 px; labels/names/unique IDs; local SVG resolution without external requests; normal-text contrast ≥4.5:1 and control/focus contrast ≥3:1 for the documented shared-token pairs; keyboard disclosure/dialog/focus return; field feedback and amount-control examples; reduced motion; and text scaling/reflow. Screenshots/results go under ignored `.vercel/design-review/`.
 
 This suite passed against development and production-build preview on 2026-11-23. Native browser zoom, real-device touch/keyboard, other browser engines, and dedicated assistive technology are not certified by these emulated checks. Human staging component approval remains required before D3. The existing 140-test suite and authenticated local browser integration also passed after the D2 shared CSS changes. Full evidence and review instructions are in `V2_VISUAL_FOUNDATIONS.md`.
+
+
+## V2-D3 Navigation Acceptance
+
+- User-requested onboarding submit guard: Save Profile and Calculate starts disabled, enables only for valid required data and applicable confirmations, disables again when a required value/confirmation is removed, and stays disabled during saving. Maintain does not require the directional confirmation; Lose/Gain do. Programmatic form submission must not bypass the view guard, and controller/server validation remains required.
+
+- Four labeled destinations in the approved order, one displayed main/destination, accurate `aria-current`, dynamic title and skip link, visible keyboard focus, at least 44px navigation targets, and phone/tablet/desktop reflow without page overflow.
+- Signed-out, session-checking, recovery, loading/error and incomplete-profile states must not expose private navigation or allow destination hints to bypass existing guards. Logout and identity changes clear private state.
+- Back/Forward, direct valid/invalid entry and refresh restore only an allowlisted destination; history contains destination only. Callback processing remains authoritative and no credentials, dates, food names or personal values are added to navigation state.
+- Switching destinations retains calculator results and selected date/week in memory. Hidden data completion must not steal focus. Settings Back returns to a safe prior destination; account controls remain reachable in Settings or the incomplete-profile shell.
+- Run `npm.cmd run check` and `npm.cmd run test:auth:local` against the local-only environment with local Supabase. The browser suite now navigates actual visible destinations and verifies the shell; human staging navigation approval remains required. See `V2_NAVIGATION_REVISION.md` for evidence and browser/device limitations.

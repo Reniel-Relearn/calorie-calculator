@@ -1,7 +1,7 @@
 # V2-D2 Visual Foundations and Shared Components
 
 **Date:** 2026-11-23 (Asia/Manila)
-**Status:** IMPLEMENTED AND VERIFIED LOCALLY — LOCAL VISUAL APPROVAL RECEIVED 2026-11-23; STAGING SAMPLE ACCEPTANCE PENDING.
+**Status:** DONE - user approved locally and confirmed staging acceptance on 2026-11-23. Pushed as `4f9d708`; all five PR checks passed. Ready component preview returned HTTP 200.
 **Prerequisite:** D1 approved by the user; committed/pushed as `5ee3340` (`Map V2 interface revision work`). All five PR checks passed and its preview reached Ready.
 **Scope:** Shared runtime presentation and an isolated component specimen. No screen navigation, progressive onboarding, backend, domain calculations, data catalog, or production deployment changes.
 
@@ -69,7 +69,7 @@ Loading graphics do not introduce an artificial delay. Skeleton/spinner motion s
 | Existing authenticated local browser integration | PASS: signup, confirmation, onboarding, Maintain/Lose/Gain Settings, captured-snapshot log edit/delete, Today/Week refresh, account deletion, session restoration, recovery, and bad-link handling. Used the verified local-only environment and local Supabase stack. |
 | Visual inspection | Agent inspected phone and desktop specimen screenshots; no clipping or broken icon assets in reviewed captures. Evidence is local under ignored `.vercel/design-review/`, not committed reference imagery. |
 | Diff/security inspection | PASS: whitespace and secret scan; no controller/service/domain/data/migration changes. Research PDFs remain excluded. |
-| Human local/staging component approval | Local review APPROVED by the user on 2026-11-23; commit/push explicitly authorized. Staging review PENDING. D2 is not marked DONE. |
+| Human local/staging component approval | Local review APPROVED by the user on 2026-11-23; commit/push explicitly authorized. Staging review PASSED per user confirmation on 2026-11-23. D2 is DONE. |
 
 The helper originally required headless-page focus emulation and proper waits for native event completion; the production UI did not need a behavioral workaround. The built-artifact checks handle Vite's combined stylesheets and shorthand hex colors. New verification code passes with these corrections.
 
@@ -78,8 +78,8 @@ No new database migration was required; database assertions were not rerun solel
 ## Review and next phase
 
 1. Local component review approved by the user on 2026-11-23, including the revised amount controls.
-2. Commit/push explicitly authorized by the user; verify PR checks and preview readiness before hosted acceptance.
-3. After that push passes CI, review `/prototypes/v2-foundations/` on its Ready Vercel preview and confirm staging visual acceptance. No new Supabase/Turnstile hostname is needed for the specimen alone because it does not authenticate or call providers.
-4. Only after D2 acceptance, authorize D3: add guarded same-document Today/Analyze/Week/Settings navigation, header/logout placement, active state, focus/skip links, Back/Forward/refresh behavior, and responsive/safe-area shell. No full-screen D4/D5 or backend work starts in D2.
+2. Commit/push completed as `4f9d708`; all five PR checks passed and preview is Ready.
+3. The user confirmed staging visual acceptance on 2026-11-23 for `/prototypes/v2-foundations/` on its Ready Vercel preview. No new Supabase/Turnstile hostname is needed for the specimen alone because it does not authenticate or call providers.
+4. D3 authorized after D2 acceptance; implementation is documented in `V2_NAVIGATION_REVISION.md`: add guarded same-document Today/Analyze/Week/Settings navigation, header/logout placement, active state, focus/skip links, Back/Forward/refresh behavior, and responsive/safe-area shell. No full-screen D4/D5 or backend work starts in D2.
 
 Recommended eventual D2 commit: `Build V2 visual foundations`.

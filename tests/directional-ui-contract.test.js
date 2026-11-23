@@ -13,7 +13,7 @@ test("onboarding and Settings expose all supported calorie goals", () => {
 });
 
 test("the calorie-estimate disclaimer is the bottommost Settings section", () => {
-  const settingsStart = html.indexOf('<section class="settings-panel"');
+  const settingsStart = html.search(/<section class="settings-panel(?:\s[^"]*)?"/);
   const disclaimer = html.indexOf(
     '<section class="settings-estimate-disclaimer"',
     settingsStart,

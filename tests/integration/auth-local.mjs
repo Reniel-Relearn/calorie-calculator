@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { access, mkdtemp, rm } from "node:fs/promises";
+import { access, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -208,6 +208,11 @@ async function createPage() {
 
   return {
     callFunction,
+    capture: async (name) => {
+      await mkdir('.vercel/navigation-review', { recursive: true });
+      const shot = await send('Page.captureScreenshot', { format: 'png' });
+      await writeFile(`.vercel/navigation-review/${name}.png`, Buffer.from(shot.data, 'base64'));
+    },
     close: async () => {
       socket.close();
       await fetch(`${CDP_URL}/json/close/${target.id}`);
@@ -284,7 +289,7 @@ async function waitForVisible(page, selector, timeout = 10_000) {
   await page.waitForFunction(
     `function (selector) {
       const element = document.querySelector(selector);
-      return Boolean(element && !element.hidden);
+      return Boolean(element && !element.closest("[hidden]") && element.getClientRects().length);
     }`,
     [selector],
     `Expected visible element: ${selector}`,
@@ -340,8 +345,9 @@ async function run() {
   try {
     await page.navigate(APP_URL);
     await page.evaluate("localStorage.clear(); true");
-    await page.navigate(APP_URL);
+    await page.navigate(`${APP_URL}?view=settings`);
     await waitForVisible(page, "#auth-signed-out");
+    assert.equal(await page.evaluate("document.querySelector('#private-shell').hidden && document.querySelector('#primary-navigation').hidden"), true);
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
     assert.equal(
       await page.evaluate("document.documentElement.scrollWidth === document.documentElement.clientWidth"),
@@ -380,6 +386,11 @@ async function run() {
     await waitForVisible(page, "#profile-onboarding", 15_000);
     assert.equal(await page.evaluate("document.querySelector('#auth-main').hidden"), true);
     assert.equal(await page.evaluate("document.querySelector('#app').hidden"), true);
+    assert.equal(await page.evaluate("document.querySelector('#primary-navigation').hidden"), true);
+    await page.navigate(`${APP_URL}?view=week`);
+    await waitForVisible(page, '#profile-onboarding', 15_000);
+    assert.equal(await page.evaluate('document.querySelector("#private-shell").hidden && document.querySelector("#primary-navigation").hidden'), true);
+
     assert.equal(
       await page.evaluate("document.querySelectorAll('main:not([hidden])').length"),
       1,
@@ -436,11 +447,9 @@ async function run() {
     }
     await page.setViewport(390, 844);
 
-    await click(page, "#profile-submit");
-    await page.waitFor(
-      "document.activeElement.id === 'profile-display-name' && !document.querySelector('#profile-form-error').hidden",
-      "Onboarding validation did not focus and announce the first invalid field.",
-    );
+    assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), true);
+    await page.evaluate("document.querySelector('#profile-onboarding-form').requestSubmit(); true");
+    assert.equal(await page.evaluate("document.querySelector('#primary-navigation').hidden"), true);
     await setForm(page, {
       "#profile-display-name": "Local Test User",
       "#profile-date-of-birth": "1990-01-01",
@@ -450,10 +459,33 @@ async function run() {
     });
     await click(page, "#profile-equation-sex-female");
     await click(page, "#profile-activity-low-active");
+    assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), true);
     await click(page, "#profile-life-stage-confirmation");
+    assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), false);
+    await setForm(page, { "#profile-height-cm": "" });
+    assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), true);
+    await setForm(page, { "#profile-height-cm": "165" });
+    assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), false);
+    await click(page, "#profile-life-stage-confirmation");
+    assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), true);
+    await click(page, "#profile-life-stage-confirmation");
+    for (const goal of ["lose", "gain"]) {
+      await click(page, `#profile-goal-${goal}`);
+      assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), true);
+      await click(page, "#profile-directional-safety-confirmation");
+      assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), false);
+      await click(page, "#profile-directional-safety-confirmation");
+      assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), true);
+    }
+    await click(page, "#profile-goal-maintain");
+    assert.equal(await page.evaluate("document.querySelector('#profile-submit').disabled"), false);
     await click(page, "#profile-submit");
+    await waitForVisible(page, "#destination-week", 15_000);
+    assert.equal(await page.evaluate('document.querySelector("#primary-navigation [aria-current=page]").dataset.navigate'), 'week');
+    await click(page, '#primary-navigation [data-navigate="today"]');
     await waitForVisible(page, "#profile-home", 15_000);
-    await waitForVisible(page, "#app");
+    await waitForVisible(page, "#private-shell");
+    assert.equal(await page.evaluate("document.querySelector('#primary-navigation [aria-current=page]').dataset.navigate"), "today");
     assert.equal(
       await page.evaluate("document.querySelectorAll('main:not([hidden])').length"),
       1,
@@ -479,6 +511,7 @@ async function run() {
       await page.evaluate("document.querySelector('#daily-next').disabled && document.querySelector('#daily-today').disabled"),
       true,
     );
+    await click(page, '[data-navigate="week"]');
     await waitForVisible(page, "#weekly-tracker");
     await page.waitFor(
       "!document.querySelector('#weekly-content').hidden && document.querySelectorAll('#weekly-day-list > li').length === 7",
@@ -504,6 +537,7 @@ async function run() {
         true,
         `The daily tracker overflowed at ${width}x${height}`,
       );
+      await click(page, '[data-navigate="today"]');
       assert.equal(
         await page.evaluate(`[
           ...document.querySelectorAll('#daily-tracker button, #daily-tracker input, #daily-tracker a.button')
@@ -515,6 +549,7 @@ async function run() {
         true,
         `The daily tracker touch targets were too small at ${width}x${height}`,
       );
+      await click(page, '[data-navigate="week"]');
       assert.equal(
         await page.evaluate(`[
           ...document.querySelectorAll('#weekly-tracker button')
@@ -529,7 +564,54 @@ async function run() {
     }
     await page.setViewport(390, 844);
 
-    await click(page, "#settings-open");
+    // The destination shell is independent of calculator state and data loads.
+    for (const [width, height] of [[320, 568], [390, 844], [768, 1024], [1280, 800]]) {
+      await page.setViewport(width, height);
+      for (const destination of ['today', 'analyze', 'week', 'settings']) {
+        await click(page, `#primary-navigation [data-navigate="${destination}"]`);
+        await page.waitForFunction(`function (expected) {
+          return document.querySelector('#primary-navigation [aria-current="page"]').dataset.navigate === expected
+            && !document.querySelector('#destination-' + expected).hidden;
+        }`, [destination], 'Navigation did not activate its destination.');
+        await page.waitForFunction(`function (expected) {
+          return document.activeElement.id === (expected === 'settings' ? 'settings-heading' : 'destination-title');
+        }`, [destination], 'Destination heading focus was not restored.');
+        assert.equal(await page.evaluate('document.querySelectorAll("[data-destination]:not([hidden])").length'), 1);
+        assert.equal(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), true, `${destination} overflow at ${width}`);
+        assert.equal(await page.evaluate('[...document.querySelectorAll("#primary-navigation a")].every(el => { const r = el.getBoundingClientRect(); return r.width >= 44 && r.height >= 44; })'), true);
+        assert.equal(await page.evaluate('document.querySelector("#skip-app").hash'), '#destination-title');
+        assert.equal(await page.evaluate('document.querySelectorAll("main:not([hidden])").length'), 1);
+        assert.equal(await page.evaluate('Object.keys(history.state).join()'), 'view');
+        if (width === 390 || width === 1280) await page.capture(`${destination}-${width}`);
+      }
+    }
+    await page.setViewport(390, 844);
+    await click(page, '#primary-navigation [data-navigate="today"]');
+    await click(page, '#primary-navigation [data-navigate="analyze"]');
+    await setForm(page, { '#food-query': '150g grilled chicken breast' });
+    await click(page, '#analyze-food-button');
+    await waitForVisible(page, '#state-success');
+    const caloriesBeforeNavigation = await page.evaluate('document.querySelector("#result-calories").value');
+    await page.evaluate('history.back(); true');
+    await page.waitFor('document.querySelector("#primary-navigation [aria-current=page]").dataset.navigate === "today"', 'Back did not restore Today.');
+    await page.evaluate('history.forward(); true');
+    await page.waitFor('document.querySelector("#primary-navigation [aria-current=page]").dataset.navigate === "analyze"', 'Forward did not restore Analyze.');
+    assert.equal(await page.evaluate('document.activeElement.id'), 'destination-title');
+    assert.equal(await page.evaluate('document.querySelector("#result-calories").value'), caloriesBeforeNavigation);
+    assert.equal(await page.evaluate('document.querySelector("#result-calories").value'), caloriesBeforeNavigation);
+    await waitForVisible(page, '#state-success');
+    await page.navigate(`${APP_URL}?view=week`);
+    await waitForVisible(page, '#destination-week', 15000);
+    assert.equal(await page.evaluate('document.querySelector("#primary-navigation [aria-current=page]").dataset.navigate'), 'week');
+    // Real keyboard activation uses the same semantic destination link.
+    await page.evaluate('document.querySelector("#primary-navigation [data-navigate=analyze]").focus(); true');
+    await page.pressEnter();
+    await waitForVisible(page, '#destination-analyze');
+    await page.navigate(`${APP_URL}?view=unsupported`);
+    await waitForVisible(page, '#destination-today', 15000);
+    assert.equal(await page.evaluate('new URL(location.href).searchParams.get("view")'), 'today');
+
+    await click(page, '#primary-navigation [data-navigate="settings"]');
     await waitForVisible(page, "#settings-panel");
     for (const [width, height] of [
       [320, 568],
@@ -565,7 +647,7 @@ async function run() {
       "Display-name-only settings update did not refresh the profile.",
       15_000,
     );
-    await click(page, "#settings-open");
+    await click(page, '#primary-navigation [data-navigate="settings"]');
     await setForm(page, { "#settings-weight-kg": "64" });
     await click(page, "#settings-life-stage-confirmation");
     await click(page, "#settings-profile-submit");
@@ -580,7 +662,7 @@ async function run() {
       ),
     );
 
-    await click(page, "#settings-open");
+    await click(page, '#primary-navigation [data-navigate="settings"]');
     assert.equal(
       await page.evaluate(
         "document.querySelector('#settings-panel > section:last-of-type').classList.contains('settings-estimate-disclaimer')",
@@ -603,7 +685,7 @@ async function run() {
     );
     assert.equal(loseTarget < maintenanceTarget, true);
 
-    await click(page, "#settings-open");
+    await click(page, '#primary-navigation [data-navigate="settings"]');
     assert.equal(
       await page.evaluate(
         "!document.querySelector('#settings-life-stage-confirmation').checked && !document.querySelector('#settings-directional-safety-confirmation').checked",
@@ -626,6 +708,7 @@ async function run() {
     );
     assert.equal(gainTarget > maintenanceTarget, true);
 
+    await click(page, '[data-navigate="analyze"]');
     await setForm(page, { "#food-query": "1 cup cooked white rice" });
     await click(page, "#analyze-food-button");
     await waitForVisible(page, "#state-success");
@@ -697,6 +780,7 @@ async function run() {
     previousDateValue.setUTCDate(previousDateValue.getUTCDate() - 1);
     const previousDate = previousDateValue.toISOString().slice(0, 10);
 
+    await click(page, '[data-navigate="today"]');
     await click(page, '#daily-log-list button[aria-label="Edit Cooked White Rice"]');
     await page.waitFor(
       "document.querySelector('#log-edit-dialog').open",
@@ -751,6 +835,7 @@ async function run() {
       [todayDate],
       "Today navigation did not restore the current empty day.",
     );
+    await click(page, '[data-navigate="week"]');
     const currentWeekLabel = await page.evaluate(
       "document.querySelector('#weekly-range-label').textContent",
     );
@@ -777,6 +862,8 @@ async function run() {
     await waitForVisible(page, "#protected-app", 15_000);
     await waitForVisible(page, "#profile-home", 15_000);
 
+    await click(page, '#primary-navigation [data-navigate="settings"]');
+    await waitForVisible(page, "#settings-panel");
     await click(page, "#logout-button");
     await waitForVisible(page, "#auth-signed-out");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
@@ -837,6 +924,8 @@ async function run() {
     await click(page, "#login-submit");
     await waitForVisible(page, "#protected-app");
     await waitForVisible(page, "#profile-home");
+    await click(page, '#primary-navigation [data-navigate="settings"]');
+    await waitForVisible(page, "#settings-panel");
     await click(page, "#logout-button");
     await waitForVisible(page, "#auth-signed-out");
 
@@ -857,6 +946,8 @@ async function run() {
     await waitForVisible(page, "#protected-app");
     await waitForVisible(page, "#profile-home");
 
+    await click(page, '#primary-navigation [data-navigate="settings"]');
+    await waitForVisible(page, "#settings-panel");
     await click(page, "#logout-button");
     await waitForVisible(page, "#auth-signed-out");
     await click(page, '[data-auth-view="login"]');
@@ -868,7 +959,7 @@ async function run() {
     await waitForVisible(page, "#protected-app");
     await waitForVisible(page, "#profile-home");
 
-    await click(page, "#settings-open");
+    await click(page, '#primary-navigation [data-navigate="settings"]');
     await setForm(page, {
       "#settings-current-password": "incorrect-password",
       "#settings-delete-confirmation": "DELETE",
@@ -905,7 +996,7 @@ async function run() {
     await waitForVisible(page, "#auth-error");
     assert.equal(await page.evaluate("document.querySelector('#protected-app').hidden"), true);
 
-    console.log("Local integration passed: signup, confirmation, onboarding, Maintain/Lose/Gain target settings, captured-snapshot log edit/delete, daily and weekly refresh, protected account deletion, session restoration, password recovery, and bad-link handling.");
+    console.log("Local integration passed: guarded four-destination navigation, Back/Forward, refresh, keyboard/phone/desktop shell, signup, confirmation, onboarding, Maintain/Lose/Gain target settings, captured-snapshot log edit/delete, daily and weekly refresh, protected account deletion, session restoration, password recovery, and bad-link handling.");
   } finally {
     await page.close();
   }

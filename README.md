@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval on 2026-11-03. V2-G0 now authorizes Maintain plus adult NASEM directional Lose/Gain starting estimates; G1 through G3 pass local unit, database/RLS, lint, browser, build, and security verification. The reviewed staging migration is applied; the full G3 staging checklist passed per user confirmation on 2026-11-23. V2-D1 is user-approved and pushed; V2-D2 visual foundations is implemented and verified locally, locally approved by the user on 2026-11-23, awaiting staging review.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval on 2026-11-03. V2-G0 now authorizes Maintain plus adult NASEM directional Lose/Gain starting estimates; G1 through G3 pass local unit, database/RLS, lint, browser, build, and security verification. The reviewed staging migration is applied; the full G3 staging checklist passed per user confirmation on 2026-11-23. V2-D1 is user-approved and pushed; V2-D2 visual foundations passed local/staging user review on 2026-11-23. V2-D3 navigation is locally user-approved and awaits staging review; detailed screen revisions remain in D4/D5.
 
 Version 2 planning and operational documents:
 
@@ -25,6 +25,7 @@ Version 2 planning and operational documents:
 - [Design reference register](V2_DESIGN_REFERENCES.md)
 - [D1 interface traceability and implementation slices](V2_DESIGN_TRACEABILITY.md)
 - [D2 visual foundations and component review](V2_VISUAL_FOUNDATIONS.md)
+- [D3 navigation and local review](V2_NAVIGATION_REVISION.md)
 - [Low-fidelity wireframe baseline](V2_DESIGN_WIREFRAMES.md)
 
 ## Core Functionality

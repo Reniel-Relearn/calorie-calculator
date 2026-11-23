@@ -2,10 +2,10 @@
 
 **Current Version:** V2
 
-**Current Program:** V2 design integration — V2-D2 staging review
+**Current Program:** V2 design integration / V2-D3 local navigation review
 
-**Current Status:** BLOCKED — USER ACTION REQUIRED: V2-D2 STAGING SAMPLE ACCEPTANCE. Local review approved and commit/push authorized 2026-11-23. Implementation/local checks passed 2026-11-23.
-**Next Phase after D2 acceptance:** V2-D3 — Mobile App Shell and Navigation Revision (not started)
+**Current Status:** BLOCKED - USER ACTION REQUIRED: D3 STAGING NAVIGATION ACCEPTANCE. Local review approved and commit/push authorized 2026-11-23. D2 staging passed per user confirmation on 2026-11-23. D3 is implemented locally, not DONE.
+**Next Phase after D3 acceptance:** V2-D4 - Authentication, Onboarding, Calculator, and Today Revision (not started)
 
 ## Completed Baseline
 
@@ -70,17 +70,24 @@ Verified on 2026-11-23:
 
 ## Current Blockers / Human Actions
 
-No G3 or D1 blocker remains. D1 was committed/pushed as `5ee3340` after explicit approval. D2 is implemented and verified locally; its local visual review passed; staging visual acceptance remains open.
+D2 staging acceptance passed per user confirmation on 2026-11-23. Its commit `4f9d708` is pushed, all five PR checks passed, and its Ready preview component page returned HTTP 200. The user authorized D3; D3 local navigation review passed; commit/push is authorized and staging navigation acceptance remains pending.
 
-- Separate backup-factor enrollment remains recommended and unconfirmed; it is not a design-phase blocker.
-- Four intentional SECURITY DEFINER RPC warnings, one free-plan leaked-password-protection warning, and one private throttle-table informational finding remain documented in `V2_G3_STAGING_VERIFICATION.md`.
-- Professional review remains recommended and outstanding under the accepted decision.
-- [V2_DESIGN_TRACEABILITY.md](V2_DESIGN_TRACEABILITY.md) is user-approved; D2 follows its visual-foundation scope.
-- Commit/push G3 completed as `71990c2` on `feature/v2-design-revision`; all five PR checks passed and its new Vercel preview is Ready. No merge or production deployment occurred.
-- D1's five PR checks passed and preview `dpl_67ifyGsmuDC9ozN8PeLCK4o365Ny` is Ready (`https://calorie-calculator-o0q2nalm2-reniel-relearn-qg-x-plai.vercel.app/`). This preview contains D1 documentation, not uncommitted D2 code.
-- Open `http://localhost:5173/prototypes/v2-foundations/` while Vite is running; review the components at phone and desktop widths using [V2_VISUAL_FOUNDATIONS.md](V2_VISUAL_FOUNDATIONS.md). No Docker/Supabase login is needed for this specimen.
-- The user approved D2 locally and authorized commit/push on 2026-11-23. After CI/preview readiness, review the same specimen path on staging; confirm acceptance before authorizing D3.
-- D2 commit/push is authorized. The two research PDFs remain excluded; no merge or production deployment occurred.
+- Open http://localhost:5173/?view=today and use a local account. Vite and local Supabase remain running for this review; hosted accounts are separate. Local confirmation mail: http://127.0.0.1:55324/.
+- Review four destinations, mobile bottom navigation, desktop horizontal navigation, Back/Forward, refresh, Settings Back/logout and retained calculator results. See [V2_NAVIGATION_REVISION.md](V2_NAVIGATION_REVISION.md).
+- After local approval, explicitly request commit/push; then review the authenticated Ready preview and confirm staging acceptance before authorizing D4. No new provider configuration is needed for local review.
+- D3 local review passed and commit/push is authorized. The two research PDFs remain excluded. No merge, remote migration or production deployment occurred.
+- Backup-factor enrollment remains recommended and unconfirmed, not a design blocker. Prior Advisor findings and professional-review limitations remain recorded in `V2_G3_STAGING_VERIFICATION.md` and ADR-032.
+
+## V2-D3 Evidence
+
+- User-requested onboarding correction implemented and browser-verified: Save Profile and Calculate stays disabled for incomplete/invalid required fields, missing applicable confirmations and pending submission. Associated helper text explains availability; existing controller/server validation remains authoritative.
+
+- Guarded Today/Analyze/Week/Settings navigation; allowlisted same-document `?view=` hints, destination-only history state, Back/Forward, refresh, titles, focus/skip links and current-page semantics.
+- Existing controller/service/view and calculator state boundaries preserved. Settings is now a destination; logout moves into it for complete profiles and remains in the lifecycle header during loading/incomplete setup. Only one destination and main are displayed.
+- Mobile bottom bar, safe-area padding and tablet/desktop horizontal row; original local icons and text labels. No sidebar, framework or new dependency.
+- `npm.cmd run check`: 144 JavaScript tests, 108-module build, npm audit zero vulnerabilities and security scan passed. D2 specimen suite: 16 grouped browser checks passed.
+- Real local authentication/navigation integration verifies owner/session/profile guards, four destination reflow/touch areas, history, keyboard activation, refresh, calculator-result preservation and existing auth/settings/logging/deletion journeys. Exact final result and limitations are recorded in `V2_NAVIGATION_REVISION.md`.
+- Local screenshots are ignored under `.vercel/navigation-review/`. Hosted D3 acceptance, real-device safe areas, Firefox/Safari and dedicated assistive technology are not claimed.
 
 ## V2-D2 Evidence
 
@@ -89,8 +96,8 @@ No G3 or D1 blocker remains. D1 was committed/pushed as `5ee3340` after explicit
 - `npm.cmd run check` passed: 140 JavaScript tests, two-entry Vite build, npm audit 0 vulnerabilities, security scan.
 - `npm.cmd run test:design:local` passed against development and built-artifact servers: eleven viewport/short-height checks, visible important control dimensions, semantics, local assets, twelve contrast pairs, keyboard/dialog/validation interactions, reduced motion, and scaling/reflow. Lowest checked normal-text contrast: 4.839:1.
 - Existing `npm.cmd run test:auth:local` passed against confirmed local Supabase, including onboarding, all goals, log edit/delete, Today/Week, recovery, deletion, and session restoration.
-- Phone/desktop screenshots inspected locally in ignored `.vercel/design-review/`. Hosted D2 acceptance, Firefox/Safari, real touch/soft-keyboard, and dedicated assistive technology are not claimed.
-- Local Supabase and the build-preview server were stopped after verification. Vite development server remains available on 127.0.0.1:5173 for the requested review.
+- Phone/desktop screenshots inspected locally in ignored `.vercel/design-review/`. D2 hosted acceptance is user-reported. Agent-run hosted browser testing, Firefox/Safari, real touch/soft-keyboard and dedicated assistive technology are not claimed.
+- Local Supabase and the build-preview server were stopped after verification. Vite development server remained available on 127.0.0.1:5173 for that D2 review; D3 subsequently restarted local Supabase for authenticated navigation checks.
 
 ## V2-D1 Evidence
 
@@ -109,9 +116,9 @@ No G3 or D1 blocker remains. D1 was committed/pushed as `5ee3340` after explicit
 5. V2-G1 — **DONE LOCALLY; UNIT/REGRESSION VERIFIED**
 6. V2-G2 — **STAGING MIGRATION APPLIED; LOCAL/REMOTE LEDGERS MATCH; REMOTE LINT PASSED**
 7. V2-G3 — **DONE — STAGING CHECKLIST PASSED, USER-CONFIRMED 2026-11-23**
-8. V2-D1 — **DONE — USER-APPROVED/PUSHED**; V2-D2 **LOCAL REVIEW APPROVED — STAGING REVIEW PENDING**; V2-D3 through V2-D6 **NOT STARTED**
+8. V2-D1 — **DONE — USER-APPROVED/PUSHED**; V2-D2 **DONE - STAGING PASSED**; V2-D3 **LOCAL REVIEW APPROVED - STAGING REVIEW PENDING**; V2-D4 through V2-D6 **NOT STARTED**
 9. V2-P10 onward — **NOT STARTED**
 
 ## Next Intended Action
 
-Local review is approved and commit/push is explicitly authorized; verify CI and built specimen on its Ready preview, then obtain staging sample acceptance. D3 follows only after review/authorization. [V2_VISUAL_FOUNDATIONS.md](V2_VISUAL_FOUNDATIONS.md) records exact tokens, changed files, evidence, limitations, and next actions. The specimen has no Auth/Turnstile dependency, so reviewing it alone needs no new provider hostname configuration.
+Local D3 review passed and commit/push is authorized; verify CI/preview and obtain staging acceptance. D4 starts only after acceptance and authorization. Review instructions, file ownership, verification and boundaries are in [V2_NAVIGATION_REVISION.md](V2_NAVIGATION_REVISION.md).

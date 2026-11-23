@@ -1,5 +1,6 @@
 import { ENERGY_TARGET_CODES } from "../targets/energy-target.js";
 import { roundKcalForDisplay } from "../targets/target-format.js";
+import { validateProfileInput } from "./profile-validation.js";
 
 const ACTIVITY_LABELS = Object.freeze({
   inactive: "Inactive",
@@ -56,6 +57,7 @@ function formatEffectiveDate(value) {
 
 export function createProfileView(handlers) {
   let announcementToken = 0;
+  let busy = false;
 
   const elements = {
     announcement: requiredElement("profile-announcement"),
@@ -76,6 +78,7 @@ export function createProfileView(handlers) {
     retry: requiredElement("profile-retry"),
     skipApp: requiredElement("skip-app"),
     submit: requiredElement("profile-submit"),
+    submitHelp: requiredElement("profile-submit-help"),
     timezone: requiredElement("profile-timezone"),
   };
 
@@ -85,6 +88,20 @@ export function createProfileView(handlers) {
     elements.error,
     elements.home,
   ];
+
+  function updateSubmitAvailability() {
+    if (busy) {
+      elements.submit.disabled = true;
+      return;
+    }
+    const validation = validateProfileInput(formValues(elements.form));
+    elements.submit.disabled = !validation.ok || !elements.form.checkValidity();
+    elements.submitHelp.textContent = !validation.ok
+      ? `Before saving: ${validation.errors[validation.firstField]}`
+      : elements.submit.disabled
+        ? "Check that all required values use the indicated format and increments."
+        : "Required information and confirmations are complete. You can save your profile.";
+  }
 
   function announce(message) {
     if (!message) return;
@@ -177,15 +194,22 @@ export function createProfileView(handlers) {
           ? `National Academies 2023 directional SEPV · version ${target.methodologyVersion}`
         : `${target.methodology} · version ${target.methodologyVersion}`;
     elements.homeEffective.textContent = `Effective ${formatEffectiveDate(target.effectiveFrom)}`;
-    showOnly(elements.home, options);
+    showOnly(elements.home, { ...options, focus: handlers.onHomeShown ? false : options.focus });
+    handlers.onHomeShown?.(options);
     announce(options.announcement ?? "Your profile and calorie estimate are ready.");
   }
 
   elements.form.addEventListener("submit", (event) => {
     event.preventDefault();
+    updateSubmitAvailability();
+    if (elements.submit.disabled) return;
     handlers.onSubmit(formValues(event.currentTarget));
   });
+  elements.form.addEventListener("input", updateSubmitAvailability);
+  elements.form.addEventListener("change", updateSubmitAvailability);
+  elements.form.addEventListener("reset", () => queueMicrotask(updateSubmitAvailability));
   elements.retry.addEventListener("click", handlers.onRetry);
+  updateSubmitAvailability();
 
   return Object.freeze({
     clearErrors,
@@ -197,7 +221,9 @@ export function createProfileView(handlers) {
       for (const section of sections) section.hidden = true;
     },
     setBusy(isBusy) {
+      busy = isBusy;
       for (const field of elements.form.elements) field.disabled = isBusy;
+      updateSubmitAvailability();
       elements.submit.setAttribute("aria-busy", String(isBusy));
       elements.submit.textContent = isBusy
         ? "Saving your profile…"
@@ -214,6 +240,7 @@ export function createProfileView(handlers) {
     showOnboarding({ focus = true, timezoneName }) {
       clearErrors();
       if (!elements.timezone.value) elements.timezone.value = timezoneName;
+      updateSubmitAvailability();
       showOnly(elements.onboarding, { focus });
       announce("Complete your private profile to calculate a calorie estimate.");
     },
