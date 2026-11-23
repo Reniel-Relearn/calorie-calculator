@@ -111,7 +111,7 @@
 
 .profile-choice-group > legend {
   padding: 0;
-  color: #37445f;
+  color: var(--color-label);
   font-weight: 700;
 }
 

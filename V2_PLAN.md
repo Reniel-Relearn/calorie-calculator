@@ -234,7 +234,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
-**Design program status:** V2-D1 APPROVED BY USER 2026-11-23. V2-D0 and V2-G0–G3 are complete for staging. V2-D2 is authorized as the next phase.
+**Design program status:** V2-D1 USER-APPROVED AND PUSHED AS `5ee3340`. V2-D2 IMPLEMENTED/VERIFIED LOCALLY — LOCAL REVIEW APPROVED; STAGING SAMPLE REVIEW PENDING. V2-D3 has not started.
 
 **Disposition:** The user visually approved the complete isolated prototype on 2026-11-03 and authorized a separate V2 Lose/Gain scientific/product phase. The screenshot-derived visual baseline may proceed without waiting for a hands-on Lose It! walkthrough; that behavioral research is deferred and cannot retroactively imply copied behavior. Production design integration remains sequenced after the active V2-G0 methodology gate and its approved implementation stages.
 
@@ -384,7 +384,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D2 — Visual Foundations and Shared Components
 
-**Status:** AUTHORIZED — USER APPROVED D1 AND REQUESTED V2-D2 ON 2026-11-23
+**Status:** BLOCKED — USER ACTION REQUIRED: STAGING SAMPLE ACCEPTANCE. Local review approved and commit/push authorized 2026-11-23. Implementation and local checks passed 2026-11-23; see [V2_VISUAL_FOUNDATIONS.md](V2_VISUAL_FOUNDATIONS.md). Not DONE; D3 remains unstarted.
 
 **Objective:** Implement the approved visual foundations and reusable presentation primitives before revising full screens.
 
@@ -645,7 +645,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 15. V2-G2 — Weight-Goal Data Contracts and Private Migration — **STAGING MIGRATION APPLIED; REMOTE LEDGER/LINT VERIFIED**
 16. V2-G3 — Weight-Goal Application Integration — **DONE — STAGING CHECKLIST PASSED, USER-CONFIRMED 2026-11-23**
 17. V2-D1 — Interface Audit and Design Traceability — **DONE — USER-APPROVED 2026-11-23**
-18. V2-D2 — Visual Foundations and Shared Components
+18. V2-D2 — Visual Foundations and Shared Components — **IMPLEMENTED/VERIFIED LOCALLY; LOCAL REVIEW APPROVED; STAGING REVIEW PENDING**
 19. V2-D3 — Mobile App Shell and Navigation Revision
 20. V2-D4 — Authentication, Onboarding, Calculator, and Today Revision
 21. V2-D5 — Weekly, Settings, and Data-Control Revision

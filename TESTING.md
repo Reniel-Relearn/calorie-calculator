@@ -502,3 +502,11 @@ The V2-G1 through V2-G3 target work requires these checks in addition to the mai
 - The exact calorie-estimate disclaimer is the bottommost Settings section on mobile and desktop.
 
 Local JavaScript and build checks do not substitute for a clean Supabase reset, pgTAP, browser integration, or staging verification. Record each external gate only after it actually passes.
+
+## V2 Visual Foundations Checks
+
+Run Vite locally, then `npm.cmd run test:design:local`. The local-only browser suite opens the D2 component specimen in an isolated Chrome/Chromium profile. Set `DESIGN_TEST_CHROME_PATH` if Chrome is outside the supported discovery paths; set `DESIGN_TEST_APP_URL` to a local build-preview URL to test the compiled artifact instead of development assets.
+
+Required D2 checks cover the maintained viewport matrix plus short height; no page overflow; important enabled controls at least 44 px; labels/names/unique IDs; local SVG resolution without external requests; normal-text contrast ≥4.5:1 and control/focus contrast ≥3:1 for the documented shared-token pairs; keyboard disclosure/dialog/focus return; field feedback and amount-control examples; reduced motion; and text scaling/reflow. Screenshots/results go under ignored `.vercel/design-review/`.
+
+This suite passed against development and production-build preview on 2026-11-23. Native browser zoom, real-device touch/keyboard, other browser engines, and dedicated assistive technology are not certified by these emulated checks. Human staging component approval remains required before D3. The existing 140-test suite and authenticated local browser integration also passed after the D2 shared CSS changes. Full evidence and review instructions are in `V2_VISUAL_FOUNDATIONS.md`.
