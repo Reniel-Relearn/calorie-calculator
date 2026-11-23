@@ -3,7 +3,7 @@
 **Program:** V2-G0 through V2-G3
 
 **Decision date:** 2026-11-03
-**Status:** PRODUCT METHOD APPROVED; STAGING MIGRATION APPLIED; PREVIEW READY; AUTHENTICATED STAGING VERIFICATION BLOCKED BY SUPABASE DASHBOARD MFA ACCESS
+**Status:** V2-G0–G3 COMPLETE FOR STAGING; G3 CHECKLIST PASSED, USER-CONFIRMED 2026-11-23; V2-D1 READY
 
 ## 1. Accepted product method
 
@@ -87,7 +87,7 @@ The additive migration widens stored target precision, installs a non-client-cal
 
 ### V2-G3 — application integration
 
-**Status:** BLOCKED — preview ready and enhanced local browser integration passed; authenticated staging verification requires restored Supabase dashboard MFA access.
+**Status:** DONE — staging checklist passed, user-confirmed 2026-11-23. Remote infrastructure checks were performed by the agent; hosted browser acceptance was reported by the user. See `V2_G3_STAGING_VERIFICATION.md` for evidence and residual advisory findings.
 
 Onboarding and Settings expose all three goals, collect non-persistent safety confirmations, display structured failures, persist versioned targets through existing services, and keep daily/weekly consumers goal-agnostic. The required disclaimer is the bottommost Settings section.
 
@@ -118,12 +118,12 @@ Staging infrastructure verified on 2026-11-03:
 - Vercel preview deployment `dpl_2BG7ntErw59QvJH4KAHBegau93UJ` reached `READY` without a production promotion;
 - authenticated preview smoke returned HTTP 200 with security headers and the expected Lose/Gain and disclaimer markup.
 
-Still required before production deployment:
+Staging disposition and later production gate:
 
-1. Restore Supabase dashboard MFA access and enroll a separate backup TOTP factor.
-2. Allow-list the temporary preview origin in Supabase Auth and Cloudflare Turnstile.
-3. Complete authenticated staging verification for onboarding/settings Maintain, Lose, Gain, unavailable cases, Today, Week, and historical targets on mobile and desktop.
-4. Inspect Supabase advisors and RLS after migration.
+1. Dashboard access recovery is complete per user confirmation on 2026-11-23; separate backup-factor enrollment remains recommended and unconfirmed.
+2. Temporary preview Supabase callbacks and Cloudflare Turnstile hostname were added, as confirmed by the user.
+3. Authenticated staging checklist, including supported/unavailable goals, persistence, history, owner isolation, recovery, and responsive behavior, passed per user confirmation on 2026-11-23.
+4. Supabase advisors, RLS, grants, and locked RPC search paths were inspected by the agent on 2026-11-23; findings and rationale are recorded in `V2_G3_STAGING_VERIFICATION.md`.
 5. Perform a controlled production rollout only after explicit approval.
 
 Professional review is an outstanding recommendation, not an active implementation or deployment gate. Any later professional finding must be handled through a new versioned decision and migration; history must not be rewritten.

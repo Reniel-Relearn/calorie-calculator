@@ -234,11 +234,11 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ---
 
-**Design program status:** APPROVED — V2-D0 CLOSED 2026-11-03; V2-G0 APPROVED; V2-G1–G3 LOCALLY VERIFIED; STAGING MIGRATION APPLIED; AUTHENTICATED STAGING VERIFICATION BLOCKED BY SUPABASE DASHBOARD MFA ACCESS
+**Design program status:** APPROVED — V2-D0 CLOSED 2026-11-03; V2-G0 APPROVED; V2-G1–G3 COMPLETE FOR STAGING; G3 CHECKLIST PASSED, USER-CONFIRMED 2026-11-23; V2-D1 READY
 
 **Disposition:** The user visually approved the complete isolated prototype on 2026-11-03 and authorized a separate V2 Lose/Gain scientific/product phase. The screenshot-derived visual baseline may proceed without waiting for a hands-on Lose It! walkthrough; that behavioral research is deferred and cannot retroactively imply copied behavior. Production design integration remains sequenced after the active V2-G0 methodology gate and its approved implementation stages.
 
-**Sequence rule:** V2-D0 and V2-G0 are complete. G1 through G3 are implemented locally and the reviewed migration is applied to staging, but G3 remains open until authenticated staging verification passes. Then proceed through V2-D1 to V2-D6. Do not begin V2-P10 until the goal and design programs are complete and verified.
+**Sequence rule:** V2-D0 and V2-G0 through V2-G3 are complete for staging. The user confirmed the G3 checklist passed on 2026-11-23. V2-D1 is ready for authorization, followed by V2-D2 to V2-D6. Do not begin V2-P10 until the goal and design programs are complete and verified.
 
 **Purpose:** Revise the complete implemented V2 experience as one coherent mobile-first application after its principal screens and workflows exist, while leaving enough time for security, accessibility, browser, staging, and production verification against the settled interface.
 
@@ -336,7 +336,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-G3 — Weight-Goal Application Integration
 
-**Status:** BLOCKED — PREVIEW READY; ENHANCED LOCAL BROWSER INTEGRATION PASSED; AUTHENTICATED STAGING VERIFICATION REQUIRES RESTORED SUPABASE DASHBOARD MFA ACCESS
+**Status:** DONE — STAGING CHECKLIST PASSED, USER-CONFIRMED 2026-11-23. Agent inspected ledger, lint, RLS/grants, Advisor findings, matching preview smoke, and PR checks; hosted browser acceptance was reported by the user. See [V2_G3_STAGING_VERIFICATION.md](V2_G3_STAGING_VERIFICATION.md).
 
 **Objective:** Connect approved goal calculations to profile/settings controllers and services while leaving visual redesign ownership to V2-D1 through V2-D6.
 
@@ -354,7 +354,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 
 ### V2-D1 — Interface Audit and Design Traceability
 
-**Status:** NOT STARTED — BLOCKED BY V2-G2/G3 VERIFICATION
+**Status:** READY — NOT STARTED; V2-G2/G3 STAGING DEPENDENCIES SATISFIED 2026-11-23
 
 **Objective:** Turn the approved design baseline into an implementation-ready inventory and gap map without changing runtime code.
 
@@ -643,7 +643,7 @@ Completion evidence is recorded in `V2_STATUS.md`; ongoing monitoring and incide
 13. V2-G0 — Lose/Gain Scientific Methodology and Safety Gate — **DONE — APPROVED 2026-11-03**
 14. V2-G1 — Pure Weight-Target Engine and Validation — **DONE LOCALLY**
 15. V2-G2 — Weight-Goal Data Contracts and Private Migration — **STAGING MIGRATION APPLIED; REMOTE LEDGER/LINT VERIFIED**
-16. V2-G3 — Weight-Goal Application Integration — **PREVIEW READY; AUTHENTICATED STAGING VERIFICATION PENDING**
+16. V2-G3 — Weight-Goal Application Integration — **DONE — STAGING CHECKLIST PASSED, USER-CONFIRMED 2026-11-23**
 17. V2-D1 — Interface Audit and Design Traceability
 18. V2-D2 — Visual Foundations and Shared Components
 19. V2-D3 — Mobile App Shell and Navigation Revision
