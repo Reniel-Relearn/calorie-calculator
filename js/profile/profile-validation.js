@@ -163,8 +163,8 @@ export function validateProfileInput(values, options = {}) {
     errors.activityCategory = "Choose the activity description that fits best.";
   }
 
-  if (goalType !== ENERGY_GOAL_TYPES.MAINTAIN) {
-    errors.goalType = "Version 2 currently supports maintenance targets only.";
+  if (!Object.values(ENERGY_GOAL_TYPES).includes(goalType)) {
+    errors.goalType = "Choose Maintain, Lose, or Gain.";
   }
 
   if (!isSupportedTimeZone(timezoneName)) {
@@ -177,6 +177,15 @@ export function validateProfileInput(values, options = {}) {
   ) {
     errors.lifeStageEligibilityConfirmed =
       "Confirm that this estimate is not for pregnancy or breastfeeding.";
+  }
+
+  if (
+    goalType !== ENERGY_GOAL_TYPES.MAINTAIN &&
+    options.requireEligibilityConfirmation !== false &&
+    values?.directionalSafetyEligibilityConfirmed !== true
+  ) {
+    errors.directionalSafetyEligibilityConfirmed =
+      "Confirm the additional safety statement for Lose or Gain.";
   }
 
   let ageYears = null;
@@ -201,6 +210,7 @@ export function validateProfileInput(values, options = {}) {
     "goalType",
     "timezoneName",
     "lifeStageEligibilityConfirmed",
+    "directionalSafetyEligibilityConfirmed",
   ];
   const firstField = fieldOrder.find((field) => errors[field]) ?? null;
 
@@ -227,6 +237,8 @@ export function validateProfileInput(values, options = {}) {
       goalType,
       lifeStageEligibilityConfirmed:
         values?.lifeStageEligibilityConfirmed === true,
+      directionalSafetyEligibilityConfirmed:
+        values?.directionalSafetyEligibilityConfirmed === true,
     },
   };
 }

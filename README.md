@@ -10,7 +10,7 @@ The release proves the core workflow:
 
 food + amount → deterministic match → serving normalization → nutrition calculation → result
 
-**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, maintain-only calorie targets, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 is now blocked on the user's written design plan and approved mockups before the V2-D1 through V2-D6 interface revision.
+**Version 2 is the active roadmap.** V2-P2 through V2-P9 and V2-S0 are complete and verified locally and on staging, covering authentication, private persistence, onboarding, explicit food logging, daily and weekly history, profile settings, target history, captured-snapshot log correction, protected account deletion, Turnstile, abuse throttling, deployment headers, and repository security controls. V2-D0 closed with visual approval on 2026-11-03. V2-G0 now authorizes Maintain plus adult NASEM directional Lose/Gain starting estimates; G1 through G3 pass local unit, database/RLS, lint, browser, build, and security verification. The reviewed staging migration is applied; the full G3 staging checklist passed per user confirmation on 2026-11-23. V2-D1 is user-approved and pushed; V2-D2 visual foundations passed local/staging user review on 2026-11-23. V2-D3 navigation is locally user-approved and awaits staging review; detailed screen revisions remain in D4/D5.
 
 Version 2 planning and operational documents:
 
@@ -19,6 +19,14 @@ Version 2 planning and operational documents:
 - [Current status](V2_STATUS.md)
 - [Architecture decisions](V2_DECISIONS.md)
 - [Research record](V2_RESEARCH.md)
+- [Lose/Gain target methodology plan](V2_LOSE_GAIN_TARGET_PLAN.md)
+- [Design revision audit](V2_DESIGN_REVISION_AUDIT.md)
+- [Design revision plan](V2_DESIGN_REVISION_PLAN_PROPOSAL.md)
+- [Design reference register](V2_DESIGN_REFERENCES.md)
+- [D1 interface traceability and implementation slices](V2_DESIGN_TRACEABILITY.md)
+- [D2 visual foundations and component review](V2_VISUAL_FOUNDATIONS.md)
+- [D3 navigation and local review](V2_NAVIGATION_REVISION.md)
+- [Low-fidelity wireframe baseline](V2_DESIGN_WIREFRAMES.md)
 
 ## Core Functionality
 
@@ -91,6 +99,10 @@ npm run preview
 ```
 
 On Windows systems where PowerShell blocks `npm.ps1`, use `npm.cmd` in place of `npm`.
+
+For the D2 shared-component review, open `/prototypes/v2-foundations/` on the Vite server. This specimen requires no account or running Supabase stack. After building, the same path is included in `dist` and can be served by `npm run preview` or a Vercel preview.
+
+With the local server running, `npm run test:design:local` checks component reflow, contrast, semantics, keyboard behavior, reduced motion, and assets in isolated Chrome/Chromium. See [visual foundations](V2_VISUAL_FOUNDATIONS.md) for the complete review and verification record.
 
 ### Public environment configuration
 

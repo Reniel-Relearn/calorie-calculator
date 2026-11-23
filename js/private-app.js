@@ -14,6 +14,8 @@ import { createLogManagementView } from "./logs/log-management-view.js";
 import { createSettingsController } from "./settings/settings-controller.js";
 import { createSettingsService } from "./settings/settings-service.js";
 import { createSettingsView } from "./settings/settings-view.js";
+import { createNavigationController } from "./navigation/navigation-controller.js";
+import { createNavigationView } from "./navigation/navigation-view.js";
 
 export function createPrivateApplication(client, options = {}) {
   let dailyController = null;
@@ -21,6 +23,10 @@ export function createPrivateApplication(client, options = {}) {
   let profileController = null;
   let settingsController = null;
   let weeklyController = null;
+  let navigation = null;
+  const navigationView = createNavigationView({
+    onNavigate: (destination) => navigation?.navigate(destination),
+  });
   const dailyView = createDailyView({
     onDeleteLog: (log) => logManagementController?.requestDelete(log),
     onEditLog: (log) => logManagementController?.edit(log),
@@ -61,7 +67,8 @@ export function createPrivateApplication(client, options = {}) {
   const settingsView = createSettingsView({
     onClose: () => settingsController?.close(),
     onDeleteAccount: (values) => settingsController?.deleteAccount(values),
-    onOpen: () => settingsController?.open(),
+    onOpen: () => navigation?.navigate("settings"),
+    onClosed: () => navigation?.returnFromSettings(),
     onSubmit: (values) => settingsController?.submit(values),
   }, options.captcha);
   settingsController = createSettingsController({
@@ -71,10 +78,18 @@ export function createPrivateApplication(client, options = {}) {
     onProfileSaved: (_profile, _target, result) =>
       profileController?.refresh({
         announcement: result.targetChanged
-          ? "Settings saved. A new maintenance target is now effective."
+          ? "Settings saved. A new calorie target is now effective."
           : "Display name updated.",
         focus: false,
       }),
+  });
+  navigation = createNavigationController({
+    view: navigationView,
+    onChange: (destination, { focus }) => {
+      if (destination === "settings") {
+        if (document.getElementById("settings-panel").hidden) settingsView.resume({ focus });
+      } else settingsView.hide();
+    },
   });
 
   if (typeof document !== "undefined") {
@@ -98,6 +113,7 @@ export function createPrivateApplication(client, options = {}) {
     },
   });
   const profileView = createProfileView({
+    onHomeShown: (options) => navigation.activate(options),
     onRetry: () => profileController?.retry(),
     onSubmit: (values) => profileController?.submit(values),
   });
@@ -111,6 +127,7 @@ export function createPrivateApplication(client, options = {}) {
       settingsController.activate(profile, target);
     },
     onProfileUnavailable: () => {
+      navigation.suspend();
       calculator.deactivateFoodLogging();
       dailyController.reset();
       weeklyController.reset();
@@ -122,6 +139,7 @@ export function createPrivateApplication(client, options = {}) {
   return Object.freeze({
     activate: (user, options) => profileController.activate(user, options),
     initialize() {
+      navigation.reset();
       profileController.reset();
       logManagementController.reset();
       settingsController.reset();

@@ -19,6 +19,7 @@ function validInput(overrides = {}) {
     goalType: "maintain",
     timezoneName: "Asia/Manila",
     lifeStageEligibilityConfirmed: true,
+    directionalSafetyEligibilityConfirmed: true,
     ...overrides,
   };
 }
@@ -56,6 +57,7 @@ test("rejects underage, unsupported, missing, and noncanonical values", () => {
     validInput({
       activityCategory: "sometimes",
       dateOfBirth: "2008-10-07",
+      directionalSafetyEligibilityConfirmed: false,
       displayName: " ",
       goalType: "lose",
       heightCm: "0",
@@ -75,10 +77,22 @@ test("rejects underage, unsupported, missing, and noncanonical values", () => {
     "heightCm",
     "weightKg",
     "activityCategory",
-    "goalType",
     "timezoneName",
     "lifeStageEligibilityConfirmed",
+    "directionalSafetyEligibilityConfirmed",
   ]);
+});
+
+test("accepts supported directional goals without persisting safety confirmations", () => {
+  const result = validateProfileInput(
+    validInput({ dateOfBirth: "1990-01-01", goalType: "gain" }),
+    { asOfDate: "2026-10-06" },
+  );
+
+  assert.equal(result.ok, true);
+  assert.equal(result.profile.goalType, "gain");
+  assert.equal(result.targetInput.directionalSafetyEligibilityConfirmed, true);
+  assert.equal("directionalSafetyEligibilityConfirmed" in result.profile, false);
 });
 
 test("rejects a person one day before their eighteenth birthday", () => {

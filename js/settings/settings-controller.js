@@ -39,7 +39,7 @@ export function createSettingsController({
       const targetResult = calculateTarget(validation.targetInput);
       if (targetResult.status !== ENERGY_TARGET_STATUSES.SUCCESS) {
         view.showProfileError(
-          targetResult.message ?? "A maintenance target could not be calculated.",
+          targetResult.message ?? "A calorie target could not be calculated.",
         );
         return;
       }

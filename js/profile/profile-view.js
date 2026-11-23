@@ -1,5 +1,6 @@
 import { ENERGY_TARGET_CODES } from "../targets/energy-target.js";
 import { roundKcalForDisplay } from "../targets/target-format.js";
+import { validateProfileInput } from "./profile-validation.js";
 
 const ACTIVITY_LABELS = Object.freeze({
   inactive: "Inactive",
@@ -18,6 +19,8 @@ const FIELD_IDS = Object.freeze({
   goalType: "profile-goal-maintain",
   timezoneName: "profile-timezone",
   lifeStageEligibilityConfirmed: "profile-life-stage-confirmation",
+  directionalSafetyEligibilityConfirmed:
+    "profile-directional-safety-confirmation",
 });
 
 function requiredElement(id) {
@@ -38,6 +41,9 @@ function formValues(form) {
     goalType: data.get("goalType"),
     timezoneName: data.get("timezoneName"),
     lifeStageEligibilityConfirmed: data.has("lifeStageEligibilityConfirmed"),
+    directionalSafetyEligibilityConfirmed: data.has(
+      "directionalSafetyEligibilityConfirmed",
+    ),
   };
 }
 
@@ -51,6 +57,7 @@ function formatEffectiveDate(value) {
 
 export function createProfileView(handlers) {
   let announcementToken = 0;
+  let busy = false;
 
   const elements = {
     announcement: requiredElement("profile-announcement"),
@@ -62,6 +69,7 @@ export function createProfileView(handlers) {
     home: requiredElement("profile-home"),
     homeActivity: requiredElement("profile-home-activity"),
     homeEffective: requiredElement("profile-home-effective"),
+    homeGoal: requiredElement("profile-home-goal"),
     homeGreeting: requiredElement("profile-home-greeting"),
     homeMethod: requiredElement("profile-home-method"),
     homeTarget: requiredElement("profile-home-target"),
@@ -70,6 +78,7 @@ export function createProfileView(handlers) {
     retry: requiredElement("profile-retry"),
     skipApp: requiredElement("skip-app"),
     submit: requiredElement("profile-submit"),
+    submitHelp: requiredElement("profile-submit-help"),
     timezone: requiredElement("profile-timezone"),
   };
 
@@ -79,6 +88,20 @@ export function createProfileView(handlers) {
     elements.error,
     elements.home,
   ];
+
+  function updateSubmitAvailability() {
+    if (busy) {
+      elements.submit.disabled = true;
+      return;
+    }
+    const validation = validateProfileInput(formValues(elements.form));
+    elements.submit.disabled = !validation.ok || !elements.form.checkValidity();
+    elements.submitHelp.textContent = !validation.ok
+      ? `Before saving: ${validation.errors[validation.firstField]}`
+      : elements.submit.disabled
+        ? "Check that all required values use the indicated format and increments."
+        : "Required information and confirmations are complete. You can save your profile.";
+  }
 
   function announce(message) {
     if (!message) return;
@@ -139,11 +162,13 @@ export function createProfileView(handlers) {
     let message = result.message;
     let field = "profile-form-error";
 
-    if (result.code === ENERGY_TARGET_CODES.GOAL_METHOD_UNAVAILABLE) {
-      message = "Lose and gain targets are unavailable in Version 2. Choose Maintain.";
-      field = FIELD_IDS.goalType;
-    } else if (result.code === ENERGY_TARGET_CODES.LIFE_STAGE_NOT_ELIGIBLE) {
+    if (result.code === ENERGY_TARGET_CODES.LIFE_STAGE_NOT_ELIGIBLE) {
       field = FIELD_IDS.lifeStageEligibilityConfirmed;
+    } else if (
+      result.code === ENERGY_TARGET_CODES.MISSING_DIRECTIONAL_SAFETY_CONFIRMATION ||
+      result.code === ENERGY_TARGET_CODES.DIRECTIONAL_SAFETY_NOT_ELIGIBLE
+    ) {
+      field = FIELD_IDS.directionalSafetyEligibilityConfirmed;
     } else if (result.code === ENERGY_TARGET_CODES.UNDERAGE) {
       field = FIELD_IDS.dateOfBirth;
     }
@@ -156,22 +181,35 @@ export function createProfileView(handlers) {
   function showHome(profile, target, options = {}) {
     elements.homeGreeting.textContent = `Welcome, ${profile.displayName}`;
     elements.homeTarget.textContent = roundKcalForDisplay(target.targetKcal) ?? "—";
+    elements.homeGoal.textContent =
+      { maintain: "Maintain Weight", lose: "Lose Weight", gain: "Gain Weight" }[
+        target.goalType
+      ] ?? target.goalType;
     elements.homeActivity.textContent =
       ACTIVITY_LABELS[target.activityCategory] ?? target.activityCategory;
     elements.homeMethod.textContent =
       target.methodology === "nasem-dri-energy-2023-eer"
         ? `National Academies 2023 EER · version ${target.methodologyVersion}`
+        : target.methodology === "nasem-dri-energy-2023-directional-sepv"
+          ? `National Academies 2023 directional SEPV · version ${target.methodologyVersion}`
         : `${target.methodology} · version ${target.methodologyVersion}`;
     elements.homeEffective.textContent = `Effective ${formatEffectiveDate(target.effectiveFrom)}`;
-    showOnly(elements.home, options);
-    announce(options.announcement ?? "Your profile and maintenance estimate are ready.");
+    showOnly(elements.home, { ...options, focus: handlers.onHomeShown ? false : options.focus });
+    handlers.onHomeShown?.(options);
+    announce(options.announcement ?? "Your profile and calorie estimate are ready.");
   }
 
   elements.form.addEventListener("submit", (event) => {
     event.preventDefault();
+    updateSubmitAvailability();
+    if (elements.submit.disabled) return;
     handlers.onSubmit(formValues(event.currentTarget));
   });
+  elements.form.addEventListener("input", updateSubmitAvailability);
+  elements.form.addEventListener("change", updateSubmitAvailability);
+  elements.form.addEventListener("reset", () => queueMicrotask(updateSubmitAvailability));
   elements.retry.addEventListener("click", handlers.onRetry);
+  updateSubmitAvailability();
 
   return Object.freeze({
     clearErrors,
@@ -183,7 +221,9 @@ export function createProfileView(handlers) {
       for (const section of sections) section.hidden = true;
     },
     setBusy(isBusy) {
+      busy = isBusy;
       for (const field of elements.form.elements) field.disabled = isBusy;
+      updateSubmitAvailability();
       elements.submit.setAttribute("aria-busy", String(isBusy));
       elements.submit.textContent = isBusy
         ? "Saving your profile…"
@@ -200,8 +240,9 @@ export function createProfileView(handlers) {
     showOnboarding({ focus = true, timezoneName }) {
       clearErrors();
       if (!elements.timezone.value) elements.timezone.value = timezoneName;
+      updateSubmitAvailability();
       showOnly(elements.onboarding, { focus });
-      announce("Complete your private profile to calculate a maintenance estimate.");
+      announce("Complete your private profile to calculate a calorie estimate.");
     },
     showSaveError() {
       elements.errorMessage.textContent =

@@ -5,6 +5,8 @@ const PROFILE_FIELD_IDS = Object.freeze({
   goalType: "settings-goal-maintain",
   heightCm: "settings-height-cm",
   lifeStageEligibilityConfirmed: "settings-life-stage-confirmation",
+  directionalSafetyEligibilityConfirmed:
+    "settings-directional-safety-confirmation",
   sexForEnergyEquation: "settings-equation-sex-female",
   timezoneName: "settings-timezone",
   weightKg: "settings-weight-kg",
@@ -30,6 +32,9 @@ function formValues(form) {
     goalType: data.get("goalType"),
     heightCm: data.get("heightCm"),
     lifeStageEligibilityConfirmed: data.has("lifeStageEligibilityConfirmed"),
+    directionalSafetyEligibilityConfirmed: data.has(
+      "directionalSafetyEligibilityConfirmed",
+    ),
     sexForEnergyEquation: data.get("sexForEnergyEquation"),
     timezoneName: data.get("timezoneName"),
     weightKg: data.get("weightKg"),
@@ -98,14 +103,27 @@ export function createSettingsView(handlers, captcha) {
       captcha.reset("delete");
       elements.panel.hidden = true;
       elements.open.setAttribute("aria-expanded", "false");
-      elements.open.focus();
+      if (handlers.onClosed) handlers.onClosed();
+      else elements.open.focus();
+    },
+    hide() {
+      captcha.reset("delete");
+      elements.panel.hidden = true;
+      elements.open.setAttribute("aria-expanded", "false");
+      elements.deletePassword.value = "";
+      elements.deleteConfirmation.value = "";
     },
     open(profile) {
       this.setProfile(profile);
+      this.resume();
+    },
+    resume({ focus = true } = {}) {
       elements.panel.hidden = false;
       elements.open.setAttribute("aria-expanded", "true");
       captcha.prepare("delete");
-      requestAnimationFrame(() => elements.heading.focus());
+      requestAnimationFrame(() => {
+        if (focus && !elements.panel.closest("[hidden]")) elements.heading.focus();
+      });
     },
     reset() {
       captcha.reset("delete");
@@ -132,6 +150,7 @@ export function createSettingsView(handlers, captcha) {
       elements.profileForm.elements.weightKg.value = profile.weightKg;
       elements.profileForm.elements.timezoneName.value = profile.timezoneName;
       elements.profileForm.elements.lifeStageEligibilityConfirmed.checked = false;
+      elements.profileForm.elements.directionalSafetyEligibilityConfirmed.checked = false;
       setRadio(
         elements.profileForm,
         "sexForEnergyEquation",

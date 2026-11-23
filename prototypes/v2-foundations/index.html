@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <meta name="description" content="CalorieCheck shared component review. No account or database connection required.">
+    <title>Visual Foundations · CalorieCheck</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/profile.css">
+    <link rel="stylesheet" href="../../css/settings.css">
+    <link rel="stylesheet" href="./specimen.css">
+    <script type="module" src="./specimen.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#specimen-main">Skip to component review</a>
+    <div class="specimen-shell">
+      <header class="specimen-header">
+        <p class="brand">Calorie<span class="brand__accent">Check</span></p>
+        <span class="specimen-label">D2 · Component review</span>
+      </header>
+      <main id="specimen-main" tabindex="-1">
+        <div class="specimen-intro">
+          <p class="eyebrow">Visual foundations</p>
+          <h1>A consistent foundation.</h1>
+          <p>The shared colors, controls, and feedback for CalorieCheck’s next interface. Try the examples, resize the page, and use your keyboard.</p>
+          <p class="specimen-disclosure">Design examples only. No login, nutrition calculation, or data saving happens here.</p>
+          <a class="specimen-jump" href="#controls-heading">Explore the components <span aria-hidden="true">↓</span></a>
+        </div>
+
+        <section class="specimen-section" aria-labelledby="type-heading">
+          <div class="specimen-section__heading"><p class="eyebrow">01 · Type &amp; color</p><h2 id="type-heading">Give the important things room.</h2><p>Strong numbers. Readable supporting text. Color that reinforces the words.</p></div>
+          <div class="specimen-grid">
+            <article class="surface specimen-metric">
+              <p class="specimen-kicker">Metric typography example</p>
+              <p class="calorie-value">1,250 <span>kcal</span></p>
+              <p class="specimen-metric__context">of 2,100 kcal · illustrative values</p>
+              <label for="sample-meter" class="visually-hidden">Illustrative progress: 1,250 of 2,100 kilocalories</label>
+              <meter class="calorie-meter" id="sample-meter" min="0" max="2100" value="1250">1,250 of 2,100 kcal</meter>
+              <p class="field-help">The visible values remain available without the graphic.</p>
+            </article>
+            <article class="surface specimen-palette">
+              <h3>One palette, clear roles</h3>
+              <ul class="specimen-swatches">
+                <li><span class="specimen-swatch specimen-swatch--primary" aria-hidden="true"></span><span><strong>Action blue</strong><small>Primary actions and active controls</small></span></li>
+                <li><span class="specimen-swatch specimen-swatch--ink" aria-hidden="true"></span><span><strong>Deep navy</strong><small>Headings and essential values</small></span></li>
+                <li><span class="specimen-swatch specimen-swatch--success" aria-hidden="true"></span><span><strong>Success teal</strong><small>Confirmed completion, paired with text</small></span></li>
+                <li><span class="specimen-swatch specimen-swatch--danger" aria-hidden="true"></span><span><strong>Attention red</strong><small>Errors and consequential actions</small></span></li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="specimen-section" aria-labelledby="controls-heading">
+          <div class="specimen-section__heading"><p class="eyebrow">02 · Controls</p><h2 id="controls-heading" tabindex="-1">Comfortable to tap. Clear to focus.</h2><p>Every enabled example does something on this page. Nothing is sent to a server.</p></div>
+          <div class="specimen-grid">
+            <article class="surface specimen-stack">
+              <h3>Actions &amp; feedback</h3>
+              <div class="specimen-actions">
+                <button class="button button--primary" type="button" data-feedback="success"><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#check"/></svg>Show success example</button>
+                <button class="button button--secondary" type="button" data-feedback="info">Show information</button>
+                <button class="button button--text" type="button" data-feedback="warning">Show warning example</button>
+                <button class="button button--danger" type="button" data-feedback="error">Show error example</button>
+              </div>
+              <div class="status-message" id="feedback-example" role="status" aria-live="polite" aria-atomic="true"><svg class="ui-icon" aria-hidden="true"><use id="feedback-icon" href="../../assets/icons/interface.svg#info"/></svg><div><strong id="feedback-title">Information example</strong><p id="feedback-copy">Choose an action above to preview its feedback.</p></div></div>
+              <div class="specimen-actions">
+                <button class="button button--primary" type="button" disabled>Disabled example</button>
+                <button class="button button--secondary" type="button" disabled aria-busy="true">Busy example…</button>
+              </div>
+            </article>
+            <article class="surface specimen-stack">
+              <h3>Fields &amp; validation</h3>
+              <form id="specimen-form" class="specimen-stack" novalidate>
+                <div class="form-field"><label for="sample-name">Example display name</label><input id="sample-name" name="name" type="text" autocomplete="off" placeholder="Enter at least two characters" aria-describedby="sample-name-help sample-name-error" required minlength="2"><p class="field-help" id="sample-name-help">This field is only for testing focus and validation.</p><p class="form-error" id="sample-name-error" role="alert" hidden></p></div>
+                <div class="form-field"><label for="sample-select">Example selection</label><select id="sample-select"><option>First option</option><option>Second option</option><option>A longer option to check wrapping and native interaction</option></select></div>
+                <button class="button button--secondary" type="submit">Preview field validation</button>
+                <p class="field-help" id="sample-form-status" role="status" aria-live="polite"></p>
+              </form>
+            </article>
+          </div>
+          <div class="specimen-grid specimen-row-gap">
+            <article class="surface specimen-stack">
+              <fieldset class="profile-choice-group profile-choice-group--flush">
+                <legend>Choice-card examples</legend>
+                <div class="profile-choice-list">
+                  <label class="profile-choice"><input type="radio" name="sample-choice" value="first" checked><span><strong>Selected option</strong><small>A native radio button with a full-label touch target.</small></span></label>
+                  <label class="profile-choice"><input type="radio" name="sample-choice" value="second"><span><strong>Another option</strong><small>Switch with touch, keyboard arrows, or a click.</small></span></label>
+                </div>
+              </fieldset>
+              <label class="profile-confirmation"><input type="checkbox"><span>Example confirmation. This changes only the checkbox on this page.</span></label>
+            </article>
+            <article class="surface specimen-stack">
+              <h3>Small controls, generous targets</h3>
+              <label for="sample-amount" class="specimen-kicker">Amount-control example</label>
+              <div class="specimen-stepper">
+                <button class="button button--icon" id="sample-decrease" type="button" aria-label="Decrease example amount"><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#minus"/></svg></button>
+                <div class="form-field"><input id="sample-amount" type="number" value="1" min="0.25" step="0.25" inputmode="decimal" aria-describedby="sample-amount-help"></div>
+                <button class="button button--icon" id="sample-increase" type="button" aria-label="Increase example amount"><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#plus"/></svg></button>
+              </div>
+              <p class="field-help" id="sample-amount-help">Quarter-step interaction example. No nutrition is calculated.</p>
+              <details class="specimen-details"><summary>View disclosure example</summary><p class="field-help">Native disclosure preserves keyboard and touch behavior. Required information should remain visible without opening it.</p></details>
+              <button class="button button--secondary" id="sample-dialog-open" type="button">Open dialog example</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="specimen-section" aria-labelledby="states-heading">
+          <div class="specimen-section__heading"><p class="eyebrow">03 · System feedback</p><h2 id="states-heading">Make each state understandable.</h2><p>Loading, empty, and recoverable error patterns. These panels are visible design samples.</p></div>
+          <div class="specimen-grid">
+            <div class="status-panel" id="loading-example"><span class="spinner" aria-hidden="true"></span><h3>Loading example</h3><p>A short status keeps the task clear while the real request is pending.</p><div class="specimen-skeletons" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span></div></div>
+            <div class="status-panel"><svg class="ui-icon specimen-state-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#calendar"/></svg><h3>Empty-state example</h3><p>Explain what is missing and point to a useful next action.</p><a class="button button--text" href="#controls-heading">Try the controls</a></div>
+          </div>
+          <div class="status-message status-message--error specimen-row-gap"><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#warning"/></svg><div><strong>Recoverable error example</strong><p>Keep the explanation close to the affected task. Long content must wrap without pushing the page sideways: example-of-a-very-long-reference-or-food-description-that-must-remain-readable.</p></div></div>
+        </section>
+
+        <section class="specimen-section" aria-labelledby="icons-heading">
+          <div class="specimen-section__heading"><p class="eyebrow">04 · Supporting details</p><h2 id="icons-heading">Text first. Icons alongside.</h2></div>
+          <ul class="specimen-icon-list surface">
+            <li><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#home"/></svg>Today</li>
+            <li><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#search"/></svg>Analyze</li>
+            <li><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#calendar"/></svg>Week</li>
+            <li><svg class="ui-icon" aria-hidden="true"><use href="../../assets/icons/interface.svg#person"/></svg>Settings</li>
+          </ul>
+          <p class="field-help">Icon samples, not navigation. Persistent destinations arrive in D3.</p>
+        </section>
+      </main>
+      <footer class="specimen-footer"><span>CalorieCheck · V2-D2</span><span>Shared components now. Complete screens follow in D3–D5.</span></footer>
+    </div>
+    <dialog class="management-dialog" id="sample-dialog" aria-labelledby="sample-dialog-title" aria-describedby="sample-dialog-copy">
+      <div class="management-dialog__content">
+        <p class="eyebrow">Dialog specimen</p><h2 id="sample-dialog-title">A focused moment.</h2><p id="sample-dialog-copy">This example checks spacing, keyboard focus, Escape, and focus return. It does not delete or change account data.</p>
+        <button class="button button--secondary" id="sample-dialog-close" type="button" autofocus>Close example</button>
+      </div>
+    </dialog>
+  </body>
+</html>

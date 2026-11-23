@@ -77,10 +77,10 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 
 ## V2-ADR-011 — Weight-Change Target Method
 
-**Status:** ACCEPTED — APPROVED 2026-10-05
+**Status:** SUPERSEDED BY V2-ADR-032 ON 2026-11-03
 **Decision:** Ship Version 2 with the verified maintenance method only. Keep `LOSE` and `GAIN` as recognized user goal concepts that return an explicit unavailable outcome. Do not implement the Hall model, copy the NIDDK planner, or use a fixed `±500 kcal` adjustment.
 **Reason:** The published Hall model requires additional goal, timeframe, continuous activity, body-composition, diet-composition, sodium, and numerical-simulation behavior. The official implementation is listed through NIH technology transfer, no reusable software license was identified, and independent consumer target vectors—especially for intentional gain—were not available for a defensible implementation.
-**Consequences:** V2-P4 includes no deficit, surplus, or dynamic weight-change model. Onboarding may calculate and persist a target only for `MAINTAIN`; selecting `LOSE` or `GAIN` must explain that Version 2 has no approved target method. A later version may revisit weight change after a separately approved scientific, licensing, input, and validation plan.
+**Consequences:** V2-P4 shipped no deficit, surplus, or dynamic weight-change model. This was the production rule until the separate V2-G0 evidence and product decision established V2-ADR-032. The historical reason for rejecting the Hall/fixed-adjustment approaches remains valid.
 
 ## V2-ADR-012 — Eligibility and Life-Stage Scope
 
@@ -219,3 +219,37 @@ Research support is recorded in [V2_RESEARCH.md](V2_RESEARCH.md).
 **Reason:** The staging application is already public. Direct Supabase requests bypass Vercel Firewall, authentication/email quotas can be exhausted, and the privileged deletion endpoint needs durable abuse controls before additional design work expands the interface surface.
 
 **Consequences:** Staging and production authentication fail closed when Turnstile is not configured. The browser receives only the public Turnstile site key; its secret is stored only in Supabase Auth. Account deletion allows five attempts per user in a 15-minute window and rejects oversized, malformed, unsupported-method, unauthenticated, and unapproved-origin requests. Provider settings, migration/deployment, staging checks, repository rules, pull-request approval, and merge remain human-controlled completion gates. No paid service or trial is authorized.
+
+## V2-ADR-030 — Design Architecture, Navigation, and Reference Baseline
+
+**Status:** ACCEPTED — D0 BASELINE VISUALLY APPROVED 2026-11-03
+
+**Decision:** Retain Vite, semantic HTML, custom CSS, modular vanilla JavaScript, the existing controller/service/view separation, and the deterministic V1 calculator engine. Use four labeled primary destinations—Today, Analyze, Week, Settings—with lightweight same-document History API and allowlisted non-sensitive query state. Make consumed of estimated target the dominant Today relationship and remaining or neutral above-target text secondary. Use five-stage progressive onboarding with the existing atomic final save. Preserve one information architecture across mobile, tablet, and desktop, using restrained two-column enhancement without a permanent sidebar. Keep deterministic submitted food search and show accessible preparation-specific choices for ambiguity; do not add live typeahead.
+
+Use a hybrid reference model: CalorieCheck V1 for brand/calculator continuity, Lose It! for primary Today/diary UX principles, Apple Fitness for glanceability and hierarchy, and Cronometer for nutrition and diary-data hierarchy. Borrow principles only. Do not copy trademarks, brand systems, rings, exact layouts, proprietary assets, or incidental features. Use a small local audited SVG set only if useful, keep text labels authoritative, retain the semantic weekly list with optional CSS bars, use restrained 100–200 ms functional motion with reduced-motion support, omit food imagery by default, and defer dark mode. Screenshot-based visual ingestion is complete for the current batch. Hands-on behavioral UX research remains separate and pending; no hidden interaction is inferred.
+
+**Reason:** The existing application already has complete tested V2 behavior and hardened security boundaries. The selected approach improves hierarchy and navigation without adding framework or dependency risk, while the hybrid references cover complementary product qualities without importing another product's scope or identity.
+
+**Consequences:** React, Tailwind, React Router, external state management, component libraries, icon packages, chart libraries, decorative food photography, dark mode, path-based private routes, and live autocomplete are excluded from this design program unless a future separately approved decision provides concrete evidence. Auth callbacks, session restoration, accessibility, RLS, privacy, target history, null-aware nutrition, demo-data disclosure, and security controls remain unchanged. The approved isolated prototype is the design source of truth. The optional hands-on behavioral walkthrough is deferred and no hidden reference behavior is inferred. V2-ADR-032 records the subsequently approved production directional-target method.
+
+## V2-ADR-031 — Lose/Gain Scientific Phase Placement
+
+**Status:** ACCEPTED FOR PLANNING — APPROVED 2026-11-03
+
+**Decision:** Keep production Maintain-only while inserting V2-G0 through V2-G3 before production design integration. V2-G0 must approve the scientific method, licensing boundary, separate Gain evidence, inputs, BMI policy, activity/recalculation assumptions, safety thresholds, and independent reference vectors. V2-G1 may then implement the pure model, V2-G2 the private data contract/migration, and V2-G3 the application/service integration. BMI is screening context and never the calorie formula. Fixed deficits/surpluses, linear kilogram rules, copied NIDDK code/UI, undocumented remote calculators, and prototype sample calorie values are prohibited.
+
+**Reason:** The product owner selected Lose/Gain as intended Version 2 directions, but the existing evidence still does not authorize a production method. Settling science and persistence before design integration prevents the approved interface from being wired to invented or temporary logic.
+
+**Consequences:** `V2_LOSE_GAIN_TARGET_PLAN.md` remains the execution and verification artifact. V2-ADR-032 now supersedes the temporary Maintain-only production rule. G1 through G3 must still pass local, database, staging, and deployment review before the new behavior is released.
+
+## V2-ADR-032 — Adult Directional Lose/Gain Starting Estimates
+
+**Status:** ACCEPTED — PRODUCT OWNER AUTHORIZED 2026-11-03
+
+**Decision:** Keep the existing NASEM EER for Maintain from age 18. For eligible users age 19+, calculate Lose as raw EER minus `1.96 × adult SEPV` and Gain as raw EER plus `1.96 × adult SEPV`, using the published adult constants `342 kcal/day` for the male equation and `241 kcal/day` for the female equation. Treat the outputs as starting estimates, retain raw internal precision, and round only for display. Do not collect goal weight, goal date, desired rate, or forecast weight change.
+
+Adopt fail-closed product safeguards: age 18–18.99 remains Maintain-only; Lose is unavailable below BMI `18.5`; both directional goals are unavailable below BMI `16` or when the non-persistent safety confirmation is not satisfied; and a Lose result below `1,200 kcal/day` is unavailable rather than clamped. The `1,200` boundary is a CalorieCheck policy, not a NASEM formula constant. Pregnancy, breastfeeding, unsupported inputs, and known high-risk circumstances remain outside the self-directed contract.
+
+**Reason:** NASEM 2023 Chapter 7 explicitly applies `EER ± 1.96 × SEPV` as adult starting intakes likely to fall outside an individual's maintenance range and supplies both Lose and Gain examples. The method is traceable, deterministic, compatible with the existing EER inputs, and does not require the unlicensed planner implementation or forecasting inputs rejected in V2-ADR-011.
+
+**Consequences:** Directional targets use methodology `nasem-dri-energy-2023-directional-sepv`, version `1.0.0`, and store the SEPV displacement provenance in the effective-dated input snapshot. Recalculation happens only after explicit target-affecting profile changes. All eligible authenticated accounts receive the same behavior; no allowlist or feature flag is added. Licensed-professional review remains outstanding and recommended, but the product owner explicitly removed it as a release prerequisite. CalorieCheck claims neither professional endorsement nor clinical validation.

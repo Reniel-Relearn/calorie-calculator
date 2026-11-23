@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Isolated CalorieCheck Version 2 interface prototype using sample data only.">
+    <title>CalorieCheck V2 Design Prototype</title>
+    <link rel="stylesheet" href="./prototype.css">
+  </head>
+  <body data-mode="app">
+    <a class="skip-link" href="#prototype-main">Skip to main content</a>
+
+    <div class="prototype-notice" role="note">
+      <span><strong>Design prototype</strong> · sample data only</span>
+      <button class="prototype-notice__button" type="button" data-open-dialog="preview-dialog">Preview screens</button>
+    </div>
+
+    <header class="app-header" data-app-chrome>
+      <a class="brand" href="?screen=today" data-route="today" aria-label="CalorieCheck Today">
+        <span class="brand__calorie">Calorie</span><span class="brand__check">Check</span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a class="primary-nav__item" href="?screen=today" data-route="today">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1Z"/></svg>
+          <span>Today</span>
+        </a>
+        <a class="primary-nav__item" href="?screen=analyze" data-route="analyze">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"/></svg>
+          <span>Analyze</span>
+        </a>
+        <a class="primary-nav__item" href="?screen=week" data-route="week">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h2M11 14h2M15 14h2M7 18h2M11 18h2"/></svg>
+          <span>Week</span>
+        </a>
+        <a class="primary-nav__item" href="?screen=settings" data-route="settings">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0M19 5v4M17 7h4"/></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </header>
+
+    <main id="prototype-main" class="app-main" tabindex="-1">
+      <section class="screen" data-screen="today" aria-labelledby="today-title">
+        <header class="page-header page-header--with-action">
+          <div>
+            <p class="eyebrow">Today overview</p>
+            <h1 id="today-title">Good afternoon, Alex</h1>
+          </div>
+          <button class="avatar-button" type="button" data-route-button="settings" aria-label="Open settings for Alex">AG</button>
+        </header>
+
+        <div data-today-state-panel="populated">
+        <div class="today-date-nav" aria-label="Review another day">
+          <button type="button" data-today-change="previous" aria-label="Previous day">‹</button>
+          <div><strong data-today-date>Today</strong><span data-today-full-date>Sunday, November 2</span></div>
+          <button type="button" data-today-change="next" aria-label="Next day" disabled>›</button>
+        </div>
+
+        <div class="today-layout">
+          <div class="today-layout__summary">
+            <article class="calorie-card" aria-labelledby="calorie-summary-title">
+              <div class="calorie-card__heading">
+                <div>
+                  <p class="card-kicker">Today’s calories</p>
+                  <h2 id="calorie-summary-title"><span class="metric-large">1,240</span> <span class="metric-total">of 1,750 kcal</span></h2>
+                </div>
+                <span class="status-chip status-chip--calm">On track</span>
+              </div>
+              <div class="progress-track" role="meter" aria-label="Calories consumed" aria-valuemin="0" aria-valuemax="1750" aria-valuenow="1240">
+                <span style="width: 70.9%"></span>
+              </div>
+              <p class="calorie-card__remaining"><strong>510 kcal remaining</strong><span>Illustrative Lose Weight target</span></p>
+            </article>
+
+            <section class="goal-card" aria-labelledby="today-goal-title">
+              <div class="section-heading">
+                <div>
+                  <p class="card-kicker">Goals</p>
+                  <h2 id="today-goal-title">Lose Weight</h2>
+                </div>
+                <span class="status-chip status-chip--prototype">Prototype estimate</span>
+              </div>
+              <div class="goal-path" aria-label="Weight goal from 67 kilograms to 57 kilograms">
+                <div><span>Current</span><strong>67 kg</strong></div>
+                <span class="goal-path__line" aria-hidden="true"></span>
+                <div><span>Goal</span><strong>57 kg</strong></div>
+              </div>
+              <dl class="goal-context">
+                <div><dt>Current BMI</dt><dd>27.0</dd></div>
+                <div><dt>Goal BMI</dt><dd>23.0</dd></div>
+                <div><dt>Target date</dt><dd>Mar 2, 2027</dd></div>
+              </dl>
+              <p class="data-note">BMI is screening context only. The calorie value is an illustrative planning estimate until the Lose/Gain methodology is validated for production.</p>
+              <button class="text-action" type="button" data-route-button="settings">Review goal settings</button>
+            </section>
+
+            <section class="nutrient-summary" aria-labelledby="nutrient-summary-title">
+              <div class="section-heading">
+                <div>
+                  <p class="card-kicker">Nutrition</p>
+                  <h2 id="nutrient-summary-title">Today at a glance</h2>
+                </div>
+              </div>
+              <dl class="nutrient-grid">
+                <div><dt>Protein</dt><dd><strong>76</strong> g</dd><span class="mini-bar"><i style="width: 68%"></i></span></div>
+                <div><dt>Carbs</dt><dd><strong>142</strong> g</dd><span class="mini-bar"><i style="width: 56%"></i></span></div>
+                <div><dt>Fat</dt><dd><strong>42</strong> g</dd><span class="mini-bar"><i style="width: 62%"></i></span></div>
+              </dl>
+            </section>
+
+            <a class="primary-action primary-action--with-icon" href="?screen=analyze" data-route="analyze">
+              <span aria-hidden="true">＋</span> Analyze food
+            </a>
+          </div>
+
+          <section class="log-section" aria-labelledby="today-log-title">
+            <div class="section-heading section-heading--spaced">
+              <div>
+                <p class="card-kicker">Food log</p>
+                <h2 id="today-log-title">What you ate</h2>
+              </div>
+              <span class="section-total">1,240 kcal</span>
+            </div>
+            <ol class="food-list">
+              <li class="food-row">
+                <div class="food-row__body"><strong>Cooked White Rice</strong><span>250 g · 8:15 AM</span></div>
+                <div class="food-row__value"><strong>325</strong><span>kcal</span></div>
+                <button class="icon-button" type="button" data-open-dialog="edit-dialog" aria-label="Edit Cooked White Rice">•••</button>
+              </li>
+              <li class="food-row">
+                <div class="food-row__body"><strong>Fried Egg</strong><span>1 large egg · 8:16 AM</span></div>
+                <div class="food-row__value"><strong>196</strong><span>kcal</span></div>
+                <button class="icon-button" type="button" data-open-dialog="edit-dialog" aria-label="Edit Fried Egg">•••</button>
+              </li>
+              <li class="food-row">
+                <div class="food-row__body"><strong>Grilled Chicken Breast</strong><span>180 g · 12:42 PM</span></div>
+                <div class="food-row__value"><strong>381</strong><span>kcal</span></div>
+                <button class="icon-button" type="button" data-open-dialog="edit-dialog" aria-label="Edit Grilled Chicken Breast">•••</button>
+              </li>
+              <li class="food-row">
+                <div class="food-row__body"><strong>Cooked White Rice</strong><span>1 cup · 12:42 PM</span></div>
+                <div class="food-row__value"><strong>205</strong><span>kcal</span></div>
+                <button class="icon-button" type="button" data-open-dialog="edit-dialog" aria-label="Edit Cooked White Rice">•••</button>
+              </li>
+              <li class="food-row">
+                <div class="food-row__body"><strong>Banana</strong><span>1 medium · 3:10 PM</span></div>
+                <div class="food-row__value"><strong>133</strong><span>kcal</span></div>
+                <button class="icon-button" type="button" data-open-dialog="edit-dialog" aria-label="Edit Banana">•••</button>
+              </li>
+            </ol>
+          </section>
+        </div>
+        </div>
+
+        <section class="status-panel status-panel--standalone" data-today-state-panel="loading" hidden>
+          <span class="state-card__spinner state-card__spinner--large" aria-hidden="true"></span><h2>Loading today’s data</h2><p>Your private calorie summary and food log are being prepared.</p>
+        </section>
+        <section class="status-panel status-panel--standalone" data-today-state-panel="empty" hidden>
+          <span class="status-panel__icon" aria-hidden="true">0</span><h2>No food logged today</h2><p>Analyze a food and add it when you’re ready. Nothing is logged automatically.</p><a class="primary-action" href="?screen=analyze" data-route="analyze">Analyze food</a>
+        </section>
+        <section class="status-panel status-panel--standalone" data-today-state-panel="missing-target" hidden>
+          <span class="status-panel__icon" aria-hidden="true">—</span><h2>Your target is unavailable</h2><p>Your logged calories remain visible, but Today cannot calculate a remaining or above-target amount.</p><button class="secondary-action" type="button" data-route-button="settings">Review target settings</button>
+        </section>
+        <section class="status-panel status-panel--standalone status-panel--error" data-today-state-panel="error" hidden>
+          <span class="status-panel__icon" aria-hidden="true">!</span><h2>We couldn’t load Today</h2><p>Your data was not changed. Check your connection and try again.</p><button class="secondary-action" type="button">Retry</button>
+        </section>
+        <section class="status-panel status-panel--standalone status-panel--error" data-today-state-panel="permission" hidden>
+          <span class="status-panel__icon" aria-hidden="true">×</span><h2>This information isn’t available</h2><p>CalorieCheck could not verify access to this private data. No record details are exposed.</p><button class="primary-action" type="button" data-route-button="auth">Log in again</button>
+        </section>
+      </section>
+
+      <section class="screen" data-screen="analyze" aria-labelledby="analyze-title" hidden>
+        <header class="page-header">
+          <p class="eyebrow">Demo nutrition dataset</p>
+          <h1 id="analyze-title">Analyze food</h1>
+          <p>Enter one food and the amount you ate. We’ll show supported preparation-specific matches.</p>
+        </header>
+
+        <form class="search-panel" id="analyze-form">
+          <label for="food-query">Food and amount</label>
+          <div class="search-panel__control">
+            <input id="food-query" name="query" type="search" placeholder="e.g. 150g grilled chicken breast" autocomplete="off">
+            <button class="primary-action" type="submit">Analyze</button>
+          </div>
+          <p class="field-help">Try “chicken”, “150g grilled chicken breast”, or an unsupported food.</p>
+          <details class="advanced-input">
+            <summary>Advanced input</summary>
+            <div class="advanced-input__grid">
+              <label>Food<input type="text" value=""></label>
+              <label>Amount<input type="number" inputmode="decimal" min="0" step="any"></label>
+              <label>Unit<select><option>grams</option><option>cups</option><option>milliliters</option></select></label>
+              <label>Preparation<input type="text" placeholder="grilled"></label>
+            </div>
+          </details>
+        </form>
+
+        <div class="analyze-state" data-analyze-state="intro">
+          <div class="empty-illustration" aria-hidden="true"><span></span><span></span><span></span></div>
+          <h2>Check a food in seconds</h2>
+          <p>Calories come first, with protein, carbs, fat, and source context close behind.</p>
+        </div>
+
+        <section class="analyze-state status-panel" data-analyze-state="analyzing" aria-labelledby="analyzing-title" hidden>
+          <span class="state-card__spinner state-card__spinner--large" aria-hidden="true"></span>
+          <h2 id="analyzing-title">Analyzing your food</h2>
+          <p>Checking the amount, preparation, and supported demo-food matches.</p>
+        </section>
+
+        <section class="analyze-state match-state" data-analyze-state="matches" aria-labelledby="matches-title" hidden>
+          <div class="section-heading">
+            <div><p class="card-kicker">Choose a match</p><h2 id="matches-title">Which chicken did you mean?</h2></div>
+          </div>
+          <p class="muted-copy">Preparation changes the nutrition match. Select the closest supported option.</p>
+          <div class="match-list">
+            <button type="button" class="match-row" data-select-match="Grilled Chicken Breast"><span><strong>Grilled Chicken Breast</strong><small>grilled · solid · per 100 g</small></span><span aria-hidden="true">›</span></button>
+            <button type="button" class="match-row" data-select-match="Fried Chicken"><span><strong>Fried Chicken</strong><small>fried · solid · per 100 g</small></span><span aria-hidden="true">›</span></button>
+            <button type="button" class="match-row" data-select-match="Roasted Chicken Thigh"><span><strong>Roasted Chicken Thigh</strong><small>roasted · solid · per 100 g</small></span><span aria-hidden="true">›</span></button>
+          </div>
+          <button class="text-action" type="button" data-edit-search>Edit search</button>
+        </section>
+
+        <section class="analyze-state result-card" data-analyze-state="result" aria-labelledby="result-title" hidden>
+          <header class="result-card__header">
+            <div><p class="card-kicker">Food match</p><h2 id="result-title" data-result-food>Grilled Chicken Breast</h2><p>Cooked, grilled · USDA FoodData Central</p></div>
+            <span class="source-badge">Demo data</span>
+          </header>
+          <div class="result-card__hero"><div><strong data-result-calories>248</strong><span>kcal</span></div><p>for <strong data-result-amount>150 g</strong></p></div>
+          <div class="serving-control" aria-label="Adjust serving amount">
+            <button type="button" data-serving-change="-10" aria-label="Decrease serving by 10 grams">−</button>
+            <label for="serving-amount">Serving<input id="serving-amount" type="number" value="150" min="10" step="10"><span>g</span></label>
+            <button type="button" data-serving-change="10" aria-label="Increase serving by 10 grams">＋</button>
+          </div>
+          <dl class="nutrition-list">
+            <div><dt>Protein</dt><dd><strong>46.5</strong> g</dd></div>
+            <div><dt>Carbohydrates</dt><dd><strong>0</strong> g</dd></div>
+            <div><dt>Fat</dt><dd><strong>5.4</strong> g</dd></div>
+            <div><dt>Fiber</dt><dd><strong>0</strong> g</dd></div>
+            <div><dt>Sugar</dt><dd><strong>—</strong></dd></div>
+            <div><dt>Sodium</dt><dd><strong>111</strong> mg</dd></div>
+          </dl>
+          <p class="data-note">Sugar is not available from this source. Missing values are not treated as zero.</p>
+          <button class="primary-action" type="button" data-add-log>Add to today’s log</button>
+          <button class="text-action" type="button" data-edit-search>Analyze another food</button>
+          <div class="inline-message inline-message--pending" data-log-state="saving" role="status" hidden>
+            <span class="inline-spinner" aria-hidden="true"></span>
+            <span>Adding to today’s log…</span>
+          </div>
+          <div class="inline-message" data-log-state="saved" hidden>
+            <span role="status">Added to today’s log.</span>
+            <button class="inline-message__action" type="button" data-route-button="today">View today’s log</button>
+          </div>
+          <div class="inline-message inline-message--error" data-log-state="error" hidden>
+            <span role="alert">We couldn’t save this entry. Your result is still available.</span>
+            <button class="inline-message__action" type="button" data-log-retry>Try again</button>
+          </div>
+        </section>
+
+        <section class="analyze-state status-panel" data-analyze-state="not-found" aria-labelledby="not-found-title" hidden>
+          <span class="status-panel__icon" aria-hidden="true">?</span>
+          <h2 id="not-found-title">Food not found</h2>
+          <p>That food isn’t in the current demo dataset. Try a different name or preparation.</p>
+          <button class="secondary-action" type="button" data-edit-search>Edit search</button>
+        </section>
+
+        <section class="analyze-state status-panel" data-analyze-state="needs-amount" aria-labelledby="needs-amount-title" hidden>
+          <span class="status-panel__icon" aria-hidden="true">#</span>
+          <h2 id="needs-amount-title">How much did you eat?</h2>
+          <p>We found Grilled Chicken Breast, but an amount is required before nutrition can be calculated.</p>
+          <button class="secondary-action" type="button" data-edit-search>Add an amount</button>
+        </section>
+
+        <section class="analyze-state status-panel status-panel--error" data-analyze-state="invalid" aria-labelledby="invalid-title" hidden>
+          <span class="status-panel__icon" aria-hidden="true">!</span>
+          <h2 id="invalid-title">Check the serving amount</h2>
+          <p>Enter a positive amount using a unit supported by this food.</p>
+          <button class="secondary-action" type="button" data-edit-search>Correct the input</button>
+        </section>
+      </section>
+
+      <section class="screen" data-screen="week" aria-labelledby="week-title" hidden>
+        <header class="page-header page-header--with-action">
+          <div><p class="eyebrow">Weekly review</p><h1 id="week-title">Your week</h1><p>Calories consumed compared with the target effective on each day.</p></div>
+        </header>
+        <div data-week-state-panel="populated">
+        <div class="week-layout">
+          <div class="week-layout__summary">
+            <div class="date-switcher" aria-label="Choose week">
+              <button type="button" data-week-change="previous" aria-label="Previous week">‹</button>
+              <strong data-week-label>Oct 27 – Nov 2</strong>
+              <button type="button" data-week-change="next" aria-label="Next week" disabled>›</button>
+            </div>
+            <article class="week-summary-card">
+              <p class="card-kicker">Average consumed</p>
+              <p><strong>1,784</strong> <span>kcal / day</span></p>
+              <p class="comparison-copy">266 kcal below the average applicable target</p>
+              <small>Current week · 7 elapsed days included</small>
+              <div class="week-chart" role="img" aria-label="Seven-day calorie overview. Exact values are listed in the daily detail.">
+                <div><i style="height: 74%"></i><span>M</span></div>
+                <div><i style="height: 87%"></i><span>T</span></div>
+                <div><i class="week-chart__above" style="height: 100%"></i><span>W</span></div>
+                <div><i style="height: 78%"></i><span>T</span></div>
+                <div><i style="height: 90%"></i><span>F</span></div>
+                <div><i style="height: 89%"></i><span>S</span></div>
+                <div><i class="week-chart__today" style="height: 57%"></i><span>S</span></div>
+              </div>
+            </article>
+          </div>
+          <section class="week-days" aria-labelledby="week-days-title">
+            <div class="section-heading"><div><p class="card-kicker">Daily detail</p><h2 id="week-days-title">Monday to Sunday</h2></div></div>
+            <ol class="week-list">
+              <li><div class="week-day"><strong>Mon</strong><span>Oct 27</span></div><div class="week-bar"><span style="width: 78%"></span></div><div class="week-value"><strong>1,602</strong><span>of 2,050</span></div></li>
+              <li><div class="week-day"><strong>Tue</strong><span>Oct 28</span></div><div class="week-bar"><span style="width: 92%"></span></div><div class="week-value"><strong>1,886</strong><span>of 2,050</span></div></li>
+              <li><div class="week-day"><strong>Wed</strong><span>Oct 29</span></div><div class="week-bar"><span style="width: 100%" class="week-bar--above"></span></div><div class="week-value"><strong>2,170</strong><span>120 above</span></div></li>
+              <li><div class="week-day"><strong>Thu</strong><span>Oct 30</span></div><div class="week-bar"><span style="width: 83%"></span></div><div class="week-value"><strong>1,701</strong><span>of 2,050</span></div></li>
+              <li><div class="week-day"><strong>Fri</strong><span>Oct 31</span></div><div class="week-bar"><span style="width: 96%"></span></div><div class="week-value"><strong>1,963</strong><span>of 2,050</span></div></li>
+              <li><div class="week-day"><strong>Sat</strong><span>Nov 1</span></div><div class="week-bar"><span style="width: 94%"></span></div><div class="week-value"><strong>1,928</strong><span>of 2,050</span></div></li>
+              <li class="week-list__today"><div class="week-day"><strong>Sun</strong><span>Today</span></div><div class="week-bar"><span style="width: 60.5%"></span></div><div class="week-value"><strong>1,240</strong><span>of 2,050</span></div></li>
+            </ol>
+            <p class="data-note">Bars support scanning; the written values remain authoritative.</p>
+          </section>
+        </div>
+        </div>
+
+        <section class="status-panel status-panel--standalone" data-week-state-panel="empty" hidden>
+          <span class="status-panel__icon" aria-hidden="true">0</span>
+          <h2>No food logged this week</h2>
+          <p>When you add food, each day’s calories and the weekly average will appear here.</p>
+          <a class="primary-action" href="?screen=analyze" data-route="analyze">Analyze food</a>
+        </section>
+
+        <section class="status-panel status-panel--standalone" data-week-state-panel="missing-target" hidden>
+          <span class="status-panel__icon" aria-hidden="true">—</span>
+          <h2>No target is available for this week</h2>
+          <p>Your logged calories are still available, but they cannot be compared with a target for these dates.</p>
+          <button class="secondary-action" type="button" data-route-button="settings">Review target settings</button>
+        </section>
+        <section class="status-panel status-panel--standalone" data-week-state-panel="loading" hidden>
+          <span class="state-card__spinner state-card__spinner--large" aria-hidden="true"></span><h2>Loading your week</h2><p>Preparing seven local dates, logged totals, and historical targets.</p>
+        </section>
+        <section class="status-panel status-panel--standalone status-panel--error" data-week-state-panel="error" hidden>
+          <span class="status-panel__icon" aria-hidden="true">!</span><h2>We couldn’t load this week</h2><p>Your history was not changed. Try again when your connection is stable.</p><button class="secondary-action" type="button">Retry</button>
+        </section>
+        <section class="status-panel status-panel--standalone" data-week-state-panel="future" hidden>
+          <span class="status-panel__icon" aria-hidden="true">→</span><h2>That week hasn’t started</h2><p>Choose the current week or an earlier week to review logged food.</p><button class="secondary-action" type="button" data-preview-week="populated">Return to current week</button>
+        </section>
+      </section>
+
+      <section class="screen" data-screen="settings" aria-labelledby="settings-title" hidden>
+        <header class="page-header">
+          <p class="eyebrow">Account and preferences</p>
+          <h1 id="settings-title">Settings</h1>
+          <p>Manage your profile, estimate inputs, and private data.</p>
+        </header>
+        <div class="form-feedback form-feedback--error" data-settings-feedback="validation" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Check the highlighted fields</strong><p>Use valid measurements, a recognized timezone, and an available goal.</p></div></div>
+        <div class="form-feedback form-feedback--pending" data-settings-feedback="saving" role="status" hidden><span class="inline-spinner" aria-hidden="true"></span><div><strong>Saving your changes…</strong><p>Your previous settings remain active until this finishes.</p></div></div>
+        <div class="form-feedback form-feedback--success" data-settings-feedback="success" role="status" hidden><span aria-hidden="true">✓</span><div><strong>Settings updated</strong><p>A new target-history record was created where required.</p></div></div>
+        <div class="form-feedback form-feedback--error" data-settings-feedback="error" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Changes weren’t saved</strong><p>Your previous profile and target remain unchanged. Review the fields and try again.</p></div></div>
+        <div class="settings-layout">
+          <section class="profile-card" aria-labelledby="profile-card-title">
+            <span class="profile-card__avatar" aria-hidden="true">AG</span>
+            <div><h2 id="profile-card-title">Alex Garcia</h2><p>alex@example.com</p></div>
+            <button class="secondary-action secondary-action--compact" type="button" data-open-dialog="profile-dialog">Edit profile</button>
+          </section>
+
+          <div class="settings-groups">
+            <section class="settings-group" aria-labelledby="target-settings-title">
+              <h2 id="target-settings-title">Calorie target</h2>
+              <button class="settings-row" type="button"><span><strong>Active goal estimate</strong><small>1,750 kcal · Lose Weight · prototype</small></span><span aria-hidden="true">›</span></button>
+              <div class="goal-availability">
+                <div><strong>Maintain Weight</strong><span>Prototype option</span></div>
+                <div><strong>Lose Weight</strong><span class="status-chip status-chip--prototype">Selected</span></div>
+                <div><strong>Gain Weight</strong><span>Prototype option</span></div>
+              </div>
+            </section>
+            <section class="settings-group" aria-labelledby="preferences-title">
+              <h2 id="preferences-title">Preferences</h2>
+              <button class="settings-row" type="button"><span><strong>Timezone</strong><small>Asia/Manila</small></span><span aria-hidden="true">›</span></button>
+              <button class="settings-row" type="button" data-open-dialog="history-dialog"><span><strong>Target history</strong><small>View effective target records</small></span><span aria-hidden="true">›</span></button>
+            </section>
+            <section class="settings-group" aria-labelledby="account-settings-title">
+              <h2 id="account-settings-title">Account</h2>
+              <button class="settings-row" type="button" data-route-button="auth"><span><strong>Log out</strong><small>Return to account access</small></span><span aria-hidden="true">›</span></button>
+              <button class="settings-row settings-row--danger" type="button" data-open-dialog="account-dialog"><span><strong>Delete account</strong><small>Permanently delete your private data</small></span><span aria-hidden="true">›</span></button>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen screen--focused" data-screen="auth" aria-labelledby="auth-title" hidden>
+        <div class="focused-shell">
+          <div class="brand brand--large" aria-label="CalorieCheck"><span class="brand__calorie">Calorie</span><span class="brand__check">Check</span></div>
+          <div class="focused-card">
+            <section data-auth-panel="login">
+              <p class="eyebrow">Welcome back</p>
+              <h1 id="auth-title">Log in to continue</h1>
+              <p>Your calculator and food history stay private to your account.</p>
+              <form id="auth-form" class="stacked-form">
+                <label for="auth-email">Email<input id="auth-email" type="email" value="alex@example.com" required></label>
+                <label for="auth-password">Password<input id="auth-password" type="password" value="prototype" required></label>
+                <div class="captcha-placeholder" role="img" aria-label="Cloudflare security check placeholder">Cloudflare security check</div>
+                <button class="primary-action" type="submit">Log in</button>
+                <button class="text-action" type="button" data-auth-view="recovery">Forgot password?</button>
+              </form>
+              <p class="auth-switch">New to CalorieCheck? <button type="button" class="text-action" data-auth-view="signup">Create account</button></p>
+            </section>
+
+            <section data-auth-panel="signup" hidden>
+              <button class="back-action" type="button" data-auth-view="login">← Back to login</button>
+              <p class="eyebrow">Create account</p><h1>Start your private tracker</h1><p>Use an email you can confirm. Your profile and logs remain private to your account.</p>
+              <form class="stacked-form" data-demo-submit="verification">
+                <label>Email<input type="email" value="alex@example.com" required></label>
+                <label>Password<input type="password" value="prototype" required></label>
+                <label>Confirm password<input type="password" value="prototype" required></label>
+                <div class="captcha-placeholder">Cloudflare security check</div>
+                <button class="primary-action" type="submit">Create account</button>
+              </form>
+            </section>
+
+            <section data-auth-panel="verification" hidden>
+              <span class="success-mark" aria-hidden="true">✓</span><p class="eyebrow">Check your inbox</p><h1>Confirm your email</h1><p>We sent a confirmation link to <strong>alex@example.com</strong>. Open it on this device to continue.</p>
+              <button class="primary-action" type="button" data-auth-view="login">Return to login</button>
+              <button class="text-action" type="button">Resend confirmation email</button>
+            </section>
+
+            <section data-auth-panel="recovery" hidden>
+              <button class="back-action" type="button" data-auth-view="login">← Back to login</button>
+              <p class="eyebrow">Password recovery</p><h1>Reset your password</h1><p>Enter your account email and we’ll send a secure reset link.</p>
+              <form class="stacked-form" data-demo-submit="recovery-sent"><label>Email<input type="email" value="alex@example.com" required></label><div class="captcha-placeholder">Cloudflare security check</div><button class="primary-action" type="submit">Send reset link</button></form>
+            </section>
+
+            <section data-auth-panel="recovery-sent" hidden>
+              <span class="success-mark" aria-hidden="true">✓</span><p class="eyebrow">Email sent</p><h1>Check for your reset link</h1><p>If an eligible account exists, a password-reset message will arrive shortly.</p><button class="primary-action" type="button" data-auth-view="reset">Preview reset screen</button><button class="text-action" type="button" data-auth-view="login">Return to login</button>
+            </section>
+
+            <section data-auth-panel="reset" hidden>
+              <p class="eyebrow">Choose a new password</p><h1>Update your password</h1><p>Use at least eight characters and avoid reusing an old password.</p>
+              <form class="stacked-form" data-demo-submit="login"><label>New password<input type="password" value="prototype-new" required></label><label>Confirm new password<input type="password" value="prototype-new" required></label><button class="primary-action" type="submit">Update password</button></form>
+            </section>
+
+            <section data-auth-panel="login-error" hidden>
+              <button class="back-action" type="button" data-auth-view="login">← Back to login</button><span class="danger-mark" aria-hidden="true">!</span><p class="eyebrow">Unable to log in</p><h1>Check your email and password</h1><p>The details didn’t match an eligible confirmed account. Try again or reset your password.</p><button class="primary-action" type="button" data-auth-view="login">Try again</button><button class="text-action" type="button" data-auth-view="recovery">Reset password</button>
+            </section>
+
+            <section data-auth-panel="confirmation-invalid" hidden>
+              <span class="danger-mark" aria-hidden="true">!</span><p class="eyebrow">Confirmation link unavailable</p><h1>Request a new confirmation email</h1><p>This link may be invalid, expired, or already used. Request a fresh message without exposing account details.</p><button class="primary-action" type="button" data-auth-view="login">Go to login</button>
+            </section>
+
+            <section data-auth-panel="reset-invalid" hidden>
+              <span class="danger-mark" aria-hidden="true">!</span><p class="eyebrow">Reset link unavailable</p><h1>Request a new reset link</h1><p>This password-reset session is no longer valid. Your password was not changed.</p><button class="primary-action" type="button" data-auth-view="recovery">Request new link</button>
+            </section>
+
+            <section data-auth-panel="configuration" hidden>
+              <span class="danger-mark" aria-hidden="true">!</span><p class="eyebrow">Account access unavailable</p><h1>Try again later</h1><p>The account service is not configured correctly. Private application access remains closed.</p><button class="primary-action" type="button" data-auth-view="login">Retry</button>
+            </section>
+
+            <section data-auth-panel="account-deleted" hidden>
+              <span class="success-mark" aria-hidden="true">✓</span><p class="eyebrow">Account deleted</p><h1>Your private data was removed</h1><p>Your session has ended and the deleted account can no longer log in.</p><button class="primary-action" type="button" data-auth-view="signup">Create a new account</button>
+            </section>
+          </div>
+          <p class="prototype-caption">Prototype only. No account request is sent.</p>
+        </div>
+      </section>
+
+      <section class="screen screen--focused" data-screen="onboarding" aria-labelledby="onboarding-title" hidden>
+        <div class="onboarding-shell">
+          <header class="onboarding-header">
+            <div class="brand" aria-label="CalorieCheck"><span class="brand__calorie">Calorie</span><span class="brand__check">Check</span></div>
+            <p>Step <span data-step-current>1</span> of 5</p>
+            <div class="step-track" aria-hidden="true"><span data-step-progress style="width: 20%"></span></div>
+          </header>
+          <div class="onboarding-card">
+            <div class="form-feedback form-feedback--error" data-onboarding-feedback="validation" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Check the highlighted fields</strong><p>Enter a valid date of birth and current measurements before continuing.</p></div></div>
+            <div class="form-feedback form-feedback--pending" data-onboarding-feedback="saving" role="status" hidden><span class="inline-spinner" aria-hidden="true"></span><div><strong>Creating your profile and target…</strong><p>Keep this page open. Nothing is complete until both records save together.</p></div></div>
+            <div class="form-feedback form-feedback--error" data-onboarding-feedback="error" role="alert" hidden><span aria-hidden="true">!</span><div><strong>We couldn’t complete onboarding</strong><p>Your profile was not partially saved. Try again when your connection is stable.</p></div></div>
+            <section data-onboarding-step="1">
+              <p class="eyebrow">Personal information</p><h1 id="onboarding-title">Let’s start with you</h1><p>This helps personalize your estimate and account.</p>
+              <div class="stacked-form"><label>Display name<input type="text" value="Alex"></label><label>Date of birth<input type="date" value="1996-06-15"></label></div>
+            </section>
+            <section data-onboarding-step="2" hidden>
+              <p class="eyebrow">Body measurements</p><h1>Your current measurements</h1><p>Use current values. You can update them later.</p>
+              <div class="stacked-form"><label for="prototype-height">Height in centimeters<input id="prototype-height" data-profile-height type="number" value="157.5" min="120" max="230" step="0.1"></label><label for="prototype-weight">Weight in kilograms<input id="prototype-weight" data-profile-weight type="number" value="67" min="30" max="300" step="0.1"></label><fieldset><legend>Sex used for the energy equation</legend><label class="choice-row"><input type="radio" name="equation-sex"> Male</label><label class="choice-row"><input type="radio" name="equation-sex" checked> Female</label></fieldset></div>
+            </section>
+            <section data-onboarding-step="3" hidden>
+              <p class="eyebrow">Activity level</p><h1>How active are you?</h1><p>Choose the description that most closely reflects your typical activity.</p>
+              <div class="choice-list"><label class="choice-card"><input type="radio" name="activity"> Inactive <small>Mostly sitting with little planned activity</small></label><label class="choice-card"><input type="radio" name="activity" checked> Low active <small>Some regular movement or light activity</small></label><label class="choice-card"><input type="radio" name="activity"> Active <small>Regular moderate activity</small></label><label class="choice-card"><input type="radio" name="activity"> Very active <small>Frequent vigorous activity</small></label></div>
+            </section>
+            <section data-onboarding-step="4" hidden>
+              <p class="eyebrow">Goal</p><h1>What would you like to do?</h1><p>Choose a direction, then add the information needed to review the goal safely.</p>
+              <div class="choice-list"><label class="choice-card"><input type="radio" name="goal" value="maintain" data-goal-option> Maintain Weight <small>Estimate calories for staying near your current weight</small></label><label class="choice-card"><input type="radio" name="goal" value="lose" data-goal-option checked> Lose Weight <small>Set a lower goal weight and target date</small></label><label class="choice-card"><input type="radio" name="goal" value="gain" data-goal-option> Gain Weight <small>Set a higher goal weight and target date</small></label></div>
+              <div class="goal-inputs" data-goal-inputs>
+                <label for="prototype-goal-weight">Goal weight in kilograms<input id="prototype-goal-weight" data-goal-weight type="number" value="57" min="30" max="300" step="0.1"></label>
+                <label for="prototype-goal-date">Target date<input id="prototype-goal-date" data-goal-date type="date" value="2027-03-02"></label>
+                <div class="bmi-preview" role="status" aria-live="polite">
+                  <div><span>Current BMI</span><strong data-current-bmi>27.0</strong></div>
+                  <span aria-hidden="true">→</span>
+                  <div><span>Goal BMI</span><strong data-goal-bmi>23.0</strong></div>
+                </div>
+                <p class="field-help">BMI is a screening measure, not a diagnosis or the calorie formula. Goal timing, activity, and an approved weight-change method are also required.</p>
+              </div>
+            </section>
+            <section data-onboarding-step="5" hidden>
+              <p class="eyebrow">Review estimate</p><h1 data-review-heading>Your Lose Weight planning estimate</h1><div class="estimate-hero"><strong data-review-calories>1,750</strong><span>kcal / day</span></div>
+              <span class="status-chip status-chip--prototype">Illustrative prototype amount</span>
+              <dl class="review-list"><div><dt>Goal</dt><dd data-review-goal>Lose Weight</dd></div><div><dt>Weight direction</dt><dd data-review-weight>67 kg → 57 kg</dd></div><div><dt>BMI context</dt><dd data-review-bmi>27.0 → 23.0</dd></div><div><dt>Target date</dt><dd data-review-date>Mar 2, 2027</dd></div><div><dt>Estimated maintenance</dt><dd>2,050 kcal / day</dd></div><div><dt>Goal method</dt><dd data-review-method>Pending scientific validation</dd></div><div><dt>Timezone</dt><dd>Asia/Manila</dd></div></dl>
+              <p class="data-note" data-review-note>This screen demonstrates the intended Lose/Gain experience. The 1,750 kcal value is sample design content, not a production recommendation. Production must use an independently validated weight-change method.</p>
+              <label class="confirmation-row"><input type="checkbox"> I confirm this estimate is not for pregnancy or breastfeeding.</label>
+            </section>
+            <div class="onboarding-actions"><button class="secondary-action" type="button" data-step-back disabled>Back</button><button class="primary-action" type="button" data-step-next>Continue</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="states" aria-labelledby="states-title" hidden>
+        <header class="page-header"><p class="eyebrow">System feedback</p><h1 id="states-title">Application states</h1><p>Representative messages keep users oriented without exposing provider or account details.</p></header>
+        <div class="state-gallery">
+          <article class="state-card"><span class="state-card__spinner" aria-hidden="true"></span><div><h2>Loading today’s data</h2><p>Your private summary is being prepared.</p></div></article>
+          <article class="state-card state-card--notice"><span aria-hidden="true">↻</span><div><h2>This is taking longer than expected</h2><p>You can keep waiting or retry safely.</p><button class="secondary-action secondary-action--compact" type="button">Try again</button></div></article>
+          <article class="state-card state-card--warning"><span aria-hidden="true">!</span><div><h2>You appear to be offline</h2><p>Saved history cannot refresh. Already loaded calculator tools may remain available.</p></div></article>
+          <article class="state-card state-card--error"><span aria-hidden="true">×</span><div><h2>We couldn’t load this information</h2><p>Your data was not changed. Try again when your connection is stable.</p><button class="secondary-action secondary-action--compact" type="button">Retry</button></div></article>
+          <article class="state-card state-card--session"><span aria-hidden="true">→</span><div><h2>Your session expired</h2><p>Log in again to continue securely. Private content has been cleared from view.</p><button class="primary-action secondary-action--compact" type="button" data-route-button="auth">Log in</button></div></article>
+          <article class="state-card state-card--success"><span aria-hidden="true">✓</span><div><h2>Changes saved</h2><p>Your profile and new target history are up to date.</p></div></article>
+          <article class="state-card state-card--error"><span aria-hidden="true">×</span><div><h2>Permission denied</h2><p>CalorieCheck could not verify access to this private information. Record details remain hidden.</p></div></article>
+          <article class="state-card state-card--warning"><span aria-hidden="true">!</span><div><h2>Account access unavailable</h2><p>The account service is not configured correctly. Protected access remains closed.</p></div></article>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="preview-dialog" class="dialog dialog--preview" aria-labelledby="preview-title">
+      <form method="dialog" class="dialog__surface">
+        <div class="dialog__header"><div><p class="card-kicker">Prototype controls</p><h2 id="preview-title">Preview a screen</h2></div><button class="icon-button" value="cancel" aria-label="Close preview menu">×</button></div>
+        <p>These controls exist only in the isolated prototype.</p>
+        <h3 class="preview-heading">Primary screens</h3>
+        <div class="preview-grid">
+          <button type="button" data-preview-screen="today">Today</button><button type="button" data-preview-screen="analyze">Analyze</button><button type="button" data-preview-screen="week">Week</button><button type="button" data-preview-screen="settings">Settings</button><button type="button" data-preview-screen="onboarding">Onboarding</button><button type="button" data-preview-screen="states">System states</button>
+        </div>
+        <h3 class="preview-heading">Account flow</h3>
+        <div class="preview-grid"><button type="button" data-preview-auth="login">Login</button><button type="button" data-preview-auth="signup">Create account</button><button type="button" data-preview-auth="verification">Confirm email</button><button type="button" data-preview-auth="recovery">Forgot password</button><button type="button" data-preview-auth="reset">Reset password</button><button type="button" data-preview-auth="login-error">Login error</button><button type="button" data-preview-auth="confirmation-invalid">Invalid confirmation</button><button type="button" data-preview-auth="reset-invalid">Invalid reset</button><button type="button" data-preview-auth="configuration">Configuration error</button><button type="button" data-preview-auth="account-deleted">Account deleted</button></div>
+        <h3 class="preview-heading">Today states</h3>
+        <div class="preview-grid"><button type="button" data-preview-today="populated">Populated</button><button type="button" data-preview-today="loading">Loading</button><button type="button" data-preview-today="empty">Empty day</button><button type="button" data-preview-today="missing-target">Missing target</button><button type="button" data-preview-today="error">Load error</button><button type="button" data-preview-today="permission">Permission denied</button></div>
+        <h3 class="preview-heading">Analyze states</h3>
+        <div class="preview-grid"><button type="button" data-preview-analyze="analyzing">Analyzing</button><button type="button" data-preview-analyze="matches">Ambiguous match</button><button type="button" data-preview-analyze="needs-amount">Needs amount</button><button type="button" data-preview-analyze="invalid">Invalid input</button><button type="button" data-preview-analyze="not-found">Not found</button><button type="button" data-preview-analyze="result">Result</button></div>
+        <h3 class="preview-heading">Logging states</h3>
+        <div class="preview-grid"><button type="button" data-preview-log="ready">Ready</button><button type="button" data-preview-log="saving">Saving</button><button type="button" data-preview-log="saved">Saved</button><button type="button" data-preview-log="error">Save error</button></div>
+        <h3 class="preview-heading">Week states</h3>
+        <div class="preview-grid"><button type="button" data-preview-week="populated">Populated</button><button type="button" data-preview-week="loading">Loading</button><button type="button" data-preview-week="empty">Empty week</button><button type="button" data-preview-week="missing-target">Missing target</button><button type="button" data-preview-week="future">Future week</button><button type="button" data-preview-week="error">Load error</button></div>
+        <h3 class="preview-heading">Onboarding and settings</h3>
+        <div class="preview-grid"><button type="button" data-preview-onboarding="validation">Validation</button><button type="button" data-preview-onboarding="saving">Saving profile</button><button type="button" data-preview-onboarding="error">Save error</button><button type="button" data-preview-settings="validation">Settings validation</button><button type="button" data-preview-settings="saving">Saving settings</button><button type="button" data-preview-settings="success">Settings saved</button><button type="button" data-preview-settings="error">Settings error</button></div>
+        <h3 class="preview-heading">Food edit and deletion</h3>
+        <div class="preview-grid"><button type="button" data-preview-edit="validation">Edit validation</button><button type="button" data-preview-edit="pending">Updating food</button><button type="button" data-preview-edit="success">Food updated</button><button type="button" data-preview-edit="error">Update error</button><button type="button" data-preview-delete="pending">Deleting food</button><button type="button" data-preview-delete="error">Food-delete error</button></div>
+        <h3 class="preview-heading">Account deletion</h3>
+        <div class="preview-grid"><button type="button" data-preview-account="pending">Deleting account</button><button type="button" data-preview-account="error">Account-delete error</button><button type="button" data-preview-account="throttled">Deletion throttled</button><button type="button" data-preview-auth="account-deleted">Deleted completion</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="edit-dialog" class="dialog" aria-labelledby="edit-title">
+      <form method="dialog" class="dialog__surface">
+        <div class="dialog__header"><div><p class="card-kicker">Food log</p><h2 id="edit-title">Edit food entry</h2></div><button class="icon-button" value="cancel" aria-label="Close edit dialog">×</button></div>
+        <p><strong>Cooked White Rice</strong><br><span class="muted-copy">Saved source and unit stay unchanged.</span></p>
+        <div class="form-feedback form-feedback--error" data-edit-feedback="validation" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Check the serving and date</strong><p>Use a positive amount and a valid local date and time.</p></div></div>
+        <div class="form-feedback form-feedback--pending" data-edit-feedback="pending" role="status" hidden><span class="inline-spinner" aria-hidden="true"></span><div><strong>Updating entry…</strong><p>Recalculating from the saved historical nutrition reference.</p></div></div>
+        <div class="form-feedback form-feedback--success" data-edit-feedback="success" role="status" hidden><span aria-hidden="true">✓</span><div><strong>Food entry updated</strong><p>Today and Week totals now reflect this serving.</p></div></div>
+        <div class="form-feedback form-feedback--error" data-edit-feedback="error" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Entry wasn’t updated</strong><p>Your previous serving remains unchanged. Try again.</p></div></div>
+        <div class="stacked-form"><label>Serving amount<input type="number" value="1" min="0.25" step="0.25"></label><label>Date<input type="date" value="2026-11-02"></label><label>Time<input type="time" value="08:15"></label></div>
+        <div class="dialog__actions"><button class="secondary-action" value="cancel">Cancel</button><button class="primary-action" value="save">Save changes</button></div>
+        <button class="text-action text-action--danger" type="button" data-open-dialog="delete-dialog">Delete this entry</button>
+      </form>
+    </dialog>
+
+    <dialog id="delete-dialog" class="dialog" aria-labelledby="delete-title">
+      <form method="dialog" class="dialog__surface">
+        <span class="danger-mark" aria-hidden="true">!</span><h2 id="delete-title">Delete food entry?</h2><p>Cooked White Rice will be permanently removed from this day and its totals.</p>
+        <div class="form-feedback form-feedback--pending" data-delete-feedback="pending" role="status" hidden><span class="inline-spinner" aria-hidden="true"></span><div><strong>Deleting entry…</strong><p>Keep this dialog open while Today and Week totals update.</p></div></div>
+        <div class="form-feedback form-feedback--error" data-delete-feedback="error" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Entry wasn’t deleted</strong><p>Your log remains unchanged. Try again.</p></div></div>
+        <div class="dialog__actions"><button class="secondary-action" value="cancel">Cancel</button><button class="danger-action" value="delete">Delete entry</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="profile-dialog" class="dialog" aria-labelledby="profile-dialog-title">
+      <form method="dialog" class="dialog__surface">
+        <div class="dialog__header"><div><p class="card-kicker">Personal information</p><h2 id="profile-dialog-title">Edit profile</h2></div><button class="icon-button" value="cancel" aria-label="Close profile editor">×</button></div>
+        <p class="muted-copy">Changes to measurements or activity create a new effective target record. Past targets remain unchanged.</p>
+        <div class="stacked-form"><label>Display name<input type="text" value="Alex Garcia"></label><label>Date of birth<input type="date" value="1996-06-15"></label><label>Height in centimeters<input type="number" value="168"></label><label>Weight in kilograms<input type="number" value="68"></label><label>Activity category<select><option>Inactive</option><option selected>Low active</option><option>Active</option><option>Very active</option></select></label><label>Timezone<select><option selected>Asia/Manila</option><option>UTC</option></select></label></div>
+        <div class="dialog__actions"><button class="secondary-action" value="cancel">Cancel</button><button class="primary-action" value="save">Review changes</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="history-dialog" class="dialog" aria-labelledby="history-dialog-title">
+      <form method="dialog" class="dialog__surface">
+        <div class="dialog__header"><div><p class="card-kicker">Calorie target</p><h2 id="history-dialog-title">Target history</h2></div><button class="icon-button" value="cancel" aria-label="Close target history">×</button></div>
+        <p class="muted-copy">Each entry shows the estimate used for logs on those dates.</p>
+        <ol class="history-list"><li><span class="history-list__dot" aria-hidden="true"></span><div><strong>2,050 kcal · Maintain Weight</strong><span>Effective October 7, 2026 – present</span><small>National Academies 2023 EER</small></div></li><li><span class="history-list__dot" aria-hidden="true"></span><div><strong>1,980 kcal · Maintain Weight</strong><span>October 6–7, 2026</span><small>National Academies 2023 EER</small></div></li></ol>
+        <button class="primary-action" value="close">Done</button>
+      </form>
+    </dialog>
+
+    <dialog id="account-dialog" class="dialog" aria-labelledby="account-dialog-title">
+      <form method="dialog" class="dialog__surface">
+        <span class="danger-mark" aria-hidden="true">!</span><h2 id="account-dialog-title">Delete your account?</h2><p>This permanently deletes your profile, target history, and food logs. It cannot be undone.</p>
+        <div class="form-feedback form-feedback--pending" data-account-feedback="pending" role="status" hidden><span class="inline-spinner" aria-hidden="true"></span><div><strong>Deleting your account…</strong><p>Do not close this page until deletion finishes.</p></div></div>
+        <div class="form-feedback form-feedback--error" data-account-feedback="error" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Account wasn’t deleted</strong><p>Your account remains active. Check your password and security verification.</p></div></div>
+        <div class="form-feedback form-feedback--warning" data-account-feedback="throttled" role="alert" hidden><span aria-hidden="true">!</span><div><strong>Too many deletion attempts</strong><p>Wait 15 minutes before trying again. Your account remains active.</p></div></div>
+        <div class="stacked-form"><label>Type DELETE<input type="text"></label><label>Current password<input type="password"></label><div class="captcha-placeholder">Cloudflare security check</div></div>
+        <div class="dialog__actions"><button class="secondary-action" value="cancel">Cancel</button><button class="danger-action" value="delete">Permanently delete</button></div>
+      </form>
+    </dialog>
+
+    <div class="sr-only" aria-live="polite" data-announcer></div>
+    <script type="module" src="./prototype.js"></script>
+  </body>
+</html>

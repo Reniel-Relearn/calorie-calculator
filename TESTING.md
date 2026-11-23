@@ -482,3 +482,42 @@ V2-S0 adds these mandatory checks before its security pull request may merge:
 - Controlled staging verifies real CAPTCHA behavior, exact deployed headers, bounded 429 behavior, owner isolation, all existing product journeys, provider logs, and rollback without attack-volume load testing.
 
 Provider dashboard settings, local Docker/database checks, remote migration/function application, and staging results must remain marked pending until actually verified.
+
+## V2 Directional Target Verification
+
+The V2-G1 through V2-G3 target work requires these checks in addition to the maintained regression suite:
+
+- Maintain remains unchanged and succeeds from age 18.
+- Lose/Gain fail closed below age 19 and succeed for eligible users from age 19.
+- Female and male directional results use `241` and `342 kcal/day` SEPV with multiplier `1.96` against raw EER.
+- Missing or negative non-persistent safety confirmations produce structured non-success outcomes and never enter persisted snapshots.
+- Lose is unavailable below BMI `18.5`; both directional goals are unavailable below BMI `16`.
+- A Lose result below the CalorieCheck `1,200 kcal/day` boundary is unavailable and is not clamped.
+- Goal weight, goal date, desired rate, and forecast fields are absent.
+- Calculation inputs are not mutated, results are deterministic, and rounding remains in the display layer.
+- Onboarding and Settings produce the correct method/version and append effective target history without rewriting prior rows.
+- Trusted RPCs reject wrong goal/age combinations, unsupported method versions, malformed snapshots, incorrect SEPV metadata, forged arithmetic, unsafe BMI inputs, and low Lose results.
+- Owner/anonymous/cross-user RLS and rollback behavior remain unchanged.
+- Today and Week select the correct historical target regardless of goal type.
+- The exact calorie-estimate disclaimer is the bottommost Settings section on mobile and desktop.
+
+Local JavaScript and build checks do not substitute for a clean Supabase reset, pgTAP, browser integration, or staging verification. Record each external gate only after it actually passes.
+
+## V2 Visual Foundations Checks
+
+Run Vite locally, then `npm.cmd run test:design:local`. The local-only browser suite opens the D2 component specimen in an isolated Chrome/Chromium profile. Set `DESIGN_TEST_CHROME_PATH` if Chrome is outside the supported discovery paths; set `DESIGN_TEST_APP_URL` to a local build-preview URL to test the compiled artifact instead of development assets.
+
+Required D2 checks cover the maintained viewport matrix plus short height; no page overflow; important enabled controls at least 44 px; labels/names/unique IDs; local SVG resolution without external requests; normal-text contrast ≥4.5:1 and control/focus contrast ≥3:1 for the documented shared-token pairs; keyboard disclosure/dialog/focus return; field feedback and amount-control examples; reduced motion; and text scaling/reflow. Screenshots/results go under ignored `.vercel/design-review/`.
+
+This suite passed against development and production-build preview on 2026-11-23. Native browser zoom, real-device touch/keyboard, other browser engines, and dedicated assistive technology are not certified by these emulated checks. Human staging component approval remains required before D3. The existing 140-test suite and authenticated local browser integration also passed after the D2 shared CSS changes. Full evidence and review instructions are in `V2_VISUAL_FOUNDATIONS.md`.
+
+
+## V2-D3 Navigation Acceptance
+
+- User-requested onboarding submit guard: Save Profile and Calculate starts disabled, enables only for valid required data and applicable confirmations, disables again when a required value/confirmation is removed, and stays disabled during saving. Maintain does not require the directional confirmation; Lose/Gain do. Programmatic form submission must not bypass the view guard, and controller/server validation remains required.
+
+- Four labeled destinations in the approved order, one displayed main/destination, accurate `aria-current`, dynamic title and skip link, visible keyboard focus, at least 44px navigation targets, and phone/tablet/desktop reflow without page overflow.
+- Signed-out, session-checking, recovery, loading/error and incomplete-profile states must not expose private navigation or allow destination hints to bypass existing guards. Logout and identity changes clear private state.
+- Back/Forward, direct valid/invalid entry and refresh restore only an allowlisted destination; history contains destination only. Callback processing remains authoritative and no credentials, dates, food names or personal values are added to navigation state.
+- Switching destinations retains calculator results and selected date/week in memory. Hidden data completion must not steal focus. Settings Back returns to a safe prior destination; account controls remain reachable in Settings or the incomplete-profile shell.
+- Run `npm.cmd run check` and `npm.cmd run test:auth:local` against the local-only environment with local Supabase. The browser suite now navigates actual visible destinations and verifies the shell; human staging navigation approval remains required. See `V2_NAVIGATION_REVISION.md` for evidence and browser/device limitations.
